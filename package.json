@@ -1,0 +1,27 @@
+{
+  "name": "discord-tictactoe",
+  "version": "1.0.0",
+  "description": "A Tic-Tac-Toe Discord's Bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/utarwyn/discord-tictactoe.git"
+  },
+  "keywords": [
+    "discord",
+    "discord-bot",
+    "tic-tac-toe"
+  ],
+  "author": "Utarwyn",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/utarwyn/discord-tictactoe/issues"
+  },
+  "homepage": "https://github.com/utarwyn/discord-tictactoe#readme",
+  "dependencies": {
+    "discord.js": "^11.2.1"
+  }
+}
