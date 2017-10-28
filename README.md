@@ -2,15 +2,15 @@
 A simple Discord Bot for playing Tic Tac Toe.\
 Created with [discord.js](https://github.com/hydrabolt/discord.js/).
 
-> Currently under development! \
-> Please wait for full code and support!
+> Currently under development!
+
+![Aperçu du jeu](https://i.gyazo.com/781322bad31493fdaa61c3c8011f46dd.gif)
 
 ### Features
 - Highly configurable
-- Easy to install
-- High performance
-- Change the grid's game size
-- Different type of games
+- Very easy to install
+- Use emojis and reactions to play!
+- Different type of games *(soon)*
 
 ### How to install
 
