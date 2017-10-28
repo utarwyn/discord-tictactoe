@@ -1,5 +1,6 @@
 # TicTacToe Discord Bot
-A simple Discord Bot for playing Tic Tac Toe.
+A simple Discord Bot for playing Tic Tac Toe.\
+Created with [discord.js](https://github.com/hydrabolt/discord.js/).
 
 > Currently under development! \
 > Please wait for full code and support!
