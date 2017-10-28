@@ -9,7 +9,7 @@ class Game {
         this._options = Util.mergeDeep({
             command : "duel",
 
-            autoClear : false,
+            auto_clear : false,
             messages : {
                 welcome : "Welcome on Tic-Tac-Toe Discord's game !",
                 begin_game : "%player1% and %player2% have just begun a game!",

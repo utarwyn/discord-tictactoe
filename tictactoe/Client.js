@@ -91,7 +91,7 @@ class Client {
         let channel     = this.getChannel();
         let welcomeMsg  = this._game.getOption("messages.welcome");
 
-        if (this._game.getOption("autoClear"))
+        if (this._game.getOption("auto_clear"))
             this.clearChannel();
 
         if (welcomeMsg !== null)
