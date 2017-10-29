@@ -8,8 +8,8 @@ class Game {
         // Merge default options...
         this._options = Util.mergeDeep({
             command : "duel",
-
             auto_clear : false,
+
             messages : {
                 welcome : "Welcome on Tic-Tac-Toe Discord's game !",
                 begin_game : "%player1% and %player2% have just begun a game!",
@@ -84,6 +84,13 @@ class Game {
 
     runGame() {
         let self = this;
+
+        // Randomize players
+        if (Math.random() >= 0.5) {
+            let tmp = this.player1;
+            this.player1 = this.player2;
+            this.player2 = tmp;
+        }
 
         this.inProgress = true;
 

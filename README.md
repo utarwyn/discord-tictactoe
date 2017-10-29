@@ -4,7 +4,7 @@ Created with [discord.js](https://github.com/hydrabolt/discord.js/).
 
 > Currently under development!
 
-![Aperçu du jeu](https://i.gyazo.com/781322bad31493fdaa61c3c8011f46dd.gif)
+![A game preview](https://i.gyazo.com/781322bad31493fdaa61c3c8011f46dd.gif)
 
 ### Features
 - Highly configurable
