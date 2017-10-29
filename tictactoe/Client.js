@@ -47,7 +47,7 @@ class Client {
         if (message.channel.name !== this._game.getOption("channel"))
             return;
 
-        if (this._game.isGameInProgress() && !message.member.user.bot) {
+        if (this._game.isGameInProgress() && !message.member.user.bot && !this._game.isMemberRegistered(message.member)) {
             message.delete();
             return;
         }
