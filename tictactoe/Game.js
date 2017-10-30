@@ -12,6 +12,7 @@ class Game {
 
             messages : {
                 welcome : "Welcome on Tic-Tac-Toe Discord's game !",
+                waiting_opponent : "%player% is ready for a duel!",
                 begin_game : "%player1% and %player2% have just begun a game!",
                 introduce_round : "It's %player%'s turn (%symbol%) !",
                 end_equality : "No winner! So sad! :(",

@@ -73,6 +73,12 @@ class Client {
         } else {
             if (!this._game.newPlayer(message.member))
                 message.delete();
+            else if (!this._game.getPlayer2()) {
+                let waitMsg = this._game.getOption("messages.waiting_opponent");
+                waitMsg = waitMsg.replace("%player%", "<@" + message.member.user.id + ">");
+
+                message.channel.send(waitMsg).catch(console.error);
+            }
         }
     }
 
