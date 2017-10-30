@@ -9,6 +9,7 @@ class Game {
         this._options = Util.mergeDeep({
             command : "duel",
             auto_clear : false,
+            use_custom_bot : false,
 
             messages : {
                 welcome : "Welcome on Tic-Tac-Toe Discord's game !",
@@ -27,7 +28,11 @@ class Game {
 
         this._verifyOptions();
 
-        this._client = new Client(this, this._options["api_token"]);
+        if (!this.getOption("use_custom_bot")) {
+            this._client = new Client(this, this._options["api_token"]);
+        } else
+            console.log("(INFO) You use a custom Discord Bot.");
+
         this._grid = new Grid();
     }
 
@@ -153,7 +158,7 @@ class Game {
     }
 
    _verifyOptions() {
-        if (this._options["api_token"] === undefined) {
+        if (this._options["api_token"] === undefined && !this._options["use_custom_bot"]) {
             console.error("(ERR) You have to give the Discord's API Token to start the bot.");
             console.error("(ERR) For more information : http://bit.ly/2z1FsR3");
             process.exit(1);
@@ -165,6 +170,10 @@ class Game {
             process.exit(2);
         }
     }
+
+   bindToClient(bot) {
+       this._client = new Client(this, bot);
+   }
 
 }
 

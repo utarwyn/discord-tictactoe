@@ -2,23 +2,23 @@ const Discord = require("discord.js");
 
 class Client {
 
-    constructor(game, apiToken) {
+    constructor(game, connectionObj) {
         this._game     = game;
-        this._apiToken = apiToken;
 
         this._channel       = null;
         this._gridMessage   = null;
         this._playerMessage = null;
 
-        this.connect();
+        this.connect(connectionObj);
     }
 
 
 
-    connect() {
+    connect(connectionObj) {
         const self = this;
+        let isApiToken = typeof connectionObj === "string";
 
-        this._bot = new Discord.Client();
+        this._bot = (isApiToken) ? new Discord.Client() : connectionObj;
 
         // Bot events!
         this._bot.on("ready", self.onReady.bind(self));
@@ -26,15 +26,16 @@ class Client {
         this._bot.on("messageReactionAdd", self.onReactionAdd.bind(self));
 
         // Connecting bot to Discord...
-        this._bot.login(this._apiToken).
-            then(function() {
-                console.log("Discord bot successfully connected!");
-                console.log("No debug for the moment. Maybe soon?");
-            }).
-            catch(function(err) {
-                console.error("Catched a Discord API error. Exiting...\n" + err);
-                process.exit(3);
-            });
+        if (isApiToken)
+            this._bot.login(connectionObj).
+                then(function() {
+                    console.log("Discord bot successfully connected!");
+                    console.log("No debug for the moment. Maybe soon?");
+                }).
+                catch(function(err) {
+                    console.error("Catched a Discord API error. Exiting...\n" + err);
+                    process.exit(3);
+                });
     }
 
 
