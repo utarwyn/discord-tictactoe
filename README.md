@@ -1,4 +1,6 @@
 # TicTacToe Discord Bot
+[![Travis](https://img.shields.io/travis/utarwyn/discord-tictactoe.svg)](https://travis-ci.org/utarwyn/discord-tictactoe) \
+\
 A simple Discord Bot for playing Tic Tac Toe.\
 Created with [discord.js](https://github.com/hydrabolt/discord.js/).
 
