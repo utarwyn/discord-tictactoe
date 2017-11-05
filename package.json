@@ -1,6 +1,6 @@
 {
   "name": "discord-tictactoe",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Tic-Tac-Toe Discord's Bot",
   "main": "index.js",
   "scripts": {

@@ -12,6 +12,7 @@ class Game {
             use_custom_bot: false,
 
             randomize_players: true,
+            inactivity_cooldown: 600, // in seconds
 
             messages: {
                 welcome: "Welcome on Tic-Tac-Toe Discord's game !",
@@ -27,6 +28,7 @@ class Game {
         this.player2 = null;
         this.currentPlayerIdx = 0;
         this.inProgress = false;
+        this._resetTask = null;
 
         this._verifyOptions();
 
@@ -55,6 +57,9 @@ class Game {
 
         if (this.player1 !== null && this.player2 !== null)
             this.runGame();
+        else
+            // Re-start the inactivity cooldown.
+            this.runInactivityResetTask();
 
         return true;
     }
@@ -105,7 +110,26 @@ class Game {
         this._client.clearChannel(function() {
             self._client.sendBeginGame();
             self._client.sendGrid(self._grid, self.getCurrentPlayer());
+
+            // Start the inactivity cooldown
+            self.runInactivityResetTask();
         });
+    }
+
+    runInactivityResetTask() {
+        let self = this;
+
+        if (this._resetTask !== null)
+            clearTimeout(this._resetTask);
+
+        this._resetTask = setTimeout(function() {
+            // Doing this, only if an action was done before.
+            if (!self.isGameInProgress() && self.player1 === null && self.player2 === null)
+                return;
+
+            self.reset();
+            self._client.startWaiting();
+        }, 1000 * this.getOption("inactivity_cooldown"));
     }
 
     newMove(position) {
@@ -118,6 +142,9 @@ class Game {
 
         // Send the grid for the next round (or not?).
         this._client.sendGrid(this._grid, this.getCurrentPlayer());
+
+        // Re-start the inactivity cooldown.
+        this.runInactivityResetTask();
 
         // Check for a winner!
         let winner = this._grid.checkWinner();
@@ -142,6 +169,9 @@ class Game {
         this.player1 = null;
         this.player2 = null;
         this.currentPlayerIdx = 0;
+
+        clearTimeout(this._resetTask);
+        this._resetTask = null;
 
         this._grid.reset();
         this._client.reset();

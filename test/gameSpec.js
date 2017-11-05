@@ -68,6 +68,7 @@ describe('Tic-Tac-Toe Game', function(){
         expect(game.player1).to.be.equals(null);
         expect(game.player2).to.be.equals(null);
         expect(game.currentPlayerIdx).to.be.equals(0);
+        expect(game._resetTask).to.be.equals(null);
         // Game grid
         expect(game._grid._data).to.have.lengthOf(0);
         // Game client
