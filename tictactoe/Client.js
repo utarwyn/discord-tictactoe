@@ -66,7 +66,7 @@ class Client {
            if (user === null) {
                message.reply("nous ne connaissons pas de joueur nommé **" + args[0] + "**.");
            } else {
-                // TODO : not working, use only !duel for the moment.
+                // TODO: not working, use only !duel for the moment.
                 user.createDM().then(function(channel) {
                     return channel.send(message.member.displayName + " t'a défié sur le jeu **TicTacToe** sur le serveur d'Utaria ! Viens le battre !\nhttps://discord.gg/scTemzr");
                 });
@@ -181,6 +181,7 @@ class Client {
 
     clearChannel(callback = null) {
         let channel = this.getChannel();
+        if (channel === null) return;
 
        channel.fetchMessages()
            .then(messages => {
@@ -198,6 +199,9 @@ class Client {
     getChannel() {
         if (this._channel !== null)
             return this._channel;
+
+        if (this._bot.guilds.array().length === 0)
+            return null;
 
         let channelName = this._game.getOption("channel");
         let channels    = this._bot.guilds.array()[0].channels.array();

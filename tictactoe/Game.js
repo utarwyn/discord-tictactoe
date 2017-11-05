@@ -7,17 +7,19 @@ class Game {
     constructor(options) {
         // Merge default options...
         this._options = Util.mergeDeep({
-            command : "duel",
-            auto_clear : false,
-            use_custom_bot : false,
+            command: "duel",
+            auto_clear: false,
+            use_custom_bot: false,
 
-            messages : {
-                welcome : "Welcome on Tic-Tac-Toe Discord's game !",
-                waiting_opponent : "%player% is ready for a duel!",
-                begin_game : "%player1% and %player2% have just begun a game!",
-                introduce_round : "It's %player%'s turn (%symbol%) !",
-                end_equality : "No winner! So sad! :(",
-                end_victory : "%player% win the game! GG! :wink:"
+            randomize_players: true,
+
+            messages: {
+                welcome: "Welcome on Tic-Tac-Toe Discord's game !",
+                waiting_opponent: "%player% is ready for a duel!",
+                begin_game: "%player1% and %player2% have just begun a game!",
+                introduce_round: "It's %player%'s turn (%symbol%) !",
+                end_equality: "No winner! So sad! :(",
+                end_victory: "%player% win the game! GG! :wink:"
             }
         }, options);
 
@@ -92,7 +94,7 @@ class Game {
         let self = this;
 
         // Randomize players
-        if (Math.random() >= 0.5) {
+        if (this.getOption("randomize_players") && Math.random() >= 0.5) {
             let tmp = this.player1;
             this.player1 = this.player2;
             this.player2 = tmp;
@@ -123,7 +125,7 @@ class Game {
             this._client.sendEndGame(winner);
             this.inProgress = false;
 
-            setTimeout(() => this.reset(), 10000);
+            setTimeout(() => { this.reset(); this._client.startWaiting(); }, 10000);
             return;
         }
 
@@ -132,7 +134,7 @@ class Game {
             this._client.sendEndGame(null);
             this.inProgress = false;
 
-            setTimeout(() => this.reset(), 10000);
+            setTimeout(() => { this.reset(); this._client.startWaiting(); }, 10000);
         }
     }
 
@@ -143,8 +145,6 @@ class Game {
 
         this._grid.reset();
         this._client.reset();
-
-        this._client.startWaiting();
     }
 
     getOption(key) {
@@ -158,17 +158,11 @@ class Game {
     }
 
    _verifyOptions() {
-        if (this._options["api_token"] === undefined && !this._options["use_custom_bot"]) {
-            console.error("(ERR) You have to give the Discord's API Token to start the bot.");
-            console.error("(ERR) For more information : http://bit.ly/2z1FsR3");
-            process.exit(1);
-        }
+        if (this._options["api_token"] === undefined && !this._options["use_custom_bot"])
+            throw new ReferenceError("You have to give the Discord's API Token to start the bot. For more information, please visit http://bit.ly/2z1FsR3");
 
-        if (this._options["channel"] === undefined) {
-            console.error("(ERR) You have to give the Discord's channel where the bot will be started.");
-            console.error("(ERR) For more information : http://bit.ly/2z1FsR3");
-            process.exit(2);
-        }
+        if (this._options["channel"] === undefined)
+            throw new ReferenceError("You have to give the Discord's channel where the bot will be started. For more information, please visit http://bit.ly/2z1FsR3");
     }
 
    bindToClient(bot) {
