@@ -185,10 +185,7 @@ class Client {
 
        channel.fetchMessages()
            .then(messages => {
-               if (messages.size >= 2 && messages.size <= 100)
-                   channel.bulkDelete(messages);
-               else if (messages.size === 1)
-                   messages.array()[0].delete();
+               messages.deleteAll();
 
                if (callback !== null)
                    callback();
