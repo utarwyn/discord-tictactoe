@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const Logger = require('./Util/Logger');
+const Logger = require('./util/Logger');
 
 class Client {
 

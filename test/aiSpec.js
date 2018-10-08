@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const Discord = require("discord.js");
+const Discord = require('discord.js');
 let TicTacToe, game;
 
 describe('Tic-Tac-Toe AI', function () {

@@ -1,14 +1,16 @@
 const expect = require('chai').expect;
-const Discord = require("discord.js");
+const Discord = require('discord.js');
 
 let TicTacToe, game;
 
 describe('Tic-Tac-Toe Game', function () {
 
     before(function () {
-        TicTacToe = require("../src/Game.js");
+        TicTacToe = require('../src/Game');
+
         game = new TicTacToe({
             use_custom_bot: true,
+            silent: true,
             channel: "test",
 
             randomize_players: false
@@ -16,7 +18,7 @@ describe('Tic-Tac-Toe Game', function () {
     });
 
     it('should init class correctly', function () {
-        expect(TicTacToe).to.be.a("function");
+        expect(TicTacToe).to.be.a('function');
         expect(game).to.be.an.instanceOf(TicTacToe);
     });
 
@@ -28,7 +30,7 @@ describe('Tic-Tac-Toe Game', function () {
         // ... and without the channel!
         const badGameFuncTwo = function () {
             new TicTacToe({
-                api_token: "MY_VERY_GOOD_TOKEN"
+                api_token: 'MY_VERY_GOOD_TOKEN'
             });
         };
 
@@ -46,7 +48,7 @@ describe('Tic-Tac-Toe Game', function () {
         game.bindToClient(fakeClient);
 
         // Check client ...
-        expect(game._client._bot).to.be.a("object");
+        expect(game._client._bot).to.be.a('object');
         // ... and binded events (+2)!
         expect(fakeClient._eventsCount).to.be.equals(3 + 2);
     });
@@ -70,8 +72,10 @@ describe('Tic-Tac-Toe Game', function () {
         expect(game.player2).to.be.equals(null);
         expect(game.currentPlayerIdx).to.be.equals(0);
         expect(game._resetTask).to.be.equals(null);
+
         // Game grid
         expect(game._grid._data).to.have.lengthOf(0);
+
         // Game client
         expect(game._client._gridMessage).to.be.equals(null);
         expect(game._client._playerMessage).to.be.equals(null);
