@@ -1,8 +1,7 @@
 {
   "name": "discord-tictactoe",
   "version": "1.0.1",
-  "description": "A Tic-Tac-Toe Discord's Bot",
-  "main": "index.js",
+  "description": "A modern and simple Tic-Tac-Toe Discord's Bot",
   "scripts": {
     "test": "mocha"
   },
@@ -22,10 +21,11 @@
   },
   "homepage": "https://github.com/utarwyn/discord-tictactoe#readme",
   "dependencies": {
-    "discord.js": "^11.2.1"
+    "chalk": "^2.4.1",
+    "discord.js": "^11.4.2"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "mocha": "^4.0.1"
+    "chai": "^4.2.0",
+    "mocha": "^4.1.0"
   }
 }
