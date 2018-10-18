@@ -64,7 +64,7 @@ class Game {
         if (!this.getOption("use_custom_bot")) {
             this._client = new Client(this, this._options["api_token"]);
         } else {
-            Logger.log('You use a custom Discord Bot.');
+            Logger.log('Starting bot with a custom Discord client...');
         }
 
         this._grid = new Grid();
@@ -292,11 +292,17 @@ class Game {
      * @private
      */
     _verifyOptions() {
-        if (this._options["api_token"] === undefined && !this._options["use_custom_bot"])
-            throw new ReferenceError("You have to give the Discord's API Token to start the bot. For more information, please visit http://bit.ly/2z1FsR3");
+        if (!this._options["api_token"] && !this._options["use_custom_bot"]) {
+            Logger.error('Please provide your Discord API token with the key `api_token`.');
+            Logger.error('More info to configure the bot at http://bit.ly/2z1FsR3');
+            throw Error('Wrong API token!');
+        }
 
-        if (this._options["channel"] === undefined)
-            throw new ReferenceError("You have to give the Discord's channel where the bot will be started. For more information, please visit http://bit.ly/2z1FsR3");
+        if (!this._options["channel"]) {
+            Logger.error('Please provide the channel where you want to run the game with key `channel`.');
+            Logger.error('More info to configure the bot at http://bit.ly/2z1FsR3');
+            throw Error('Wrong channel name!');
+        }
     }
 
 }

@@ -8,7 +8,7 @@ class Client {
      * @param game The class Game where this client will be linked.
      * @param connectionObj The connection object (Bot) where this client will be connected.
      */
-    constructor(game, connectionObj) {
+    constructor (game, connectionObj) {
         this._game = game;
 
         this._channel = null;
@@ -22,7 +22,7 @@ class Client {
      * Connect this client to a specific Discord Bot Client)
      * @param connectionObj Connect to this existing Discord Client if parameter provided
      */
-    connect(connectionObj) {
+    connect (connectionObj) {
         const self = this;
         let isApiToken = typeof connectionObj === "string";
 
@@ -34,22 +34,32 @@ class Client {
         this._bot.on("messageReactionAdd", self.onReactionAdd.bind(self));
 
         // Connecting bot to Discord...
-        if (isApiToken)
+        if (isApiToken) {
             this._bot.login(connectionObj).then(() => {
                 const guild = this._bot.guilds.first();
                 Logger.success(this._bot.user.username + ' successfully connected to ' + guild.name + '!');
             }).catch(err => {
                 Logger.error('An error occurred when trying to connect to the Discord server!');
                 Logger.error(err);
-                process.exit(3);
             });
+        }
     }
 
     /**
      * Method called when the client is ready for usage.
      */
     onReady() {
-        this.startWaiting();
+        const guildName = this._bot.guilds.first().name;
+        const channelName = this._game.getOption('channel');
+
+        // Check if the channel exists!
+        if (this.getChannel() != null) {
+            this.startWaiting();
+            Logger.success('Connected to ' + guildName + ' (#' + channelName + ')!');
+        } else {
+            Logger.error('Cannot find the channel \'' + channelName + '\' on ' + guildName + '.');
+            process.exit(1);
+        }
     }
 
     /**
@@ -58,7 +68,7 @@ class Client {
      */
     onMessage(message) {
         // Check command validity at the beginning.
-        if (message.channel.name !== this._game.getOption("channel"))
+        if (message.channel.name !== this._game.getOption('channel'))
             return;
 
         if (this._game.isGameInProgress() && !message.member.user.bot && !this._game.isMemberRegistered(message.member)) {
@@ -66,15 +76,15 @@ class Client {
             return;
         }
 
-        if (message.content.startsWith("!solo")) {
+        if (message.content.startsWith('!solo')) {
             // TODO!
             return;
         }
 
-        if (!message.content.startsWith("!" + this._game.getOption("command")))
+        if (!message.content.startsWith('!' + this._game.getOption('command')))
             return;
 
-        let args = message.content.split(" ");
+        let args = message.content.split(' ');
         args.shift();
 
         if (args.length === 0) {

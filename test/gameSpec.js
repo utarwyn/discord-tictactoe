@@ -23,19 +23,29 @@ describe('Tic-Tac-Toe Game', function () {
     });
 
     it('should verify required options', function () {
-        // Without the Discord API...
+        // Without the Api token ...
         const badGameFuncOne = function () {
             new TicTacToe();
         };
-        // ... and without the channel!
+        // ... or without the channel!
         const badGameFuncTwo = function () {
             new TicTacToe({
-                api_token: 'MY_VERY_GOOD_TOKEN'
+                api_token: 'MY_AWESOME_TOKEN'
             });
         };
 
         expect(badGameFuncOne).to.throw();
         expect(badGameFuncTwo).to.throw();
+    });
+
+    it('should check bad connection', done => {
+        const game = new TicTacToe({
+            api_token: 'bad_api_token',
+            channel: 'awesome'
+        });
+
+        // TODO
+        done()
     });
 
     it('should get the value of an option', function () {
