@@ -1,5 +1,18 @@
-.idea/
-index.js
+logs
+*.log
+.npm
+.eslintcache
+.DS_Store
+npm-debug.log*
 node_modules/
+coverage
+build/
 package-lock.json
+
+# VS Code
+.vscode
+!.vscode/tasks.js
+
+# Jetbrains IDEs
+.idea/
 *.iml

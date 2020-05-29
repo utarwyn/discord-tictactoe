@@ -1,10 +1,7 @@
 {
   "name": "discord-tictactoe",
-  "version": "1.0.1",
-  "description": "A modern and simple Tic-Tac-Toe Discord's Bot",
-  "scripts": {
-    "test": "mocha"
-  },
+  "version": "2.0.0",
+  "description": "A modern Discord Bot for playing Tic-Tac-Toe",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/utarwyn/discord-tictactoe.git"
@@ -14,18 +11,36 @@
     "discord-bot",
     "tic-tac-toe"
   ],
-  "author": "Utarwyn",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/utarwyn/discord-tictactoe/issues"
-  },
-  "homepage": "https://github.com/utarwyn/discord-tictactoe#readme",
-  "dependencies": {
-    "chalk": "^2.4.1",
-    "discord.js": "^11.4.2"
+  "engines": {
+    "node": ">= 12.13 <13"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^4.1.0"
-  }
+    "@types/jest": "~25.2.1",
+    "@types/node": "~12.12.38",
+    "@typescript-eslint/eslint-plugin": "~2.32.0",
+    "@typescript-eslint/parser": "~2.32.0",
+    "eslint": "~7.0.0",
+    "eslint-config-prettier": "~6.11.0",
+    "eslint-plugin-jest": "~23.10.0",
+    "jest": "~25.2.7",
+    "prettier": "~2.0.5",
+    "rimraf": "~3.0.2",
+    "ts-jest": "~25.5.1",
+    "tsutils": "~3.17.0",
+    "typescript": "~3.8.3"
+  },
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "tslib": "~1.11.2"
+  },
+  "scripts": {
+    "clean": "rimraf coverage build tmp",
+    "build": "tsc -p tsconfig.release.json",
+    "build:watch": "tsc -w -p tsconfig.release.json",
+    "lint": "eslint . --ext .ts,.tsx",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch"
+  },
+  "author": "Utarwyn <maximemalgorn@gmail.com>",
+  "license": "Apache-2.0"
 }
