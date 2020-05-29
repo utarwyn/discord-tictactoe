@@ -1,18 +1,16 @@
-import Discord from 'discord.js'
+import Discord from 'discord.js';
 
 let TicTacToe, game;
 
 describe('Tic-Tac-Toe Game', function () {
-
     beforeEach(function () {
         TicTacToe = require('../src/Game');
 
         game = new TicTacToe({
             use_custom_bot: true,
             silent: true,
-            channel: "test",
-
-            randomize_players: false
+            channel: 'test',
+            randomize_players: false,
         });
     });
 
@@ -29,20 +27,20 @@ describe('Tic-Tac-Toe Game', function () {
         // ... or without the channel!
         const badGameFuncTwo = function () {
             new TicTacToe({
-                api_token: 'MY_AWESOME_TOKEN'
+                api_token: 'MY_AWESOME_TOKEN',
             });
         };
 
-        expect(badGameFuncOne).toThrowError()
+        expect(badGameFuncOne).toThrowError();
         expect(badGameFuncTwo).toThrowError();
     });
 
-    it('should check bad connection', done => {
+    it('should check bad connection', (done) => {
         new TicTacToe({
             api_token: 'bad_api_token',
-            channel: 'awesome'
+            channel: 'awesome',
         });
-        done()
+        done();
     });
 
     it('should get the value of an option', function () {
@@ -85,7 +83,4 @@ describe('Tic-Tac-Toe Game', function () {
         expect(game._client._gridMessage).toBeNull();
         expect(game._client._playerMessage).toBeNull();
     });
-
-    // it('more tests soon!');
-
 });

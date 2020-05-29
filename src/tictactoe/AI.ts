@@ -1,11 +1,9 @@
-const Player = require('./Player');
+import Player from './Player';
 
-class AI extends Player {
-
+export default class AI extends Player {
     constructor() {
         super(null);
     }
-
 }
 
 module.exports = AI;

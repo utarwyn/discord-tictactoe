@@ -6,7 +6,7 @@ logs
 npm-debug.log*
 node_modules/
 coverage
-build/
+dist/
 package-lock.json
 
 # VS Code

@@ -1,4 +1,11 @@
-class Grid {
+import Player from './Player';
+
+export default class Grid {
+    private readonly _size: number;
+
+    private _data: Player[];
+
+    private _reactDict: string[];
 
     /**
      * Used to construct the Grid object.
@@ -53,8 +60,7 @@ class Grid {
      */
     isFull() {
         for (let i = 0; i < this.getSize(); i++)
-            if (!this._data[i])
-                return false;
+            if (!this._data[i]) return false;
 
         return true;
     }
@@ -69,8 +75,7 @@ class Grid {
         if (!this._data[index]) {
             this._data[index] = player;
             return true;
-        } else
-            return false;
+        } else return false;
     }
 
     /**
@@ -80,8 +85,7 @@ class Grid {
      */
     decodeMove(emojiReact) {
         for (let i = 0; i < this._reactDict.length; i++)
-            if (this._reactDict[i] === emojiReact)
-                return i;
+            if (this._reactDict[i] === emojiReact) return i;
 
         return -1;
     }
@@ -116,14 +120,22 @@ class Grid {
         let diag1idx1 = this._rowColToIdx(0, 0);
         let diag1idx3 = this._rowColToIdx(2, 2);
 
-        if (this._compare(diag1idx1, middleIdx) && this._compare(middleIdx, diag1idx3))
+        if (
+            this._compare(diag1idx1, middleIdx) &&
+            this._compare(middleIdx, diag1idx3)
+        )
             return this.getPlayerAt(diag1idx1);
 
         let diag2idx1 = this._rowColToIdx(0, 2);
         let diag2idx3 = this._rowColToIdx(2, 0);
 
-        if (this._compare(diag2idx1, middleIdx) && this._compare(middleIdx, diag2idx3))
+        if (
+            this._compare(diag2idx1, middleIdx) &&
+            this._compare(middleIdx, diag2idx3)
+        )
             return this.getPlayerAt(diag2idx1);
+
+        return null;
     }
 
     /**
@@ -161,7 +173,11 @@ class Grid {
      * @private
      */
     _compare(idx1, idx2) {
-        return this._data[idx1] && this._data[idx2] && this._data[idx1].equals(this._data[idx2]);
+        return (
+            this._data[idx1] &&
+            this._data[idx2] &&
+            this._data[idx1].equals(this._data[idx2])
+        );
     }
 
     /**
@@ -170,15 +186,15 @@ class Grid {
      */
     _initReactions() {
         this._reactDict = [
-            "\u2196", // Top left
-            "\u2B06", // Top
-            "\u2197", // Top right
-            "\u2B05", // Left
-            "\u23FA", // Middle
-            "\u27A1", // Right
-            "\u2199", // Bottom left
-            "\u2B07", // Bottom
-            "\u2198"  // Bottom right
+            '\u2196', // Top left
+            '\u2B06', // Top
+            '\u2197', // Top right
+            '\u2B05', // Left
+            '\u23FA', // Middle
+            '\u27A1', // Right
+            '\u2199', // Bottom left
+            '\u2B07', // Bottom
+            '\u2198', // Bottom right
         ];
     }
 }

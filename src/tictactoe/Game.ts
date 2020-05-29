@@ -1,10 +1,27 @@
-const Client = require('./Client');
-const Player = require('./Player');
-const Grid = require('./Grid');
-const Util = require('./util/Util');
-const Logger = require('./util/Logger');
+import Logger from '@util/Logger';
+import Player from './Player';
+import Util from '@util/Util';
+import Client from './Client';
+import Grid from './Grid';
 
-class Game {
+export default class Game {
+    private readonly _options: any;
+
+    private readonly _logger: Logger;
+
+    private player1: Player;
+
+    private player2: Player;
+
+    private _client: Client;
+
+    private readonly _grid: Grid;
+
+    private currentPlayerIdx: number;
+
+    private inProgress: boolean;
+
+    private _resetTask: any;
 
     /**
      * Used to construct a new Game object.
@@ -12,62 +29,49 @@ class Game {
      */
     constructor(options) {
         // Merge default options...
-        this._options = Util.mergeDeep({
-            command: "duel",
-            auto_clear: false,
-            use_custom_bot: false,
-            silent: false,
+        this._options = Util.mergeDeep(
+            {
+                command: 'duel',
+                auto_clear: false,
+                use_custom_bot: false,
+                silent: false,
 
-            randomize_players: true,
-            inactivity_cooldown: 600, // in seconds
+                randomize_players: true,
+                inactivity_cooldown: 600, // in seconds
 
-            messages: {
-                welcome: "Welcome on Tic-Tac-Toe Discord's game !",
-                waiting_opponent: "%player% is ready for a duel!",
-                begin_game: "%player1% and %player2% have just begun a game!",
-                introduce_round: "It's %player%'s turn (%symbol%) !",
-                end_equality: "No winner! So sad! :(",
-                end_victory: "%player% win the game! GG! :wink:"
-            }
-        }, options);
+                messages: {
+                    welcome: "Welcome on Tic-Tac-Toe Discord's game !",
+                    waiting_opponent: '%player% is ready for a duel!',
+                    begin_game:
+                        '%player1% and %player2% have just begun a game!',
+                    introduce_round: "It's %player%'s turn (%symbol%) !",
+                    end_equality: 'No winner! So sad! :(',
+                    end_victory: '%player% win the game! GG! :wink:',
+                },
+            },
+            options,
+        );
 
-        /**
-         * The first player
-         * @type {null|Player}
-         */
+        this._logger = new Logger(this._options.silent);
         this.player1 = null;
-
-        /**
-         * The second player
-         * @type {null|Player}
-         */
         this.player2 = null;
-
         this.currentPlayerIdx = 0;
-
-        /**
-         * Boolean whiches control the game state.
-         * @type {boolean} True if the game is under progress.
-         */
         this.inProgress = false;
-
-        /**
-         * Contains the task ID which
-         * @type {null|int}
-         * @private
-         */
         this._resetTask = null;
 
-        Logger.setSilent(this._options.silent);
         this._verifyOptions();
 
-        if (!this.getOption("use_custom_bot")) {
-            this._client = new Client(this, this._options["api_token"]);
+        if (!this.getOption('use_custom_bot')) {
+            this._client = new Client(this, this._options['api_token']);
         } else {
-            Logger.log('Starting bot with a custom Discord client...');
+            this._logger.log('Starting bot with a custom Discord client...');
         }
 
         this._grid = new Grid();
+    }
+
+    public get logger(): Logger {
+        return this._logger;
     }
 
     /**
@@ -84,21 +88,15 @@ class Game {
      * @returns {boolean} True if the member could be added.
      */
     newMember(member) {
-        if (this.isMemberRegistered(member))
-            return false;
+        if (this.isMemberRegistered(member)) return false;
 
-        if (this.player1 === null)
-            this.player1 = new Player(member);
-        else if (this.player2 === null)
-            this.player2 = new Player(member);
-        else
-            return false;
+        if (this.player1 === null) this.player1 = new Player(member);
+        else if (this.player2 === null) this.player2 = new Player(member);
+        else return false;
 
-        if (this.player1 !== null && this.player2 !== null)
-            this.runGame();
-        else
+        if (this.player1 !== null && this.player2 !== null) this.runGame();
         // Re-start the inactivity cooldown.
-            this.runInactivityResetTask();
+        else this.runInactivityResetTask();
 
         return true;
     }
@@ -125,8 +123,10 @@ class Game {
      * @returns {boolean} True if the passed member is registered for the current game
      */
     isMemberRegistered(member) {
-        return (this.player1 !== null && this.player1.isMember(member)) ||
-            (this.player2 !== null && this.player2.isMember(member));
+        return (
+            (this.player1 !== null && this.player1.isMember(member)) ||
+            (this.player2 !== null && this.player2.isMember(member))
+        );
     }
 
     /**
@@ -134,7 +134,7 @@ class Game {
      * @returns {null|Player}
      */
     getCurrentPlayer() {
-        return (this.currentPlayerIdx === 0) ? this.player1 : this.player2;
+        return this.currentPlayerIdx === 0 ? this.player1 : this.player2;
     }
 
     /**
@@ -151,14 +151,10 @@ class Game {
      * @returns {string} Emoji formatted in a string.
      */
     getEmojiFor(player) {
-        if (!player)
-            return "white_large_square";
-        else if (player === this.player1)
-            return "regional_indicator_x";
-        else if (player === this.player2)
-            return "o2";
-        else
-            return "poop";
+        if (!player) return 'white_large_square';
+        else if (player === this.player1) return 'regional_indicator_x';
+        else if (player === this.player2) return 'o2';
+        else return 'poop';
     }
 
     /**
@@ -168,7 +164,7 @@ class Game {
         let self = this;
 
         // Randomize players
-        if (this.getOption("randomize_players") && Math.random() >= 0.5) {
+        if (this.getOption('randomize_players') && Math.random() >= 0.5) {
             let tmp = this.player1;
             this.player1 = this.player2;
             this.player2 = tmp;
@@ -198,12 +194,16 @@ class Game {
 
         this._resetTask = setTimeout(function () {
             // Doing this, only if an action was done before.
-            if (!self.isGameInProgress() && self.player1 === null && self.player2 === null)
+            if (
+                !self.isGameInProgress() &&
+                self.player1 === null &&
+                self.player2 === null
+            )
                 return;
 
             self.reset();
             self._client.startWaiting();
-        }, 1000 * this.getOption("inactivity_cooldown"));
+        }, 1000 * this.getOption('inactivity_cooldown'));
     }
 
     /**
@@ -212,8 +212,7 @@ class Game {
      */
     newMove(position) {
         // Update grid if move is valid
-        if (!this._grid.playerMoveAt(this.getCurrentPlayer(), position))
-            return;
+        if (!this._grid.playerMoveAt(this.getCurrentPlayer(), position)) return;
 
         // Next player!
         this.currentPlayerIdx = (this.currentPlayerIdx + 1) % 2;
@@ -278,11 +277,10 @@ class Game {
      * @returns {null|*} The config value stored or null.
      */
     getOption(key) {
-        let keys = key.split(".");
+        let keys = key.split('.');
         let val = this._options;
 
-        for (let i = 0; i < keys.length; i++)
-            val = val[keys[i]];
+        for (let i = 0; i < keys.length; i++) val = val[keys[i]];
 
         return val;
     }
@@ -292,19 +290,24 @@ class Game {
      * @private
      */
     _verifyOptions() {
-        if (!this._options["api_token"] && !this._options["use_custom_bot"]) {
-            Logger.error('Please provide your Discord API token with the key `api_token`.');
-            Logger.error('More info to configure the bot at http://bit.ly/2z1FsR3');
+        if (!this._options['api_token'] && !this._options['use_custom_bot']) {
+            this._logger.error(
+                'Please provide your Discord API token with the key `api_token`.',
+            );
+            this._logger.error(
+                'More info to configure the bot at http://bit.ly/2z1FsR3',
+            );
             throw Error('Wrong API token!');
         }
 
-        if (!this._options["channel"]) {
-            Logger.error('Please provide the channel where you want to run the game with key `channel`.');
-            Logger.error('More info to configure the bot at http://bit.ly/2z1FsR3');
+        if (!this._options['channel']) {
+            this._logger.error(
+                'Please provide the channel where you want to run the game with key `channel`.',
+            );
+            this._logger.error(
+                'More info to configure the bot at http://bit.ly/2z1FsR3',
+            );
             throw Error('Wrong channel name!');
         }
     }
-
 }
-
-module.exports = Game;

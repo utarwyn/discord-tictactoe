@@ -1,17 +1,22 @@
-const Discord = require('discord.js');
-const Logger = require('./util/Logger');
+import Discord from 'discord.js';
+import Game from './Game';
 
-class Client {
+export default class Client {
+    private readonly _game: Game;
+
+    private _gridMessage: Discord.Message;
+
+    private _playerMessage: Discord.Message;
+
+    private _bot: Discord.Client;
 
     /**
      * Used to construct a new Client object.
      * @param game The class Game where this client will be linked.
      * @param connectionObj The connection object (Bot) where this client will be connected.
      */
-    constructor (game, connectionObj) {
+    constructor(game, connectionObj) {
         this._game = game;
-
-        this._channel = null;
         this._gridMessage = null;
         this._playerMessage = null;
 
@@ -22,26 +27,32 @@ class Client {
      * Connect this client to a specific Discord Bot Client)
      * @param connectionObj Connect to this existing Discord Client if parameter provided
      */
-    connect (connectionObj) {
+    connect(connectionObj) {
         const self = this;
-        let isApiToken = typeof connectionObj === "string";
+        let isApiToken = typeof connectionObj === 'string';
 
-        this._bot = (isApiToken) ? new Discord.Client() : connectionObj;
+        this._bot = isApiToken ? new Discord.Client() : connectionObj;
 
         // Bot events!
-        this._bot.on("ready", self.onReady.bind(self));
-        this._bot.on("message", self.onMessage.bind(self));
-        this._bot.on("messageReactionAdd", self.onReactionAdd.bind(self));
+        this._bot.on('ready', self.onReady.bind(self));
+        this._bot.on('message', self.onMessage.bind(self));
+        this._bot.on('messageReactionAdd', self.onReactionAdd.bind(self));
 
         // Connecting bot to Discord...
         if (isApiToken) {
-            this._bot.login(connectionObj).then(() => {
-                const guild = this._bot.guilds.first();
-                Logger.success(this._bot.user.username + ' successfully connected to ' + guild.name + '!');
-            }).catch(err => {
-                Logger.error('An error occurred when trying to connect to the Discord server!');
-                Logger.error(err);
-            });
+            this._bot
+                .login(connectionObj)
+                .then(() => {
+                    this._game.logger.success(
+                        this._bot.user.username + ' successfully connected!',
+                    );
+                })
+                .catch((err) => {
+                    this._game.logger.error(
+                        'An error occurred when trying to connect to the Discord server!',
+                    );
+                    this._game.logger.error(err);
+                });
         }
     }
 
@@ -49,15 +60,16 @@ class Client {
      * Method called when the client is ready for usage.
      */
     onReady() {
-        const guildName = this._bot.guilds.first().name;
         const channelName = this._game.getOption('channel');
 
         // Check if the channel exists!
         if (this.getChannel() != null) {
             this.startWaiting();
-            Logger.success('Connected to ' + guildName + ' (#' + channelName + ')!');
+            this._game.logger.success('Connected to #' + channelName + '!');
         } else {
-            Logger.error('Cannot find the channel \'' + channelName + '\' on ' + guildName + '.');
+            this._game.logger.error(
+                'Cannot find the channel #' + channelName + '.',
+            );
             process.exit(1);
         }
     }
@@ -68,10 +80,13 @@ class Client {
      */
     onMessage(message) {
         // Check command validity at the beginning.
-        if (message.channel.name !== this._game.getOption('channel'))
-            return;
+        if (message.channel.name !== this._game.getOption('channel')) return;
 
-        if (this._game.isGameInProgress() && !message.member.user.bot && !this._game.isMemberRegistered(message.member)) {
+        if (
+            this._game.isGameInProgress() &&
+            !message.member.user.bot &&
+            !this._game.isMemberRegistered(message.member)
+        ) {
             message.delete();
             return;
         }
@@ -91,8 +106,11 @@ class Client {
             if (!this._game.newMember(message.member)) {
                 message.delete();
             } else if (!this._game.getPlayer2()) {
-                let waitMsg = this._game.getOption("messages.waiting_opponent");
-                waitMsg = waitMsg.replace("%player%", "<@" + message.member.user.id + ">");
+                let waitMsg = this._game.getOption('messages.waiting_opponent');
+                waitMsg = waitMsg.replace(
+                    '%player%',
+                    '<@' + message.member.user.id + '>',
+                );
 
                 message.channel.send(waitMsg).catch(console.error);
             }
@@ -119,23 +137,21 @@ class Client {
      */
     startWaiting() {
         let channel = this.getChannel();
-        let welcomeMsg = this._game.getOption("messages.welcome");
+        let welcomeMsg = this._game.getOption('messages.welcome');
 
-        if (this._game.getOption("auto_clear"))
-            this.clearChannel();
+        if (this._game.getOption('auto_clear')) this.clearChannel();
 
-        if (welcomeMsg !== null)
-            channel.send(welcomeMsg);
+        if (welcomeMsg !== null) channel.send(welcomeMsg);
     }
 
     /**
      * Send the beginning of a game (send the game header)
      */
     sendBeginGame() {
-        let msg = this._game.getOption("messages.begin_game");
+        let msg = this._game.getOption('messages.begin_game');
 
-        msg = msg.replace("%player1%", this._game.getPlayer1().getName());
-        msg = msg.replace("%player2%", this._game.getPlayer2().getName());
+        msg = msg.replace('%player1%', this._game.getPlayer1().getName());
+        msg = msg.replace('%player2%', this._game.getPlayer2().getName());
 
         this.getChannel().send(msg).catch(console.error);
     }
@@ -147,19 +163,21 @@ class Client {
      */
     sendGrid(grid, currentPlayer) {
         let self = this;
-        let playerCtn, content = "";
+        let playerCtn,
+            content = '';
 
-        playerCtn = this._game.getOption("messages.introduce_round");
-        playerCtn = playerCtn.replace("%player%", currentPlayer.getTag());
-        playerCtn = playerCtn.replace("%symbol%", ":" + this._game.getEmojiFor(currentPlayer) + ":");
+        playerCtn = this._game.getOption('messages.introduce_round');
+        playerCtn = playerCtn.replace('%player%', currentPlayer.getTag());
+        playerCtn = playerCtn.replace(
+            '%symbol%',
+            ':' + this._game.getEmojiFor(currentPlayer) + ':',
+        );
 
         for (let i = 0; i < grid.getSize(); i++) {
-            content += ":" + this._game.getEmojiFor(grid.getPlayerAt(i)) + ":";
+            content += ':' + this._game.getEmojiFor(grid.getPlayerAt(i)) + ':';
 
-            if ((i + 1) % grid.getLineLength() === 0)
-                content += "\n";
+            if ((i + 1) % grid.getLineLength() === 0) content += '\n';
         }
-
 
         if (this._gridMessage !== null) {
             this._playerMessage.edit(playerCtn);
@@ -167,23 +185,29 @@ class Client {
             return;
         }
 
-        this.getChannel().send(playerCtn).then(message => {
+        this.getChannel()
+            .send(playerCtn)
+            .then((message) => {
                 self._playerMessage = message;
 
-                self.getChannel().send(content).then(message => {
+                self.getChannel()
+                    .send(content)
+                    .then((message) => {
                         function postEmoji(idx) {
                             if (idx >= grid.getSize()) return;
-                            message.react(grid.getReactionEmojiAt(idx)).then(() => postEmoji(idx + 1)).catch(console.error);
+                            message
+                                .react(grid.getReactionEmojiAt(idx))
+                                .then(() => postEmoji(idx + 1))
+                                .catch(console.error);
                         }
 
                         postEmoji(0);
 
                         self._gridMessage = message;
-                    }
-                ).catch(console.error);
-
-            }
-        ).catch(console.error);
+                    })
+                    .catch(console.error);
+            })
+            .catch(console.error);
     }
 
     /**
@@ -196,13 +220,13 @@ class Client {
         let winMessage;
 
         if (!winner) {
-            winMessage = this._game.getOption("messages.end_equality");
+            winMessage = this._game.getOption('messages.end_equality');
         } else {
-            winMessage = this._game.getOption("messages.end_victory");
-            winMessage = winMessage.replace("%player%", winner.getTag());
+            winMessage = this._game.getOption('messages.end_victory');
+            winMessage = winMessage.replace('%player%', winner.getTag());
         }
 
-        this._gridMessage.clearReactions().catch(console.error);
+        this._gridMessage.reactions.removeAll().catch(console.error);
         this.getChannel().send(winMessage).catch(console.error);
     }
 
@@ -222,39 +246,19 @@ class Client {
         let channel = this.getChannel();
         if (channel === null) return;
 
-        channel.fetchMessages()
-            .then(messages => {
-                messages.deleteAll();
-
-                if (callback !== null)
-                    callback();
-            })
-            .catch(console.error);
+        // TODO clear messages
+        if (callback) {
+            callback();
+        }
     }
 
     /**
      * Get the channel where this Client is configured.
      * @returns {null|TextChannel}
      */
-    getChannel() {
-        if (this._channel !== null)
-            return this._channel;
-
-        if (this._bot.guilds.array().length === 0)
-            return null;
-
-        let channelName = this._game.getOption("channel");
-        let channels = this._bot.guilds.first().channels.array();
-
-        for (let ch of channels) {
-            if (ch.type === 'text' && ch.name === channelName) {
-                return this._channel = ch;
-            }
-        }
-
+    getChannel(): Discord.TextChannel | null {
         return null;
     }
-
 }
 
 module.exports = Client;

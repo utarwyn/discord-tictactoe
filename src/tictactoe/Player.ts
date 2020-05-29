@@ -1,10 +1,15 @@
-class Player {
+import { GuildMember } from 'discord.js';
+
+export default class Player {
+    private readonly _member: GuildMember;
+
+    private _name: string;
 
     /**
      * Used to create a Player object
      * @param member {GuildMember} The Discord Guild member
      */
-    constructor(member) {
+    constructor(member: GuildMember) {
         /**
          * The associated Discord Guild member if provided
          * @type {GuildMember}
@@ -21,18 +26,19 @@ class Player {
     }
 
     getName() {
-        if (this._name === null)
+        if (this._name === null) {
             if (this.isAI()) {
                 this._name = Player._generateAIName();
             } else {
                 this._name = this._member.displayName;
             }
+        }
 
         return this._name;
     }
 
-    getTag() {
-        return (this.isAI()) ? this.getName() : "<@" + this._member.user.id + ">";
+    getTag(): string {
+        return this.isAI() ? this.getName() : '<@' + this._member.user.id + '>';
     }
 
     isAI() {
@@ -60,10 +66,15 @@ class Player {
     }
 
     static _generateAIName() {
-        const names = ["Daniel", "Ben", "Jayden", "Zane", "Cesar", "Alec", "Braydon"];
+        const names = [
+            'Daniel',
+            'Ben',
+            'Jayden',
+            'Zane',
+            'Cesar',
+            'Alec',
+            'Braydon',
+        ];
         return names[Math.floor(Math.random() * names.length)];
     }
-
 }
-
-module.exports = Player;
