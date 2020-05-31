@@ -1,1 +1,8 @@
-{}
+{
+  "welcome": "Nouvelle partie de TicTacToe",
+  "ready": "{player} est prêt pour lancer un duel !",
+  "start": "{player1} et {player2} viennent de commencer une partie !",
+  "round": "C'est au tour de {player} ({symbol})!",
+  "equality": "Egalité, impossible de vous départager ! :sob:",
+  "winner": "{player} a gagné la partie ! Bravo ! :tada:"
+}

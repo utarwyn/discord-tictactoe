@@ -1,1 +1,9 @@
-{}
+{
+  "clientId": "YOUR_CLIENT_ID",
+  "token": "YOUR_BOT_USER_TOKEN",
+
+  "language": "en",
+  "command": "!duel",
+  "deleteMessages": false,
+  "resetAfter": 0
+}

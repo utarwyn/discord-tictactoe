@@ -9,6 +9,11 @@ coverage
 dist/
 package-lock.json
 
+# Configuration
+config/*
+!config/locales/
+!config/config.example.json
+
 # VS Code
 .vscode
 !.vscode/tasks.js
