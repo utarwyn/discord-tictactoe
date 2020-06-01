@@ -4,10 +4,17 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "target": "es6",
-    "strict": false,
+    "strict": true,
     "outDir": "dist",
     "lib": ["es2017"],
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@bot/*": ["src/bot/*"],
+      "@config/*": ["src/config/*"],
+      "@tictactoe/*": ["src/tictactoe/*"]
+    },
+    "incremental": true
   },
-  "include": ["src/**/*", "bin/**/*", "__tests__/**/*", "__mocks__/**/*"]
+  "include": ["src/**/*", "bin/**/*"],
+  "exclude": ["**/__tests__"]
 }

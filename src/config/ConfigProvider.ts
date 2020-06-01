@@ -10,18 +10,16 @@ import Config from './Config';
  * @since 2.0.0
  */
 export default class ConfigProvider implements Config {
-    public clientId: string = null;
-    public token: string = null;
+    public clientId = '';
+    public token = '';
     public command = '!duel';
     public deleteMessages = false;
     public language = 'en';
     public resetAfter = 0;
 
-    private readonly CONFIG_PATH = path.join(
-        process.cwd(),
-        'config',
-        'config.json',
-    );
+    [key: string]: any;
+
+    private readonly CONFIG_PATH = path.join(process.cwd(), 'config', 'config.json');
 
     constructor() {
         this.initializeFromFile();
@@ -32,7 +30,7 @@ export default class ConfigProvider implements Config {
     private initializeFromFile(): void {
         if (fs.existsSync(this.CONFIG_PATH)) {
             const savedConfig = require(this.CONFIG_PATH);
-            Object.keys(savedConfig).forEach((field) => {
+            Object.keys(savedConfig).forEach(field => {
                 this[field] = savedConfig[field];
             });
         }
@@ -40,10 +38,10 @@ export default class ConfigProvider implements Config {
 
     private initializeFromEnv(): void {
         Object.keys(process.env)
-            .filter((key) => this[ConfigProvider.camelCase(key)] !== undefined)
-            .forEach((key) => {
+            .filter(key => this[ConfigProvider.camelCase(key)] !== undefined)
+            .forEach(key => {
                 const camelCaseKey = ConfigProvider.camelCase(key);
-                const value = process.env[key];
+                const value: string = process.env[key]!;
                 let newValue;
 
                 // Ignore the default Node variable LANGUAGE
@@ -72,14 +70,14 @@ export default class ConfigProvider implements Config {
     }
 
     private verifyValues(): void {
-        const nullKey = Object.keys(this).find((key) => this[key] === null);
-        if (nullKey) {
-            throw new Error(`Config key ${nullKey} must be defined`);
+        const emptyKey = Object.keys(this).find(key => this[key] === '');
+        if (emptyKey) {
+            throw new Error(`Config key ${emptyKey} must be defined`);
         }
     }
 
     private static camelCase(str: string): string {
-        return str.toLowerCase().replace(/_([a-z])/g, (g) => {
+        return str.toLowerCase().replace(/_([a-z])/g, g => {
             return g[1].toUpperCase();
         });
     }

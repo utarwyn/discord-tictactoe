@@ -1,20 +1,18 @@
 module.exports = {
+    clearMocks: true,
     testEnvironment: 'node',
     transform: {
-        "^.+\\.tsx?$": "ts-jest"
+        '.ts': 'ts-jest'
     },
-    moduleFileExtensions: [
-        "ts",
-        "tsx",
-        "js",
-        "jsx",
-        "json",
-        "node",
-    ],
-    testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(ts|js)x?$',
+    roots: ['<rootDir>/src'],
+    moduleNameMapper: {
+        '@bot/(.*)': '<rootDir>/src/bot/$1',
+        '@config/(.*)': '<rootDir>/src/config/$1',
+        '@tictactoe/(.*)': '<rootDir>/src/tictactoe/$1'
+    },
+    moduleFileExtensions: ['js', 'json', 'ts'],
     coverageDirectory: 'coverage',
-    collectCoverageFrom: [
-        'src/**/*.{ts,tsx,js,jsx}',
-        '!src/**/*.d.ts',
-    ],
+    collectCoverage: true,
+    coverageReporters: ['lcov'],
+    coveragePathIgnorePatterns: ['/node_modules/', '.d.ts']
 };

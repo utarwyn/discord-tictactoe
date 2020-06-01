@@ -12,22 +12,15 @@ import { I18n, Replacements } from './I18n';
  */
 export default class I18nProvider implements I18n {
     constructor() {
-        const localesPath = path.join(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            'config',
-            'locales',
-        );
+        const localesPath = path.join(__dirname, '..', '..', '..', 'config', 'locales');
         const files = fs.readdirSync(localesPath);
 
         i18n.configure({
-            locales: files.map((file) => path.basename(file, '.json')),
+            locales: files.map(file => path.basename(file, '.json')),
             defaultLocale: 'en',
             directory: localesPath,
             objectNotation: true,
-            updateFiles: false,
+            updateFiles: false
         });
     }
 
