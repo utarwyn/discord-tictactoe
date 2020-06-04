@@ -12,7 +12,7 @@ import Config from './Config';
 export default class ConfigProvider implements Config {
     public clientId = '';
     public token = '';
-    public command = '!duel';
+    public command = '!ttt';
     public deleteMessages = false;
     public language = 'en';
     public resetAfter = 0;

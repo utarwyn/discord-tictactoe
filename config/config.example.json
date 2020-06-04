@@ -3,7 +3,7 @@
   "token": "YOUR_BOT_USER_TOKEN",
 
   "language": "en",
-  "command": "!duel",
+  "command": "!ttt",
   "deleteMessages": false,
   "resetAfter": 0
 }

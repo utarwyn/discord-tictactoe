@@ -1,7 +1,7 @@
 import { Client, Message } from 'discord.js';
 import TicTacToe from '../index';
 import CommandHandler from './CommandHandler';
-import DuelCommand from './commands/DuelCommand';
+import StartCommand from './commands/StartCommand';
 
 /**
  * Manages all interactions with the Discord bot.
@@ -13,11 +13,11 @@ export default class TicTacToeBot extends Client {
     /**
      * Game controller
      */
-    private readonly controller: TicTacToe;
+    private readonly _controller: TicTacToe;
     /**
      * Manages the command handling
      */
-    private readonly commandHandler: CommandHandler;
+    private readonly _commandHandler: CommandHandler;
 
     /**
      * Constructs the Discord bot interaction object.
@@ -26,18 +26,25 @@ export default class TicTacToeBot extends Client {
      */
     constructor(controller: TicTacToe) {
         super();
-        this.controller = controller;
-        this.commandHandler = new CommandHandler();
+        this._controller = controller;
+        this._commandHandler = new CommandHandler();
 
         this.registerCommands();
         this.addEventListeners();
     }
 
     /**
+     * Retrieves the game controller.
+     */
+    public get controller(): TicTacToe {
+        return this._controller;
+    }
+
+    /**
      * Register all commands to be handled by the bot.
      */
     private registerCommands(): void {
-        this.commandHandler.addCommand(new DuelCommand(this.controller));
+        this._commandHandler.addCommand(new StartCommand(this));
     }
 
     /**
@@ -54,7 +61,7 @@ export default class TicTacToeBot extends Client {
      */
     private onMessage(message: Message): void {
         if (!message.author.bot && message.channel.type === 'text') {
-            this.commandHandler.execute(message);
+            this._commandHandler.execute(message);
         }
     }
 }

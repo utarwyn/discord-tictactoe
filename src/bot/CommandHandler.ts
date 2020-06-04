@@ -42,7 +42,6 @@ export default class CommandHandler {
         if (this.triggers.has(command)) {
             message.content = message.content.substring(command.length + 1);
             this.triggers.get(command)!.run(message, params);
-            return;
         }
     }
 }

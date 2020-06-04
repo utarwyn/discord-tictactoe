@@ -1,8 +1,9 @@
 {
-  "welcome": "New TicTacToe game",
-  "ready": "{player} is ready for a duel!",
-  "start": "{player1} and {player2} have just begun a game!",
-  "round": "It's {player}'s turn ({symbol})!",
-  "equality": "No winner! :sob:",
-  "winner": "{player} win the game! GG! :wink:"
+  "duel": {
+    "title": "New duel challenge",
+    "challenge": "{invited}, **{initier}** challenged you to a duel!",
+    "action": "React to this message to accept or decline the duel.",
+    "expire": "**{invited}** does not have answered to the challenge.",
+    "unknown-user": "You could not challenge **{username}**. Please mention another user."
+  }
 }
