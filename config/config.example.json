@@ -3,7 +3,5 @@
   "token": "YOUR_BOT_USER_TOKEN",
 
   "language": "en",
-  "command": "!ttt",
-  "deleteMessages": false,
-  "resetAfter": 0
+  "command": "!ttt"
 }

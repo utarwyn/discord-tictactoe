@@ -1,8 +1,7 @@
 import Command from './Command';
-import { GuildMember, Message } from 'discord.js';
+import { GuildMember, Message, TextChannel } from 'discord.js';
 import localize from '@config/localize';
 import TicTacToeBot from '@bot/TicTacToeBot';
-import ChallengeMessage from '@bot/messages/ChallengeMessage';
 
 /**
  * Command to start a duel with someone else.
@@ -34,10 +33,16 @@ export default class StartCommand implements Command {
      * @inheritDoc
      */
     run(message: Message, params?: string[]): void {
+        const channel = this.bot.getorCreateGameChannel(message.channel as TextChannel);
+        // Disable this command if a game is running
+        if (channel.gameRunning) {
+            return;
+        }
+
         if (params && params.length > 0) {
             const invited = StartCommand.getMentionedUser(message);
             if (invited) {
-                new ChallengeMessage(message, invited).send().catch(console.error);
+                channel.sendDuelRequest(message, invited).catch(console.error);
             } else {
                 message.channel
                     .send(localize.__('duel.unknown-user', { username: params[0] }))

@@ -7,19 +7,24 @@ import {
     Snowflake
 } from 'discord.js';
 import localize from '@config/localize';
+import GameChannel from '@bot/channel/GameChannel';
 
 /**
- * Message sent when a user challenge someone else to a duel.
- * Invited user must uses reactions to answer to the request.
+ * Message sent when a user challenges someone else to a duel.
+ * Invited user must uses reactions to answer the request.
  *
  * @author Utarwyn <maximemalgorn@gmail.com>
  * @since 2.0.0
  */
-export default class ChallengeMessage {
+export default class DuelRequestMessage {
     /**
      * Unicode reactions that the invited user have to use.
      */
     private static readonly REACTIONS = ['👍', '👎'];
+    /**
+     * Game channel object in which the duel is requested.
+     */
+    private readonly channel: GameChannel;
     /**
      * Message sent by the user who wants to start a duel.
      */
@@ -34,12 +39,14 @@ export default class ChallengeMessage {
     private message?: Message;
 
     /**
-     * Constructs a new challenge message.
+     * Constructs a new duel request based on a message.
      *
+     * @param channel game channel object
      * @param message request message object
      * @param invited invited user object
      */
-    constructor(message: Message, invited: GuildMember) {
+    constructor(channel: GameChannel, message: Message, invited: GuildMember) {
+        this.channel = channel;
         this.request = message;
         this.invited = invited;
     }
@@ -47,9 +54,9 @@ export default class ChallengeMessage {
     /**
      * Send the challenge embed message in the channel.
      */
-    public async send(): Promise<void> {
+    async send(): Promise<void> {
         this.message = await this.request.channel.send(this.createEmbed());
-        for (const reaction of ChallengeMessage.REACTIONS) {
+        for (const reaction of DuelRequestMessage.REACTIONS) {
             await this.message.react(reaction);
         }
 
@@ -57,7 +64,7 @@ export default class ChallengeMessage {
             .awaitReactions(
                 (reaction, user) => {
                     return (
-                        ChallengeMessage.REACTIONS.includes(reaction.emoji.name) &&
+                        DuelRequestMessage.REACTIONS.includes(reaction.emoji.name) &&
                         user.id === this.invited.id
                     );
                 },
@@ -68,6 +75,19 @@ export default class ChallengeMessage {
     }
 
     /**
+     * Closes the request by deleting the
+     * message and answer with a reason if provided.
+     *
+     * @param message message to answer if needed
+     */
+    public async close(message?: string): Promise<void> {
+        await this.message!.delete();
+        if (message) {
+            await this.request.channel.send(message);
+        }
+    }
+
+    /**
      * Called when the invited user answered to the request.
      *
      * @param collected collection with all reactions added
@@ -75,17 +95,22 @@ export default class ChallengeMessage {
     private async challengeAnswered(
         collected: Collection<Snowflake, MessageReaction>
     ): Promise<void> {
-        const reaction = collected.first();
-        // TODO create a new game here
-        console.log('reacted with', reaction?.emoji.name);
+        if (collected.first()!.emoji.name === DuelRequestMessage.REACTIONS[0]) {
+            await this.channel.createGame(this.request.member!, this.invited);
+        } else {
+            await this.channel.closeDuelRequest(
+                this,
+                localize.__('duel.reject', { invited: this.invited.displayName })
+            );
+        }
     }
 
     /**
      * Called if the challenge has expired without answer.
      */
     private async challengeExpired(): Promise<void> {
-        await this.message!.delete();
-        await this.request.channel.send(
+        await this.channel.closeDuelRequest(
+            this,
             localize.__('duel.expire', { invited: this.invited.displayName })
         );
     }

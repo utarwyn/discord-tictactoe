@@ -1,7 +1,8 @@
-import { Client, Message } from 'discord.js';
+import { Client, Message, TextChannel } from 'discord.js';
 import TicTacToe from '../index';
-import CommandHandler from './CommandHandler';
-import StartCommand from './commands/StartCommand';
+import CommandHandler from '@bot/CommandHandler';
+import StartCommand from '@bot/commands/StartCommand';
+import GameChannel from '@bot/channel/GameChannel';
 
 /**
  * Manages all interactions with the Discord bot.
@@ -18,6 +19,10 @@ export default class TicTacToeBot extends Client {
      * Manages the command handling
      */
     private readonly _commandHandler: CommandHandler;
+    /**
+     * Collection with all channels in which games are handled.
+     */
+    private _channels: Array<GameChannel>;
 
     /**
      * Constructs the Discord bot interaction object.
@@ -28,6 +33,7 @@ export default class TicTacToeBot extends Client {
         super();
         this._controller = controller;
         this._commandHandler = new CommandHandler();
+        this._channels = [];
 
         this.registerCommands();
         this.addEventListeners();
@@ -38,6 +44,23 @@ export default class TicTacToeBot extends Client {
      */
     public get controller(): TicTacToe {
         return this._controller;
+    }
+
+    /**
+     * Retrieves a game channel from the Discord object.
+     * Creates a new game channel innstance if not found in the cache.
+     *
+     * @param parent parent Discord channel object
+     */
+    public getorCreateGameChannel(parent: TextChannel): GameChannel {
+        const found = this._channels.find(channel => channel.channel === parent);
+        if (found) {
+            return found;
+        } else {
+            const instance = new GameChannel(parent);
+            this._channels.push(instance);
+            return instance;
+        }
     }
 
     /**

@@ -17,7 +17,7 @@ export default class TicTacToe {
     /**
      * Connection handling service to Discord
      */
-    private readonly _bot: TicTacToeBot;
+    private readonly bot: TicTacToeBot;
 
     /**
      * Constructs the game controller.
@@ -26,7 +26,7 @@ export default class TicTacToe {
      */
     constructor(config: Config) {
         this._config = config;
-        this._bot = new TicTacToeBot(this);
+        this.bot = new TicTacToeBot(this);
         localize.setLanguage(config.language!);
     }
 
@@ -35,13 +35,6 @@ export default class TicTacToe {
      */
     public get config(): Config {
         return this._config;
-    }
-
-    /**
-     * Retrieves the client bot.
-     */
-    public get bot(): TicTacToeBot {
-        return this._bot;
     }
 
     /**

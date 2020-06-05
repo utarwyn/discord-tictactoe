@@ -10,6 +10,4 @@ export default interface Config {
 
     language?: string;
     command?: string;
-    deleteMessages?: boolean;
-    resetAfter?: number;
 }
