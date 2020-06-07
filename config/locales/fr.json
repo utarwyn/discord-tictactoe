@@ -10,6 +10,7 @@
   "game": {
     "title": ":game_die: {player1} **contre** {player2}",
     "action": "{player}, sélectionnez votre action:",
+    "load": "Les réactions chargent, merci de patienter...",
     "end": "Personne n'a gagné la partie, c'est une égalité ! On réessaie ?",
     "win": "{player} a gagné la partie ! :tada:",
     "expire": "La partie vient **d'expirer** à cause de l'inactivité d'un joueur."

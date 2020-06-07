@@ -35,6 +35,10 @@ export default class GameBoardMessage {
      * Discord message object managed by the instance.
      */
     private message?: Message;
+    /**
+     * Stores reactions state.
+     */
+    private reactionsLoaded: boolean;
 
     /**
      * Constructs a new game board message.
@@ -48,6 +52,7 @@ export default class GameBoardMessage {
         this.channel = channel;
         this.members = [member1, member2];
         this.game = game;
+        this.reactionsLoaded = false;
     }
 
     /**
@@ -81,6 +86,9 @@ export default class GameBoardMessage {
             for (const reaction of GameBoardMessage.MOVE_REACTIONS) {
                 await this.message.react(reaction);
             }
+
+            this.reactionsLoaded = true;
+            await this.update();
         } else {
             await this.message.edit(text);
         }
@@ -142,11 +150,14 @@ export default class GameBoardMessage {
         }
 
         // Action part
-        message +=
-            '\n' +
-            localize.__('game.action', {
+        message += '\n';
+        if (this.reactionsLoaded) {
+            message += localize.__('game.action', {
                 player: this.members[this.game.currentPlayer - 1].toString()
             });
+        } else {
+            message += localize.__('game.load');
+        }
 
         return message;
     }
