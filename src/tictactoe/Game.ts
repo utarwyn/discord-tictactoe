@@ -1,0 +1,157 @@
+import { nextPlayer, Player } from '@tictactoe/Player';
+
+/**
+ * Back implementation of a game.
+ *
+ * @author Utarwyn <maximemalgorn@gmail.com>
+ * @since 2.0.0
+ */
+export default class Game {
+    /**
+     * Size of the board.
+     */
+    private readonly _boardSize: number;
+    /**
+     * Board data array.
+     */
+    private readonly _board: Array<Player>;
+    /**
+     * Current player that has to player this round.
+     */
+    private _currentPlayer: Player;
+
+    /**
+     * Constructs a new game implementation.
+     *
+     * @param boardSize size of the board, default is 3
+     */
+    constructor(boardSize = 3) {
+        this._boardSize = boardSize;
+        this._board = [];
+
+        // Randomize the first player
+        this._currentPlayer = Math.random() < 0.5 ? Player.First : Player.Second;
+
+        // Fill the board with empty data
+        for (let i = 0; i < boardSize * boardSize; i++) {
+            this._board[i] = Player.None;
+        }
+    }
+
+    /**
+     * Retrieves the board size.
+     */
+    public get boardSize(): number {
+        return this._boardSize;
+    }
+
+    /**
+     * Retrieves the board data array.
+     */
+    public get board(): Array<Player> {
+        return this._board;
+    }
+
+    /**
+     * Retrieves the player that has to play.
+     */
+    public get currentPlayer(): Player {
+        return this._currentPlayer;
+    }
+
+    /**
+     * Retrieves the winner of the game. If none, Player.None is returned.
+     */
+    public get winner(): Player {
+        // Check horizontally
+        for (let row = 0; row < this.boardSize; row++) {
+            const i1 = this.toIndex(row, 0);
+            const i2 = this.toIndex(row, 1);
+            const i3 = this.toIndex(row, 2);
+
+            if (this.validEquals(i1, i2) && this.validEquals(i2, i3)) {
+                return this.board[i1];
+            }
+        }
+
+        // Check vertically
+        for (let col = 0; col < this.boardSize; col++) {
+            const i1 = this.toIndex(0, col);
+            const i2 = this.toIndex(1, col);
+            const i3 = this.toIndex(2, col);
+
+            if (this.validEquals(i1, i2) && this.validEquals(i2, i3)) {
+                return this.board[i1];
+            }
+        }
+
+        // Check diagonals
+        const middle = this.toIndex(1, 1);
+        const topLeft = this.toIndex(0, 0);
+        const topRight = this.toIndex(0, 2);
+        const bottomRight = this.toIndex(2, 2);
+        const bottomLeft = this.toIndex(2, 0);
+
+        if (this.validEquals(topLeft, middle) && this.validEquals(middle, bottomRight)) {
+            return this.board[middle];
+        }
+        if (this.validEquals(topRight, middle) && this.validEquals(middle, bottomLeft)) {
+            return this.board[middle];
+        }
+
+        return Player.None;
+    }
+
+    /**
+     * Checks if the board is full.
+     */
+    public get boardFull(): boolean {
+        return this.board.every(v => v !== Player.None);
+    }
+
+    /**
+     * Plays for a given player at a given position on the board.
+     * If the position is not valid or already saved, return false.
+     *
+     * @param player player that has played on the position
+     * @param position position where the player has played
+     */
+    public play(player: Player, position: number): boolean {
+        if (position < this.board.length && this.board[position] == Player.None) {
+            this.board[position] = player;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Calculates the next player that have to play.
+     */
+    public nextPlayer(): void {
+        this._currentPlayer = nextPlayer(this.currentPlayer);
+    }
+
+    /**
+     * Calculates the position of a
+     * cell on the board from its row and column.
+     *
+     * @param row row position
+     * @param column column position
+     */
+    private toIndex(row: number, column: number): number {
+        return row * this.boardSize + column;
+    }
+
+    /**
+     * Checks if cells at two positions are not empty and equals.
+     *
+     * @param position1 first position
+     * @param position2 second position
+     */
+    private validEquals(position1: number, position2: number): boolean {
+        return (
+            this.board[position1] !== Player.None && this.board[position1] === this.board[position2]
+        );
+    }
+}

@@ -8,8 +8,7 @@
     "unknown-user": "You could not challenge **{username}**. Please mention another user."
   },
   "game": {
-    "title": ":game_die: **New TicTacToe game!**",
-    "versus": "{player1} **VS** {player2}",
+    "title": ":game_die: **TicTacToe game:** {player1} **VS** {player2}",
     "action": "{player}, select your move:"
   }
 }

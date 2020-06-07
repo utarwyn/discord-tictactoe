@@ -1,6 +1,7 @@
 import localize from '@config/localize';
 import Config from '@config/Config';
 import TicTacToeBot from '@bot/TicTacToeBot';
+import Game from '@tictactoe/Game';
 
 /**
  * Controls all interactions between modules of the bot.
@@ -42,5 +43,12 @@ export default class TicTacToe {
      */
     public async connect(): Promise<void> {
         await this.bot.login(this.config.token);
+    }
+
+    /**
+     * Creates a new game object.
+     */
+    public createGame(): Game {
+        return new Game();
     }
 }

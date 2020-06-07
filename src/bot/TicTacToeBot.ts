@@ -57,7 +57,7 @@ export default class TicTacToeBot extends Client {
         if (found) {
             return found;
         } else {
-            const instance = new GameChannel(parent);
+            const instance = new GameChannel(this, parent);
             this._channels.push(instance);
             return instance;
         }

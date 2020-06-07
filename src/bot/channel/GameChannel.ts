@@ -1,6 +1,7 @@
 import { GuildMember, Message, TextChannel } from 'discord.js';
 import DuelRequestMessage from '@bot/channel/DuelRequestMessage';
 import GameBoardMessage from '@bot/channel/GameBoardMessage';
+import TicTacToeBot from '@bot/TicTacToeBot';
 
 /**
  * Manages a channel in which games can be played.
@@ -9,6 +10,10 @@ import GameBoardMessage from '@bot/channel/GameBoardMessage';
  * @since 2.0.0
  */
 export default class GameChannel {
+    /**
+     * TicTacToe bot.
+     */
+    private readonly bot: TicTacToeBot;
     /**
      * Discord channel parent object
      */
@@ -25,9 +30,11 @@ export default class GameChannel {
     /**
      * Constructs a new game channel managed by the client.
      *
+     * @param bot client interaction service
      * @param channel managed Discord channel parent object
      */
-    constructor(channel: TextChannel) {
+    constructor(bot: TicTacToeBot, channel: TextChannel) {
+        this.bot = bot;
         this._channel = channel;
         this.requests = [];
     }
@@ -82,9 +89,14 @@ export default class GameChannel {
         }
         this.requests = [];
 
-        // If no game is running; create a new one with two members
+        // If no game is running, create a new one with two members
         if (!this.gameRunning) {
-            this.gameBoard = new GameBoardMessage(this, member1, member2);
+            this.gameBoard = new GameBoardMessage(
+                this,
+                member1,
+                member2,
+                this.bot.controller.createGame()
+            );
             await this.gameBoard.update();
         }
     }
