@@ -1,4 +1,4 @@
-import { GuildMember, Message } from 'discord.js';
+import { Collection, GuildMember, Message, MessageReaction, Snowflake } from 'discord.js';
 import localize from '@config/localize';
 import GameChannel from '@bot/channel/GameChannel';
 import Game from '@tictactoe/Game';
@@ -51,6 +51,26 @@ export default class GameBoardMessage {
     }
 
     /**
+     * Waits for the current player to select
+     * a move with one reaction below the message.
+     */
+    public awaitMove(): void {
+        if (!this.message) return;
+        this.message
+            .awaitReactions(
+                (reaction, user) => {
+                    return (
+                        GameBoardMessage.MOVE_REACTIONS.includes(reaction.emoji.name) &&
+                        user.id === this.members[this.game.currentPlayer - 1].id
+                    );
+                },
+                { max: 1, time: 30000, errors: ['time'] }
+            )
+            .then(this.onMoveSelected.bind(this))
+            .catch(this.onExpire.bind(this));
+    }
+
+    /**
      * Updates the message.
      */
     public async update(): Promise<void> {
@@ -64,6 +84,40 @@ export default class GameBoardMessage {
         } else {
             await this.message.edit(text);
         }
+    }
+
+    /**
+     * Called when a player has selected a valid move emoji below the message.
+     *
+     * @param collected collected data from discordjs
+     */
+    private async onMoveSelected(collected: Collection<Snowflake, MessageReaction>): Promise<void> {
+        const move = GameBoardMessage.MOVE_REACTIONS.indexOf(collected.first()!.emoji.name);
+
+        if (this.game.play(this.game.currentPlayer, move)) {
+            this.game.nextPlayer();
+
+            const winner = this.game.winner;
+
+            if (this.game.boardFull || winner) {
+                await this.message?.delete();
+                await this.channel.endGame(winner ? this.members[winner - 1] : undefined);
+            } else {
+                // Update the current message and await a new move!
+                await this.update();
+                this.awaitMove();
+            }
+        }
+    }
+
+    /**
+     * Called when a player has not played during the expected time.
+     */
+    private async onExpire(): Promise<void> {
+        if (this.message) {
+            await this.message?.delete();
+        }
+        await this.channel.expireGame();
     }
 
     /**
@@ -81,7 +135,7 @@ export default class GameBoardMessage {
 
         // Board part
         for (let i = 0; i < this.game.boardSize * this.game.boardSize; i++) {
-            message += GameBoardMessage.PLAYER_EMOJIS[this.game.board[i]];
+            message += GameBoardMessage.PLAYER_EMOJIS[this.game.board[i]] + ' ';
             if ((i + 1) % this.game.boardSize === 0) {
                 message += '\n';
             }

@@ -2,6 +2,7 @@ import { GuildMember, Message, TextChannel } from 'discord.js';
 import DuelRequestMessage from '@bot/channel/DuelRequestMessage';
 import GameBoardMessage from '@bot/channel/GameBoardMessage';
 import TicTacToeBot from '@bot/TicTacToeBot';
+import localize from '@config/localize';
 
 /**
  * Manages a channel in which games can be played.
@@ -77,6 +78,37 @@ export default class GameChannel {
     }
 
     /**
+     * Ends the current game and display the winner if provided.
+     *
+     * @param winner member who wins the game
+     */
+    public async endGame(winner?: GuildMember): Promise<void> {
+        if (this.gameRunning) {
+            if (winner) {
+                await this.channel.send(
+                    localize.__('game.win', {
+                        player: winner.toString()
+                    })
+                );
+            } else {
+                await this.channel.send(localize.__('game.end'));
+            }
+            this.gameBoard = undefined;
+        }
+    }
+
+    /**
+     * Changes the state of the current game to expired.
+     * Also allow other games to be played in the channel.
+     */
+    public async expireGame(): Promise<void> {
+        if (this.gameRunning) {
+            await this.channel.send(localize.__('game.expire'));
+            this.gameBoard = undefined;
+        }
+    }
+
+    /**
      * Creates a new game in the channel if none running.
      *
      * @param member1 first player object
@@ -98,6 +130,7 @@ export default class GameChannel {
                 this.bot.controller.createGame()
             );
             await this.gameBoard.update();
+            this.gameBoard.awaitMove();
         }
     }
 }
