@@ -8,7 +8,7 @@
     "unknown-user": "You could not challenge **{username}**. Please mention another user."
   },
   "game": {
-    "title": ":game_die: **TicTacToe game:** {player1} **VS** {player2}",
+    "title": ":game_die: {player1} **VS** {player2}",
     "action": "{player}, select your move:",
     "end": "No one won the game, it's a tie! Let's try again?",
     "win": "{player} has won the game! :tada:",
