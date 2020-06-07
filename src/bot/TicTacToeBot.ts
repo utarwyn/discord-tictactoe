@@ -10,11 +10,15 @@ import GameChannel from '@bot/channel/GameChannel';
  * @author Utarwyn <maximemalgorn@gmail.com>
  * @since 2.0.0
  */
-export default class TicTacToeBot extends Client {
+export default class TicTacToeBot {
     /**
      * Game controller
      */
     private readonly _controller: TicTacToe;
+    /**
+     * Discord Client object
+     */
+    private readonly _client: Client;
     /**
      * Manages the command handling
      */
@@ -28,10 +32,11 @@ export default class TicTacToeBot extends Client {
      * Constructs the Discord bot interaction object.
      *
      * @param controller game controller
+     * @param client Discord client object, if empty use a new client
      */
-    constructor(controller: TicTacToe) {
-        super();
+    constructor(controller: TicTacToe, client?: Client) {
         this._controller = controller;
+        this._client = client ?? new Client();
         this._commandHandler = new CommandHandler();
         this._channels = [];
 
@@ -44,6 +49,13 @@ export default class TicTacToeBot extends Client {
      */
     public get controller(): TicTacToe {
         return this._controller;
+    }
+
+    /**
+     * Retrieves the connected Discord client.
+     */
+    public get client(): Client {
+        return this._client;
     }
 
     /**
@@ -74,7 +86,7 @@ export default class TicTacToeBot extends Client {
      * Register all events to be handled by the bot.
      */
     private addEventListeners(): void {
-        this.on('message', this.onMessage);
+        this.client.on('message', this.onMessage.bind(this));
     }
 
     /**

@@ -2,6 +2,7 @@ import localize from '@config/localize';
 import Config from '@config/Config';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import Game from '@tictactoe/Game';
+import { Client } from 'discord.js';
 
 /**
  * Controls all interactions between modules of the bot.
@@ -24,10 +25,11 @@ export default class TicTacToe {
      * Constructs the game controller.
      *
      * @param config tictactoe configuration
+     * @param client Custom Discord Client to start the bot, can be empty
      */
-    constructor(config: Config) {
+    constructor(config: Config, client?: Client) {
         this._config = config;
-        this.bot = new TicTacToeBot(this);
+        this.bot = new TicTacToeBot(this, client);
         localize.setLanguage(config.language!);
     }
 
@@ -42,7 +44,7 @@ export default class TicTacToe {
      * Connects the client to Discord.
      */
     public async connect(): Promise<void> {
-        await this.bot.login(this.config.token);
+        await this.bot.client.login(this.config.token);
     }
 
     /**
