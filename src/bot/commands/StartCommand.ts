@@ -66,6 +66,7 @@ export default class StartCommand implements Command {
                 invited &&
                 !invited.user.bot &&
                 message.member !== invited &&
+                invited.user.presence.status !== 'offline' &&
                 invited.permissionsIn(message.channel).has('VIEW_CHANNEL')
             ) {
                 return invited;
