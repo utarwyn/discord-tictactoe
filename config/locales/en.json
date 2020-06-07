@@ -13,6 +13,6 @@
     "load": "Reactions are loading, please wait...",
     "end": "No one won the game, it's a tie! Let's try again?",
     "win": "{player} has won the game! :tada:",
-    "expire": "Game has **expired** because of the inactivity of one user."
+    "expire": "Game has **expired**... maybe because of one user inactivity."
   }
 }

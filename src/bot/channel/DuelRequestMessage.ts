@@ -81,7 +81,9 @@ export default class DuelRequestMessage {
      * @param message message to answer if needed
      */
     public async close(message?: string): Promise<void> {
-        await this.message!.delete();
+        if (this.message && this.message.deletable && !this.message.deleted) {
+            await this.message.delete();
+        }
         if (message) {
             await this.request.channel.send(message);
         }

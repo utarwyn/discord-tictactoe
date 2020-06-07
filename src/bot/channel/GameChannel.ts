@@ -130,7 +130,9 @@ export default class GameChannel {
                 this.bot.controller.createGame()
             );
             await this.gameBoard.update();
-            this.gameBoard.awaitMove();
+            if (this.gameRunning) {
+                this.gameBoard.awaitMove();
+            }
         }
     }
 }

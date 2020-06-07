@@ -60,7 +60,7 @@ export default class GameBoardMessage {
      * a move with one reaction below the message.
      */
     public awaitMove(): void {
-        if (!this.message) return;
+        if (!this.message || this.message.deleted) return;
         this.message
             .awaitReactions(
                 (reaction, user) => {
@@ -84,7 +84,12 @@ export default class GameBoardMessage {
         if (!this.message) {
             this.message = await this.channel.channel.send(text);
             for (const reaction of GameBoardMessage.MOVE_REACTIONS) {
-                await this.message.react(reaction);
+                try {
+                    await this.message.react(reaction);
+                } catch {
+                    await this.onExpire();
+                    return;
+                }
             }
 
             this.reactionsLoaded = true;
@@ -122,8 +127,8 @@ export default class GameBoardMessage {
      * Called when a player has not played during the expected time.
      */
     private async onExpire(): Promise<void> {
-        if (this.message) {
-            await this.message?.delete();
+        if (this.message && this.message.deletable && !this.message.deleted) {
+            await this.message.delete();
         }
         await this.channel.expireGame();
     }
