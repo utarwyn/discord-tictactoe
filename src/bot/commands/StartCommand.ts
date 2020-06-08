@@ -49,7 +49,7 @@ export default class StartCommand implements Command {
                     .catch(console.error);
             }
         } else {
-            // TODO Duel with an AI
+            channel.createGame(message.member!).catch(console.error);
         }
     }
 

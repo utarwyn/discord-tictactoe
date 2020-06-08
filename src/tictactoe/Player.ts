@@ -11,14 +11,24 @@ export const enum Player {
 }
 
 /**
+ * Stores the type of a game player when
+ * computing its score when playing against the computer.
+ */
+export const enum PlayerComputeType {
+    Human = -1,
+    None = 0,
+    Computer = +1
+}
+
+/**
  * Calculates the next user that have to play.
  *
  * @param player player object
  */
-export function nextPlayer(player: Player): Player {
-    if (player == Player.None) {
+export function getOpponent(player: Player): Player {
+    if (player === Player.None) {
         return player;
-    } else if (player == Player.First) {
+    } else if (player === Player.First) {
         return Player.Second;
     } else {
         return Player.First;

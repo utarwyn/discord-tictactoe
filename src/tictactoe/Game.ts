@@ -1,4 +1,4 @@
-import { nextPlayer, Player } from '@tictactoe/Player';
+import { getOpponent, Player } from '@tictactoe/Player';
 
 /**
  * Back implementation of a game.
@@ -106,15 +106,40 @@ export default class Game {
      * Checks if the board is full.
      */
     public get boardFull(): boolean {
-        return this.board.every(v => v !== Player.None);
+        return this.board.every(cell => cell !== Player.None);
     }
 
     /**
-     * Plays for a given player at a given position on the board.
-     * If the position is not valid or already saved, return false.
+     * Checks if the board is empty.
+     */
+    public get boardEmpty(): boolean {
+        return this.board.every(cell => cell === Player.None);
+    }
+
+    /**
+     * Retrieves the amount of empty cells on the board.
+     */
+    public get emptyCellAmount(): number {
+        return this.board.filter(cell => cell === Player.None).length;
+    }
+
+    /**
+     * Clones the current Game instance and board.
+     */
+    public clone(): Game {
+        const game = new Game(this.boardSize);
+        for (let i = 0; i < this.board.length; i++) {
+            game.board[i] = this.board[i];
+        }
+        return game;
+    }
+
+    /**
+     * Plays for a given player at a given move on the board.
+     * If the move is not valid or already saved, return false.
      *
-     * @param player player that has played on the position
-     * @param position position where the player has played
+     * @param player player that has played on the move
+     * @param position move where the player has played
      */
     public play(player: Player, position: number): boolean {
         if (position < this.board.length && this.board[position] == Player.None) {
@@ -129,15 +154,15 @@ export default class Game {
      * Calculates the next player that have to play.
      */
     public nextPlayer(): void {
-        this._currentPlayer = nextPlayer(this.currentPlayer);
+        this._currentPlayer = getOpponent(this.currentPlayer);
     }
 
     /**
-     * Calculates the position of a
+     * Calculates the move of a
      * cell on the board from its row and column.
      *
-     * @param row row position
-     * @param column column position
+     * @param row row move
+     * @param column column move
      */
     private toIndex(row: number, column: number): number {
         return row * this.boardSize + column;
@@ -146,8 +171,8 @@ export default class Game {
     /**
      * Checks if cells at two positions are not empty and equals.
      *
-     * @param position1 first position
-     * @param position2 second position
+     * @param position1 first move
+     * @param position2 second move
      */
     private validEquals(position1: number, position2: number): boolean {
         return (

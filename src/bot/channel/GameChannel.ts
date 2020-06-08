@@ -3,6 +3,8 @@ import DuelRequestMessage from '@bot/channel/DuelRequestMessage';
 import GameBoardMessage from '@bot/channel/GameBoardMessage';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import localize from '@config/localize';
+import GameEntity from '@bot/channel/GameEntity';
+import AI from '@tictactoe/AI';
 
 /**
  * Manages a channel in which games can be played.
@@ -80,9 +82,9 @@ export default class GameChannel {
     /**
      * Ends the current game and display the winner if provided.
      *
-     * @param winner member who wins the game
+     * @param winner entity who wins the game
      */
-    public async endGame(winner?: GuildMember): Promise<void> {
+    public async endGame(winner?: GameEntity): Promise<void> {
         if (this.gameRunning) {
             if (winner) {
                 await this.channel.send(
@@ -112,9 +114,9 @@ export default class GameChannel {
      * Creates a new game in the channel if none running.
      *
      * @param member1 first player object
-     * @param member2 second player object
+     * @param member2 second player object, can be empty if player wants to play against a bot
      */
-    public async createGame(member1: GuildMember, member2: GuildMember): Promise<void> {
+    public async createGame(member1: GuildMember, member2?: GuildMember): Promise<void> {
         // Close all duel requests before
         for (const request of this.requests) {
             await request.close();
@@ -125,13 +127,13 @@ export default class GameChannel {
         if (!this.gameRunning) {
             this.gameBoard = new GameBoardMessage(
                 this,
+                this.bot.controller.createGame(),
                 member1,
-                member2,
-                this.bot.controller.createGame()
+                member2 ?? new AI()
             );
             await this.gameBoard.update();
             if (this.gameRunning) {
-                this.gameBoard.awaitMove();
+                await this.gameBoard.attemptNextTurn();
             }
         }
     }
