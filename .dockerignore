@@ -1,0 +1,9 @@
+*
+!bin
+!lib
+!config/locales
+!src
+!package.json
+!package-lock.json
+!tsconfig.json
+!tsconfig.release.json

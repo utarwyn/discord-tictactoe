@@ -1,0 +1,7 @@
+version: '2'
+services:
+  discord-tictactoe:
+    build: .
+    image: tictactoe
+    volumes:
+      - ./config/config.json:/app/config/config.json
