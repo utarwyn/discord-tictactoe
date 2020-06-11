@@ -1,31 +1,60 @@
 {
   "name": "discord-tictactoe",
-  "version": "1.0.1",
-  "description": "A modern and simple Tic-Tac-Toe Discord's Bot",
-  "scripts": {
-    "test": "mocha"
+  "version": "2.0.0",
+  "description": "A modern Discord Bot for playing Tic-Tac-Toe",
+  "author": "Utarwyn <maximemalgorn@gmail.com>",
+  "license": "Apache-2.0",
+  "main": "dist/src/index.js",
+  "bin": {
+    "tictactoe": "dist/bin/tictactoe.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/utarwyn/discord-tictactoe.git"
+    "url": "https://github.com/utarwyn/discord-tictactoe"
   },
   "keywords": [
     "discord",
-    "discord-bot",
-    "tic-tac-toe"
+    "bot",
+    "tictactoe",
+    "game",
+    "nodejs",
+    "typescript"
   ],
-  "author": "Utarwyn",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/utarwyn/discord-tictactoe/issues"
-  },
-  "homepage": "https://github.com/utarwyn/discord-tictactoe#readme",
-  "dependencies": {
-    "chalk": "^2.4.1",
-    "discord.js": "^11.4.2"
-  },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^4.1.0"
+    "@types/i18n": "^0.8.6",
+    "@types/jest": "~25.2.1",
+    "@types/node": "~12.12.38",
+    "@types/ws": "^7.2.4",
+    "@typescript-eslint/eslint-plugin": "~2.32.0",
+    "@typescript-eslint/parser": "~2.32.0",
+    "eslint": "~7.0.0",
+    "eslint-config-prettier": "~6.11.0",
+    "eslint-plugin-jest": "~23.10.0",
+    "jest": "~25.2.7",
+    "prettier": "~2.0.5",
+    "replace-in-file": "^6.0.0",
+    "rimraf": "~3.0.2",
+    "ts-jest": "~25.5.1",
+    "typescript": "~3.8.3"
+  },
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "i18n": "^0.10.0"
+  },
+  "engines": {
+    "node": ">= 12.0.0"
+  },
+  "scripts": {
+    "clean": "rimraf coverage build tmp",
+    "build": "tsc -p tsconfig.release.json",
+    "build:watch": "tsc -w -p tsconfig.release.json",
+    "format:check": "prettier --config .prettierrc --list-different \"**/**.ts\"",
+    "format": "prettier --config .prettierrc --write \"**/**.ts\"",
+    "lint": "eslint . --ext .ts,.tsx",
+    "serve": "node lib/replacePaths.js && node dist/bin/tictactoe.js",
+    "start": "npm run build && npm run serve",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "release": "npm run clean && npm run lint && npm run test && npm run format && npm run build"
   }
 }

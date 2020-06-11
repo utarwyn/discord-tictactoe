@@ -1,0 +1,20 @@
+{
+  "duel": {
+    "title": "Demande de duel Tic-tac-toe",
+    "challenge": "{invited}, **{initier}** souhaite te défier au morpion !",
+    "action": "Réagis à ce message pour accepter ou décliner le duel.",
+    "expire": "**{invited}** n'a pas répondu à la demande dans les temps.",
+    "reject": "**{invited}** a rejeté votre proposition de duel.",
+    "unknown-user": "Vous ne pouvez pas défier **{username}**. Merci de mentionner un autre utilisateur."
+  },
+  "game": {
+    "title": ":game_die: {player1} **contre** {player2}",
+    "action": "{player}, sélectionnez votre action:",
+    "load": "Les réactions chargent, merci de patienter...",
+    "end": "Personne n'a gagné la partie, c'est une égalité ! On réessaie ?",
+    "win": "{player} a gagné la partie ! :tada:",
+    "expire": "La partie vient **d'expirer**... peut-être à cause de l'inactivité d'un joueur.",
+    "waiting-ai": "L'IA joue, merci de patienter...",
+    "ai": "l'IA"
+  }
+}

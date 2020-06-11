@@ -1,5 +1,23 @@
-.idea/
-index.js
+logs
+*.log
+.npm
+.eslintcache
+.DS_Store
+npm-debug.log*
 node_modules/
+coverage
+dist/
 package-lock.json
+
+# Configuration
+config/*
+!config/locales/
+!config/config.example.json
+
+# VS Code
+.vscode
+!.vscode/tasks.js
+
+# Jetbrains IDEs
+.idea/
 *.iml

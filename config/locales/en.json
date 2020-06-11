@@ -1,0 +1,20 @@
+{
+  "duel": {
+    "title": "New duel challenge",
+    "challenge": "{invited}, **{initier}** challenged you to a duel!",
+    "action": "React to this message to accept or decline the duel.",
+    "expire": "**{invited}** does not have answered to the challenge.",
+    "reject": "**{invited}** has rejected the duel.",
+    "unknown-user": "You could not challenge **{username}**. Please mention another user."
+  },
+  "game": {
+    "title": ":game_die: {player1} **VS** {player2}",
+    "action": "{player}, select your move:",
+    "load": "Reactions are loading, please wait...",
+    "end": "No one won the game, it's a tie! Let's try again?",
+    "win": "{player} has won the game! :tada:",
+    "expire": "Game has **expired**... maybe because of one user inactivity.",
+    "waiting-ai": "AI is playing, please wait...",
+    "ai": "the AI"
+  }
+}
