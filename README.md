@@ -11,7 +11,7 @@ Created with <a href="https://github.com/discordjs/discord.js">discord.js</a>.
         <img src="https://github.com/utarwyn/discord-tictactoe/workflows/Node.js%20CI/badge.svg" alt="Node.js CI">
     </a>
     <a href="https://hub.docker.com/r/utarwyn/discord-tictactoe">
-        <img src="https://img.shields.io/docker/build/utarwyn/discord-tictactoe" alt="Docker Build status">
+        <img src="https://img.shields.io/docker/cloud/build/utarwyn/discord-tictactoe" alt="Docker Build status">
     </a>
     <a href="https://github.com/utarwyn/discord-tictactoe/releases">
         <img src="https://img.shields.io/github/package-json/v/utarwyn/discord-tictactoe" alt="Npm version">
