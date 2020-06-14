@@ -137,10 +137,9 @@ export default class Game {
     /**
      * Checks if a player move is valid or not.
      *
-     * @param player player object
      * @param position move where the player wants to play
      */
-    public isMoveValid(player: Player, position: number): boolean {
+    public isMoveValid(position: number): boolean {
         return position < this.board.length && this.board[position] == Player.None;
     }
 

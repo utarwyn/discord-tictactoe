@@ -163,10 +163,8 @@ export default class GameBoardMessage {
             .awaitReactions(
                 (reaction, user) => {
                     return (
-                        this.game.isMoveValid(
-                            this.game.currentPlayer,
-                            GameBoardMessage.reactionToMove(reaction.emoji.name)
-                        ) && user.id === this.currentEntity.id
+                        user.id === this.currentEntity.id &&
+                        this.game.isMoveValid(GameBoardMessage.reactionToMove(reaction.emoji.name))
                     );
                 },
                 { max: 1, time: 30000, errors: ['time'] }
