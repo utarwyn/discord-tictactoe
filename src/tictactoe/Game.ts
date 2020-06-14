@@ -135,19 +135,24 @@ export default class Game {
     }
 
     /**
-     * Plays for a given player at a given move on the board.
-     * If the move is not valid or already saved, return false.
+     * Checks if a player move is valid or not.
+     *
+     * @param player player object
+     * @param position move where the player wants to play
+     */
+    public isMoveValid(player: Player, position: number): boolean {
+        return position < this.board.length && this.board[position] == Player.None;
+    }
+
+    /**
+     * Updates the board with a move of a specific player.
+     * Does not check if the move is valid, it replaces the board position.
      *
      * @param player player that has played on the move
      * @param position move where the player has played
      */
-    public play(player: Player, position: number): boolean {
-        if (position < this.board.length && this.board[position] == Player.None) {
-            this.board[position] = player;
-            return true;
-        } else {
-            return false;
-        }
+    public updateBoard(player: Player, position: number): void {
+        this.board[position] = player;
     }
 
     /**

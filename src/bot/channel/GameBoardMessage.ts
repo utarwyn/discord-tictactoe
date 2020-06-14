@@ -97,6 +97,16 @@ export default class GameBoardMessage {
     }
 
     /**
+     * Converts a reaction to a move position (from 0 to 8).
+     * If the move is not valid, returns -1.
+     *
+     * @param reaction unicode reaction
+     */
+    private static reactionToMove(reaction: string): number {
+        return GameBoardMessage.MOVE_REACTIONS.indexOf(reaction);
+    }
+
+    /**
      * Retrieves the entity that is playing.
      */
     private get currentEntity(): GameEntity {
@@ -119,17 +129,17 @@ export default class GameBoardMessage {
      * @param move move to play for the current player
      */
     private async playTurn(move: number): Promise<void> {
-        if (this.game.play(this.game.currentPlayer, move)) {
-            const winner = this.game.winner;
+        this.game.updateBoard(this.game.currentPlayer, move);
 
-            if (this.game.boardFull || winner) {
-                await this.message?.delete();
-                await this.channel.endGame(winner ? this.entities[winner - 1] : undefined);
-            } else {
-                this.game.nextPlayer();
-                await this.update();
-                await this.attemptNextTurn();
-            }
+        const winner = this.game.winner;
+
+        if (this.game.boardFull || winner) {
+            await this.message?.delete();
+            await this.channel.endGame(winner ? this.entities[winner - 1] : undefined);
+        } else {
+            this.game.nextPlayer();
+            await this.update();
+            await this.attemptNextTurn();
         }
     }
 
@@ -153,8 +163,10 @@ export default class GameBoardMessage {
             .awaitReactions(
                 (reaction, user) => {
                     return (
-                        GameBoardMessage.MOVE_REACTIONS.includes(reaction.emoji.name) &&
-                        user.id === this.currentEntity.id
+                        this.game.isMoveValid(
+                            this.game.currentPlayer,
+                            GameBoardMessage.reactionToMove(reaction.emoji.name)
+                        ) && user.id === this.currentEntity.id
                     );
                 },
                 { max: 1, time: 30000, errors: ['time'] }
