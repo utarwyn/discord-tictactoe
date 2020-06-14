@@ -3,7 +3,7 @@
     "title": "New duel challenge",
     "challenge": "{invited}, **{initier}** challenged you to a duel!",
     "action": "React to this message to accept or decline the duel.",
-    "expire": "**{invited}** does not have answered to the challenge.",
+    "expire": "**{invited}** did not rise up to the challenge.",
     "reject": "**{invited}** has rejected the duel.",
     "unknown-user": "You could not challenge **{username}**. Please mention another user."
   },
