@@ -1,0 +1,8 @@
+*
+package.json
+LICENSE
+README.md
+
+!config/locales/**/*
+!dist/bin/**/*
+!dist/src/**/*
