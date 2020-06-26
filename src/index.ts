@@ -11,7 +11,7 @@ import { Client } from 'discord.js';
  * @author Utarwyn <maximemalgorn@gmail.com>
  * @since 2.0.0
  */
-export default class TicTacToe {
+class TicTacToe {
     /**
      * Bot configuration
      */
@@ -54,3 +54,5 @@ export default class TicTacToe {
         return new Game();
     }
 }
+
+export = TicTacToe;

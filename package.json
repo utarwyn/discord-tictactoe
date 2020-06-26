@@ -1,6 +1,6 @@
 {
   "name": "discord-tictactoe",
-  "version": "2.0.2",
+  "version": "2.0.4",
   "description": "A modern Discord Bot for playing Tic-Tac-Toe",
   "author": "Utarwyn <maximemalgorn@gmail.com>",
   "license": "Apache-2.0",
@@ -55,6 +55,6 @@
     "start": "npm run build && npm run serve",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
-    "release": "npm run clean && npm run lint && npm run test && npm run format && npm run build"
+    "release": "npm run clean && npm run lint && npm run test && npm run format && npm run build && node lib/replacePaths.js"
   }
 }

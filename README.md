@@ -66,8 +66,9 @@ Use it in your project
    const TicTacToe = require('discord-tictactoe');
    const bot = new TicTacToe({
      clientId: 'YOUR_CLIENT_ID',
-     token: 'YOUR_BOT_USER_TOKEN'
-     // other options here if needed...
+     token: 'YOUR_BOT_USER_TOKEN',
+     language: 'en',
+     command: '!ttt'
    }); 
    bot.connect().catch(() => console.error("Cannot connect TicTacToe bot"));
    ```
