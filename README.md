@@ -61,7 +61,7 @@ Use it in your project
 
 1. Install the project from [npm][2]:\
    `npm install discord-tictactoe` or `yarn add discord-tictactoe`
-2. Import the bot in your code:
+2. Use as an independent bot:
    ```javascript
    const TicTacToe = require('discord-tictactoe');
    const bot = new TicTacToe({
@@ -71,6 +71,19 @@ Use it in your project
      command: '!ttt'
    }); 
    bot.connect().catch(() => console.error("Cannot connect TicTacToe bot"));
+   ```
+3. **OR** use it in your own bot:
+   ```javascript
+   const TicTacToe = require('discord-tictactoe');
+   const Discord = require('discord.js');
+   const yourBot = new Discord.Client();
+   
+   new TicTacToe({
+     language: 'fr',
+     command: '!ttt'
+   }, yourBot);
+   
+   yourBot.login('YOUR_BOT_TOKEN');
    ```
 
 License
