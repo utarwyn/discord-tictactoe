@@ -1,0 +1,20 @@
+{
+  "duel": {
+    "title": "Lời thách đấu mới",
+    "challenge": "{invited}, **{initier}** vừa thách đấu bạn!",
+    "action": "React vào tin nhắn này để chấp nhận hoặc từ chối lời mời",
+    "expire": "**{invited}** đã không phản hồi gì về lời mời của bạn",
+    "reject": "**{invited}** đã từ chối lời mời của bạn.",
+    "unknown-user": "Bạn không thể thách đấu **{username}**. Hãy mention một người khác."
+  },
+  "game": {
+    "title": ":game_die: {player1} **VS** {player2}",
+    "action": "{player}, lựa chọn lượt đi của bạn:",
+    "load": "Đang tải reaction, chờ chút nha...",
+    "end": "Không ai thắng màn thách đấu này. Thử lại chứ?",
+    "win": "{player} đã thắng ván đấu :tada:",
+    "expire": "Ván đấu đã **kết thúc**... Có lẽ do chỉ có một người tương tác với ván đấu",
+    "waiting-ai": "Máy đang chơi, chờ chút nha...",
+    "ai": "Máy"
+  }
+}
