@@ -1,7 +1,7 @@
 {
   "duel": {
     "title": "Sfida a tris",
-    "challenge": "{invited}, **{initier}** ti ha sfidato in un duello!",
+    "challenge": "{invited}, **{initier}** ti ha sfidato ad un duello!",
     "action": "Reagisci a questo messaggio per accettare o no la sfida.",
     "expire": "**{invited}** non ha risposto.",
     "reject": "**{invited}** non ha accettato.",
