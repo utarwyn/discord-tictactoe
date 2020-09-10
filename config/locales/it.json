@@ -1,0 +1,20 @@
+{
+  "duel": {
+    "title": "Sfida a tris",
+    "challenge": "{invited}, **{initier}** ti ha sfidato ad un duello!",
+    "action": "Reagisci a questo messaggio per accettare o no la sfida.",
+    "expire": "**{invited}** non ha risposto.",
+    "reject": "**{invited}** non ha accettato.",
+    "unknown-user": "Non puoi sfidare **{username}**. Per favore scegli un altro utente."
+  },
+  "game": {
+    "title": ":game_die: {player1} **VS** {player2}",
+    "action": "{player}, fai la tua mossa:",
+    "load": "Le reazioni stanno caricando, aspetta un momento...",
+    "end": "Che peccato, non ha vinto nessuno! Vuoi rigiocare?",
+    "win": "{player} ha vinto! :tada:",
+    "expire": "Il tempo è **scaduto**... forse perché i giocatori non sono più online.",
+    "waiting-ai": "L'IA sta' giocando, aspetta il tuo turno...",
+    "ai": "l'IA"
+  }
+}
