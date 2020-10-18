@@ -1,0 +1,20 @@
+{
+  "duel": {
+    "title": "Nuevo desafío de duelo",
+    "challenge": "{invited}, **{initier}** te desafió a un duelo!",
+    "action": "Reacciona a este mensaje para aceptar o rechazar el duelo.",
+    "expire": "**{invited}** no se puso a la altura del desafío.",
+    "reject": "**{invited}** ha rechazado el duelo.",
+    "unknown-user": "No pudiste desafiar a **{username}**. Por favor mencione otro usuario."
+  },
+  "game": {
+    "title": ":game_die: {player1} **VS** {player2}",
+    "action": "{player}, seleccione su movimiento:",
+    "load": "Las reacciones se están cargando, espere ...",
+    "end": "Nadie ganó el juego, ¡es un empate! ¿Intentemoslo de nuevo?",
+    "win": "{player} ha ganado el juego! :tada:",
+    "expire": "El juego ha **caducado**... quizás debido a la inactividad de un usuario.",
+    "waiting-ai": "La IA está jugando, por favor espere...",
+    "ai": "La IA"
+  }
+}
