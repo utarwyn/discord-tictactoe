@@ -44,8 +44,9 @@ export default class StartCommand implements Command {
             if (invited) {
                 channel.sendDuelRequest(message, invited).catch(console.error);
             } else {
+                const username = params[0].replace(/^@/, '');
                 message.channel
-                    .send(localize.__('duel.unknown-user', { username: params[0] }))
+                    .send(localize.__('duel.unknown-user', { username }))
                     .catch(console.error);
             }
         } else {
