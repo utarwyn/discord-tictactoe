@@ -21,10 +21,10 @@
     "typescript"
   ],
   "devDependencies": {
-    "@types/i18n": "^0.8.7",
+    "@types/i18n": "^0.8.8",
     "@types/jest": "~25.2.1",
-    "@types/node": "^12.19.1",
-    "@types/ws": "^7.2.7",
+    "@types/node": "^12.19.9",
+    "@types/ws": "^7.4.0",
     "@typescript-eslint/eslint-plugin": "~2.32.0",
     "@typescript-eslint/parser": "~2.32.0",
     "eslint": "~7.0.0",
@@ -38,7 +38,7 @@
     "typescript": "~3.8.3"
   },
   "dependencies": {
-    "discord.js": "^12.4.1",
+    "discord.js": "^12.5.1",
     "i18n": "^0.10.0"
   },
   "engines": {
