@@ -5,7 +5,7 @@
     "action": "React to this message to accept or decline the duel.",
     "expire": "**{invited}** did not rise up to the challenge.",
     "reject": "**{invited}** has rejected the duel.",
-    "unknown-user": "You could not challenge **{username}**. Please mention another user."
+    "unknown-user": "you cannot challenge that user."
   },
   "game": {
     "title": ":game_die: {player1} **VS** {player2}",

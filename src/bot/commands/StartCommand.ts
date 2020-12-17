@@ -40,14 +40,12 @@ export default class StartCommand implements Command {
         }
 
         if (params && params.length > 0) {
-            const invited = StartCommand.getMentionedUser(message);
-            if (invited) {
+            const invited = message.mentions.members?.first();
+            if (invited && StartCommand.isUserReadyToPlay(invited, message)) {
                 channel.sendDuelRequest(message, invited).catch(console.error);
             } else {
-                const username = params[0].replace(/^@/, '');
-                message.channel
-                    .send(localize.__('duel.unknown-user', { username }))
-                    .catch(console.error);
+                const username = invited?.displayName ?? params[0];
+                message.reply(localize.__('duel.unknown-user', { username })).catch(console.error);
             }
         } else {
             channel.createGame(message.member!).catch(console.error);
@@ -58,20 +56,16 @@ export default class StartCommand implements Command {
      * Retrieves the first valid member mentionned in a message.
      * Should be a real person, who has right permissions and not the requester.
      *
-     * @param message
+     * @param invited member invited to enter a duel
+     * @param invitation message used to invite a member to enter a duel
+     * @return true if invited member can duel with the sender, false otherwise
      */
-    private static getMentionedUser(message: Message): GuildMember | null {
-        if (message.mentions.members != null) {
-            const invited = message.mentions.members.first();
-            if (
-                invited &&
-                !invited.user.bot &&
-                message.member !== invited &&
-                invited.permissionsIn(message.channel).has('VIEW_CHANNEL')
-            ) {
-                return invited;
-            }
-        }
-        return null;
+    private static isUserReadyToPlay(invited: GuildMember, invitation: Message): boolean {
+        return (
+            invited &&
+            !invited.user.bot &&
+            invitation.member !== invited &&
+            invited.permissionsIn(invitation.channel).has('VIEW_CHANNEL')
+        );
     }
 }

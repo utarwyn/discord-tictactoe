@@ -5,7 +5,7 @@
     "action": "Réagis à ce message pour accepter ou décliner le duel.",
     "expire": "**{invited}** n'a pas répondu à la demande dans les temps.",
     "reject": "**{invited}** a rejeté votre proposition de duel.",
-    "unknown-user": "Vous ne pouvez pas défier **{username}**. Merci de mentionner un autre utilisateur."
+    "unknown-user": "vous ne pouvez pas défier ce membre."
   },
   "game": {
     "title": ":game_die: {player1} **contre** {player2}",

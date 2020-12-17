@@ -5,7 +5,7 @@
     "action": "Reaja esta mensagem para aceitar ou recusar este duelo.",
     "expire": "**{invited}** não apareceu para o duelo.",
     "reject": "**{invited}** rejeitou o duelo.",
-    "unknown-user": "Você não pode desafiar **{username}**. Por favor mencione outro usuário."
+    "unknown-user": "você não pode desafiar este usuário."
   },
   "game": {
     "title": "🎲 {player1} **VS** {player2}",

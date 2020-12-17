@@ -5,7 +5,7 @@
     "action": "Reagisci a questo messaggio per accettare o no la sfida.",
     "expire": "**{invited}** non ha risposto.",
     "reject": "**{invited}** non ha accettato.",
-    "unknown-user": "Non puoi sfidare **{username}**. Per favore scegli un altro utente."
+    "unknown-user": "non puoi sfidare questo utente."
   },
   "game": {
     "title": ":game_die: {player1} **VS** {player2}",
