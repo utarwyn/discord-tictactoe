@@ -92,8 +92,15 @@ export default class GameChannel {
                         player: winner.toString()
                     })
                 );
+                this.bot.eventHandler.emitEvent('win', {
+                    winner,
+                    loser: this.gameBoard?.entities.find(entity => entity !== winner)
+                });
             } else {
                 await this.channel.send(localize.__('game.end'));
+                this.bot.eventHandler.emitEvent('tie', {
+                    players: this.gameBoard?.entities
+                });
             }
             this.gameBoard = undefined;
         }

@@ -1,6 +1,7 @@
 import { Client, Message, TextChannel } from 'discord.js';
 import TicTacToe from '../index';
 import CommandHandler from '@bot/CommandHandler';
+import EventHandler from '@bot/EventHandler';
 import StartCommand from '@bot/commands/StartCommand';
 import GameChannel from '@bot/channel/GameChannel';
 
@@ -13,29 +14,40 @@ import GameChannel from '@bot/channel/GameChannel';
 export default class TicTacToeBot {
     /**
      * Game controller
+     * @private
      */
     private readonly _controller: TicTacToe;
     /**
      * Discord Client object
+     * @private
      */
     private readonly _client: Client;
     /**
      * Manages the command handling
+     * @private
      */
     private readonly _commandHandler: CommandHandler;
     /**
+     * Manages the command handling
+     * @private
+     */
+    private readonly _eventHandler: EventHandler;
+    /**
      * Collection with all channels in which games are handled.
+     * @private
      */
     private _channels: Array<GameChannel>;
 
     /**
      * Constructs the Discord bot interaction object.
      *
-     * @param controller game controller
-     * @param client Discord client object, if empty use a new client
+     * @param controller   game controller
+     * @param eventHandler event handling system
+     * @param client       Discord client object, if empty create a client
      */
-    constructor(controller: TicTacToe, client?: Client) {
+    constructor(controller: TicTacToe, eventHandler: EventHandler, client?: Client) {
         this._controller = controller;
+        this._eventHandler = eventHandler;
         this._client = client ?? new Client();
         this._commandHandler = new CommandHandler();
         this._channels = [];
@@ -49,6 +61,13 @@ export default class TicTacToeBot {
      */
     public get controller(): TicTacToe {
         return this._controller;
+    }
+
+    /**
+     * Retrieves the event handling system.
+     */
+    public get eventHandler(): EventHandler {
+        return this._eventHandler;
     }
 
     /**

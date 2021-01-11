@@ -11,9 +11,9 @@ import localize from '@config/localize';
  */
 export default class AI implements GameEntity {
     /**
-     * An AI got not identifier as its managed by the bot
+     * Identifier of the AI is always "AI"
      */
-    id = '';
+    id = 'AI';
     /**
      * Display name of an AI
      */

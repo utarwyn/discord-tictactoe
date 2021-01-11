@@ -32,7 +32,7 @@ export default class GameBoardMessage {
     /**
      * List of all entities of the game.
      */
-    private readonly entities: Array<GameEntity>;
+    private readonly _entities: Array<GameEntity>;
     /**
      * Discord message object managed by the instance.
      */
@@ -53,8 +53,15 @@ export default class GameBoardMessage {
     constructor(channel: GameChannel, game: Game, member1: GameEntity, member2: GameEntity) {
         this.channel = channel;
         this.game = game;
-        this.entities = [member1, member2];
+        this._entities = [member1, member2];
         this.reactionsLoaded = false;
+    }
+
+    /**
+     * Retrieves entites which are playing on this board.
+     */
+    public get entities(): Array<GameEntity> {
+        return this._entities;
     }
 
     /**
@@ -110,7 +117,7 @@ export default class GameBoardMessage {
      * Retrieves the entity that is playing.
      */
     private get currentEntity(): GameEntity {
-        return this.entities[this.game.currentPlayer - 1];
+        return this._entities[this.game.currentPlayer - 1];
     }
 
     /**
@@ -135,7 +142,7 @@ export default class GameBoardMessage {
 
         if (this.game.boardFull || winner) {
             await this.message?.delete();
-            await this.channel.endGame(winner ? this.entities[winner - 1] : undefined);
+            await this.channel.endGame(winner ? this._entities[winner - 1] : undefined);
         } else {
             this.game.nextPlayer();
             await this.update();
@@ -182,8 +189,8 @@ export default class GameBoardMessage {
         // Title part
         message =
             localize.__('game.title', {
-                player1: this.entities[0].displayName,
-                player2: this.entities[1].displayName
+                player1: this._entities[0].displayName,
+                player2: this._entities[1].displayName
             }) + '\n\n';
 
         // Board part
