@@ -50,8 +50,8 @@ Running via Docker
 1. Make sure to have Docker installed.
 2. Pull the latest image from [DockerHub][1]:\
    `docker pull utarwyn/discord-tictactoe`
-3. Start the Docker container by providing Discord Client ID and Token:\
-   `docker run --name tictactoebot -e CLIENT_ID=YOUR_CLIENT_ID -e TOKEN=YOUR_TOKEN utarwyn/discord-tictactoe`
+3. Start the Docker container by providing Discord API Token:\
+   `docker run --name tictactoebot -e TOKEN=YOUR_TOKEN utarwyn/discord-tictactoe`
 4. Add `-d` option to run the bot in the background.\
    You can also pass others options with `-e OPTION_NAME=option_value`.
 5. Use the option `-v $(pwd)/config/config.json:/app/config/config.json` to load a custom config file.
@@ -66,7 +66,6 @@ Running via Node.js
    ```javascript
    const TicTacToe = require('discord-tictactoe');
    const bot = new TicTacToe({
-     clientId: 'YOUR_CLIENT_ID',
      token: 'YOUR_BOT_USER_TOKEN',
      language: 'en',
      command: '!ttt'

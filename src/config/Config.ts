@@ -5,9 +5,7 @@
  * @since 2.0.0
  */
 export default interface Config {
-    clientId: string;
     token: string;
-
     language?: string;
     command?: string;
 }

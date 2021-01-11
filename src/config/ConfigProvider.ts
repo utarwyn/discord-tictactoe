@@ -10,7 +10,6 @@ import Config from './Config';
  * @since 2.0.0
  */
 export default class ConfigProvider implements Config {
-    public clientId = '';
     public token = '';
     public language = 'en';
     public command = '!ttt';
@@ -50,16 +49,16 @@ export default class ConfigProvider implements Config {
 
                 // Operate types checking
                 switch (typeof this[camelCaseKey]) {
-                    case 'string':
-                    case 'object':
-                    default:
-                        newValue = value.toString();
-                        break;
                     case 'number':
                         newValue = parseFloat(value);
                         break;
                     case 'boolean':
                         newValue = value.toLowerCase() === 'true';
+                        break;
+                    case 'string':
+                    case 'object':
+                    default:
+                        newValue = value.toString();
                         break;
                 }
 
