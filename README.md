@@ -56,12 +56,13 @@ Running via Docker
    You can also pass others options with `-e OPTION_NAME=option_value`.
 5. Use the option `-v $(pwd)/config/config.json:/app/config/config.json` to load a custom config file.
 
-Use it in your project
+Running via Node.js
 ------------
 
-1. Install the project from [npm][2]:\
+1. Check with `node -v` that you are running at least **Node.js 14.x**.
+2. Install the project from [npm][2]:\
    `npm install discord-tictactoe` or `yarn add discord-tictactoe`
-2. Use as an independent bot:
+3. Use as an independent bot:
    ```javascript
    const TicTacToe = require('discord-tictactoe');
    const bot = new TicTacToe({
@@ -72,7 +73,7 @@ Use it in your project
    }); 
    bot.connect().catch(() => console.error("Cannot connect TicTacToe bot"));
    ```
-3. **OR** use it in your own bot:
+4. **OR** use it in your own bot:
    ```javascript
    const TicTacToe = require('discord-tictactoe');
    const Discord = require('discord.js');
