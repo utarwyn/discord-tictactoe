@@ -1,20 +1,20 @@
 {
   "duel": {
-    "title": "Sfida a tris",
+    "title": ":crossed_swords: Sfida a tris",
     "challenge": "{invited}, **{initier}** ti ha sfidato ad un duello!",
     "action": "Reagisci a questo messaggio per accettare o no la sfida.",
-    "expire": "**{invited}** non ha risposto.",
-    "reject": "**{invited}** non ha accettato.",
+    "expire": ":x: `{invited}` non ha risposto.",
+    "reject": ":x: `{invited}` non ha accettato.",
     "unknown-user": "non puoi sfidare questo utente."
   },
   "game": {
-    "title": ":game_die: {player1} **VS** {player2}",
+    "title": ":game_die: `{player1}` **VS** `{player2}`",
     "action": "{player}, fai la tua mossa:",
     "load": "Le reazioni stanno caricando, aspetta un momento...",
     "end": "Che peccato, non ha vinto nessuno! Vuoi rigiocare?",
-    "win": "{player} ha vinto! :tada:",
-    "expire": "Il tempo è **scaduto**... forse perché i giocatori non sono più online.",
-    "waiting-ai": "L'IA sta' giocando, aspetta il tuo turno...",
+    "win": ":tada: {player} ha vinto!",
+    "expire": ":x: Il tempo è **scaduto**... forse perché i giocatori non sono più online.",
+    "waiting-ai": ":robot: L'IA sta' giocando, aspetta il tuo turno...",
     "ai": "l'IA"
   }
 }

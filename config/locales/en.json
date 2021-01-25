@@ -1,20 +1,20 @@
 {
   "duel": {
-    "title": "New duel challenge",
+    "title": ":crossed_swords: New duel challenge",
     "challenge": "{invited}, **{initier}** challenged you to a duel!",
     "action": "React to this message to accept or decline the duel.",
-    "expire": "**{invited}** did not rise up to the challenge.",
-    "reject": "**{invited}** has rejected the duel.",
+    "expire": ":x: `{invited}` did not rise up to the challenge.",
+    "reject": ":x: `{invited}` has rejected the duel.",
     "unknown-user": "you cannot challenge that user."
   },
   "game": {
-    "title": ":game_die: {player1} **VS** {player2}",
+    "title": ":game_die: `{player1}` **VS** `{player2}`",
     "action": "{player}, select your move:",
     "load": "Reactions are loading, please wait...",
     "end": "No one won the game, it's a tie! Let's try again?",
-    "win": "{player} has won the game! :tada:",
-    "expire": "Game has **expired**... maybe because of one user inactivity.",
-    "waiting-ai": "AI is playing, please wait...",
+    "win": ":tada: {player} has won the game!",
+    "expire": ":x: Game has **expired**... maybe because of one user inactivity.",
+    "waiting-ai": ":robot: AI is playing, please wait...",
     "ai": "the AI"
   }
 }

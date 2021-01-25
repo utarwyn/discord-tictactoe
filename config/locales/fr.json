@@ -1,20 +1,20 @@
 {
   "duel": {
-    "title": "Demande de duel Tic-tac-toe",
+    "title": ":crossed_swords: Demande de duel",
     "challenge": "{invited}, **{initier}** souhaite te défier au morpion !",
     "action": "Réagis à ce message pour accepter ou décliner le duel.",
-    "expire": "**{invited}** n'a pas répondu à la demande dans les temps.",
-    "reject": "**{invited}** a rejeté votre proposition de duel.",
+    "expire": ":x: `{invited}` n'a pas répondu à la demande dans les temps.",
+    "reject": ":x: `{invited}` a rejeté votre proposition de duel.",
     "unknown-user": "vous ne pouvez pas défier ce membre."
   },
   "game": {
-    "title": ":game_die: {player1} **contre** {player2}",
+    "title": ":game_die: `{player1}` **VS** `{player2}`",
     "action": "{player}, sélectionnez votre action:",
     "load": "Les réactions chargent, merci de patienter...",
     "end": "Personne n'a gagné la partie, c'est une égalité ! On réessaie ?",
-    "win": "{player} a gagné la partie ! :tada:",
-    "expire": "La partie vient **d'expirer**... peut-être à cause de l'inactivité d'un joueur.",
-    "waiting-ai": "L'IA joue, merci de patienter...",
+    "win": ":tada: {player} a gagné la partie !",
+    "expire": ":x: La partie vient **d'expirer**... peut-être à cause de l'inactivité d'un joueur.",
+    "waiting-ai": ":robot: L'IA joue, merci de patienter...",
     "ai": "l'IA"
   }
 }

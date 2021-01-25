@@ -1,20 +1,20 @@
 {
   "duel": {
-    "title": "Novo duelo",
+    "title": ":crossed_swords: Novo duelo",
     "challenge": "{invited}, **{initier}** te desafiou para um duelo!",
     "action": "Reaja esta mensagem para aceitar ou recusar este duelo.",
-    "expire": "**{invited}** não apareceu para o duelo.",
-    "reject": "**{invited}** rejeitou o duelo.",
+    "expire": ":x: `{invited}` não apareceu para o duelo.",
+    "reject": ":x: `{invited}` rejeitou o duelo.",
     "unknown-user": "você não pode desafiar este usuário."
   },
   "game": {
-    "title": "🎲 {player1} **VS** {player2}",
+    "title": ":game_die: `{player1}` **VS** `{player2}`",
     "action": "{player}, selecione a sua jogada:",
     "load": "As reações estão sendo carregadas, espere um momento...",
     "end": "Ninguém ganhou o jogo, empate! Quer tentar novamente?",
-    "win": "{player} venceu a partida! 🎉",
-    "expire": "O jogo foi **expirado**... Talvez por causa de inatividade de um usuário.",
-    "waiting-ai": "AI está jogando, espere um momento...",
+    "win": ":tada: {player} venceu a partida!",
+    "expire": ":x: O jogo foi **expirado**... Talvez por causa de inatividade de um usuário.",
+    "waiting-ai": ":robot: AI está jogando, espere um momento...",
     "ai": "a AI"
   }
 }
