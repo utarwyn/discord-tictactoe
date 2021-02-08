@@ -44,8 +44,7 @@ export default class StartCommand implements Command {
             if (invited && StartCommand.isUserReadyToPlay(invited, message)) {
                 channel.sendDuelRequest(message, invited).catch(console.error);
             } else {
-                const username = invited?.displayName ?? params[0];
-                message.reply(localize.__('duel.unknown-user', { username })).catch(console.error);
+                message.reply(localize.__('duel.unknown-user')).catch(console.error);
             }
         } else {
             channel.createGame(message.member!).catch(console.error);
