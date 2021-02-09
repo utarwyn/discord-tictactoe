@@ -34,6 +34,10 @@ export default class GameBoardMessage {
      */
     private readonly _entities: Array<GameEntity>;
     /**
+     * Expiration time of a player turn
+     */
+    private readonly expireTime: number;
+    /**
      * Discord message object managed by the instance.
      */
     private message?: Message;
@@ -49,12 +53,20 @@ export default class GameBoardMessage {
      * @param game object used to operate the game
      * @param member1 first member of the game
      * @param member2 second member of the game
+     * @param expireTime expiration time of a player turn
      */
-    constructor(channel: GameChannel, game: Game, member1: GameEntity, member2: GameEntity) {
+    constructor(
+        channel: GameChannel,
+        game: Game,
+        member1: GameEntity,
+        member2: GameEntity,
+        expireTime?: number
+    ) {
         this.channel = channel;
         this.game = game;
         this._entities = [member1, member2];
         this.reactionsLoaded = false;
+        this.expireTime = expireTime ?? 30;
     }
 
     /**
@@ -174,7 +186,7 @@ export default class GameBoardMessage {
                         this.game.isMoveValid(GameBoardMessage.reactionToMove(reaction.emoji.name))
                     );
                 },
-                { max: 1, time: 30000, errors: ['time'] }
+                { max: 1, time: this.expireTime * 1000, errors: ['time'] }
             )
             .then(this.onMoveSelected.bind(this))
             .catch(this.onExpire.bind(this));

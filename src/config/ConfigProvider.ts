@@ -13,6 +13,8 @@ export default class ConfigProvider implements Config {
     public token = '';
     public language = 'en';
     public command = '!ttt';
+    public requestExpireTime = 60;
+    public gameExpireTime = 30;
 
     [key: string]: any;
 

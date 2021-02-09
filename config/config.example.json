@@ -1,5 +1,7 @@
 {
   "token": "YOUR_BOT_USER_TOKEN",
   "language": "en",
-  "command": "!ttt"
+  "command": "!ttt",
+  "requestExpireTime": 60,
+  "gameExpireTime": 30
 }

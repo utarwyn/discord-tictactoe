@@ -8,4 +8,6 @@ export default interface Config {
     token: string;
     language?: string;
     command?: string;
+    requestExpireTime?: number;
+    gameExpireTime?: number;
 }

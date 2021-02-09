@@ -34,6 +34,10 @@ export default class DuelRequestMessage {
      */
     private readonly invited: GuildMember;
     /**
+     * Expiration time of a request message
+     */
+    private readonly expireTime: number;
+    /**
      * Message object sent in the channel.
      */
     private message?: Message;
@@ -44,11 +48,13 @@ export default class DuelRequestMessage {
      * @param channel game channel object
      * @param message request message object
      * @param invited invited user object
+     * @param expireTime expiration time of the mesage
      */
-    constructor(channel: GameChannel, message: Message, invited: GuildMember) {
+    constructor(channel: GameChannel, message: Message, invited: GuildMember, expireTime?: number) {
         this.channel = channel;
         this.request = message;
         this.invited = invited;
+        this.expireTime = expireTime ?? 60;
     }
 
     /**
@@ -68,7 +74,7 @@ export default class DuelRequestMessage {
                         user.id === this.invited.id
                     );
                 },
-                { max: 1, time: 60000, errors: ['time'] }
+                { max: 1, time: this.expireTime * 1000, errors: ['time'] }
             )
             .then(this.challengeAnswered.bind(this))
             .catch(this.challengeExpired.bind(this));
