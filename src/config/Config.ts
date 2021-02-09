@@ -5,7 +5,7 @@
  * @since 2.0.0
  */
 export default interface Config {
-    token: string;
+    token?: string;
     language?: string;
     command?: string;
     requestExpireTime?: number;

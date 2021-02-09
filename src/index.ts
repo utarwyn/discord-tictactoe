@@ -35,11 +35,14 @@ class TicTacToe {
      * @param config tictactoe configuration
      * @param client Custom Discord Client to start the bot, can be empty
      */
-    constructor(config: Config, client?: Client) {
-        this._config = config;
+    constructor(config?: Config) {
+        this._config = config ?? {};
         this.eventHandler = new EventHandler();
-        this.bot = new TicTacToeBot(this, this.eventHandler, client);
-        localize.setLanguage(config.language!);
+        this.bot = new TicTacToeBot(this, this.eventHandler);
+
+        if (this.config.language) {
+            localize.setLanguage(this.config.language);
+        }
     }
 
     /**
@@ -50,10 +53,27 @@ class TicTacToe {
     }
 
     /**
-     * Connects the client to Discord.
+     * Connects the module through an internal Discord client.
      */
-    public async connect(): Promise<void> {
-        await this.bot.client.login(this.config.token);
+    public async login(token?: string): Promise<void> {
+        const currentToken = token ?? this.config.token;
+
+        if (!currentToken) {
+            throw new Error('Bot token needed to start Discord client.');
+        } else if (!this.config.command) {
+            throw new Error('Game command needed to start Discord client.');
+        }
+
+        const client = new Client();
+        this.bot.attachToClient(client);
+        await client.login(currentToken);
+    }
+
+    /**
+     * Attaches an external Discord Client to the module.
+     */
+    public attach(client: Client): void {
+        this.bot.attachToClient(client);
     }
 
     /**

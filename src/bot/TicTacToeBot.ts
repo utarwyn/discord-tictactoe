@@ -18,11 +18,6 @@ export default class TicTacToeBot {
      */
     private readonly _controller: TicTacToe;
     /**
-     * Discord Client object
-     * @private
-     */
-    private readonly _client: Client;
-    /**
      * Manages the command handling
      * @private
      */
@@ -43,17 +38,14 @@ export default class TicTacToeBot {
      *
      * @param controller   game controller
      * @param eventHandler event handling system
-     * @param client       Discord client object, if empty create a client
      */
-    constructor(controller: TicTacToe, eventHandler: EventHandler, client?: Client) {
+    constructor(controller: TicTacToe, eventHandler: EventHandler) {
         this._controller = controller;
         this._eventHandler = eventHandler;
-        this._client = client ?? new Client();
         this._commandHandler = new CommandHandler();
         this._channels = [];
 
         this.registerCommands();
-        this.addEventListeners();
     }
 
     /**
@@ -71,10 +63,10 @@ export default class TicTacToeBot {
     }
 
     /**
-     * Retrieves the connected Discord client.
+     * Attaches a new Discord client to the module by preparing command handing.
      */
-    public get client(): Client {
-        return this._client;
+    public attachToClient(client: Client): void {
+        client.on('message', this.onMessage.bind(this));
     }
 
     /**
@@ -99,13 +91,6 @@ export default class TicTacToeBot {
      */
     private registerCommands(): void {
         this._commandHandler.addCommand(new StartCommand(this));
-    }
-
-    /**
-     * Register all events to be handled by the bot.
-     */
-    private addEventListeners(): void {
-        this.client.on('message', this.onMessage.bind(this));
     }
 
     /**
