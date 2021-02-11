@@ -57,13 +57,12 @@ export default class GameBoardMessage {
      */
     constructor(
         channel: GameChannel,
-        game: Game,
         member1: GameEntity,
         member2: GameEntity,
         expireTime?: number
     ) {
         this.channel = channel;
-        this.game = game;
+        this.game = new Game();
         this._entities = [member1, member2];
         this.reactionsLoaded = false;
         this.expireTime = expireTime ?? 30;

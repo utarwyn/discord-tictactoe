@@ -135,7 +135,6 @@ export default class GameChannel {
         if (!this.gameRunning) {
             this.gameBoard = new GameBoardMessage(
                 this,
-                this.bot.controller.createGame(),
                 member1,
                 member2 ?? new AI(),
                 this.bot.controller.config.gameExpireTime

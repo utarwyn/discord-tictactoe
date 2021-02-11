@@ -3,7 +3,6 @@ import EventHandler, { EventType } from '@bot/EventHandler';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import localize from '@config/localize';
 import Config from '@config/Config';
-import Game from '@tictactoe/Game';
 
 /**
  * Controls all interactions between modules of the bot.
@@ -56,9 +55,9 @@ class TicTacToe {
      * Connects the module through an internal Discord client.
      */
     public async login(token?: string): Promise<void> {
-        const currentToken = token ?? this.config.token;
+        const loginToken = token ?? this.config.token;
 
-        if (!currentToken) {
+        if (!loginToken) {
             throw new Error('Bot token needed to start Discord client.');
         } else if (!this.config.command) {
             throw new Error('Game command needed to start Discord client.');
@@ -66,7 +65,7 @@ class TicTacToe {
 
         const client = new Client();
         this.bot.attachToClient(client);
-        await client.login(currentToken);
+        await client.login(loginToken);
     }
 
     /**
@@ -84,13 +83,6 @@ class TicTacToe {
      */
     public on(eventName: EventType, listener: (data?: any) => void): void {
         this.eventHandler.registerListener(eventName, listener);
-    }
-
-    /**
-     * Creates a new game object.
-     */
-    public createGame(): Game {
-        return new Game();
     }
 }
 
