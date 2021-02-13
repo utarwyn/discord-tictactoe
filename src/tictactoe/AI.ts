@@ -66,10 +66,10 @@ export default class AI implements GameEntity {
         // Go through all cells
         game.board.forEach((cell, index) => {
             if (cell === Player.None) {
-                game.board[index] = player;
+                game.updateBoard(player, index);
                 const deep = this.minimax(game, depth - 1, getOpponent(player));
 
-                game.board[index] = Player.None;
+                game.updateBoard(Player.None, index);
                 deep.move = index;
 
                 if (type === PlayerComputeType.Computer) {

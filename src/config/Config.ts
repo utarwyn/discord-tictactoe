@@ -5,9 +5,28 @@
  * @since 2.0.0
  */
 export default interface Config {
+    /**
+     * Token used to connect to Discord's API.
+     */
     token?: string;
+    /**
+     * Locale of the module.
+     */
     language?: string;
+    /**
+     * Command to type to start a new tictactoe game.
+     */
     command?: string;
+    /**
+     * Expiration time of a duel request.
+     */
     requestExpireTime?: number;
+    /**
+     * Expiration time of a player turn.
+     */
     gameExpireTime?: number;
+    /**
+     * Should bot needs to delete the game board message.
+     */
+    gameBoardDelete?: boolean;
 }

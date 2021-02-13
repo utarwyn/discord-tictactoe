@@ -1,9 +1,9 @@
 import { GuildMember, Message, TextChannel } from 'discord.js';
-import DuelRequestMessage from '@bot/channel/DuelRequestMessage';
-import GameBoardMessage from '@bot/channel/GameBoardMessage';
+import GameEntity from '@bot/channel/GameEntity';
+import GameBoardMessage from '@bot/gameboard/GameBoardMessage';
+import DuelRequestMessage from '@bot/request/DuelRequestMessage';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import localize from '@config/localize';
-import GameEntity from '@bot/channel/GameEntity';
 import AI from '@tictactoe/AI';
 
 /**
@@ -81,24 +81,18 @@ export default class GameChannel {
     }
 
     /**
-     * Ends the current game and display the winner if provided.
+     * Ends the current game and emit game events.
      *
      * @param winner entity who wins the game
      */
-    public async endGame(winner?: GameEntity): Promise<void> {
+    public endGame(winner?: GameEntity): void {
         if (this.gameRunning) {
             if (winner) {
-                await this.channel.send(
-                    localize.__('game.win', {
-                        player: winner.toString()
-                    })
-                );
                 this.bot.eventHandler.emitEvent('win', {
                     winner,
                     loser: this.gameBoard?.entities.find(entity => entity !== winner)
                 });
             } else {
-                await this.channel.send(localize.__('game.end'));
                 this.bot.eventHandler.emitEvent('tie', {
                     players: this.gameBoard?.entities
                 });
@@ -137,7 +131,7 @@ export default class GameChannel {
                 this,
                 member1,
                 member2 ?? new AI(),
-                this.bot.controller.config.gameExpireTime
+                this.bot.controller.config
             );
             await this.gameBoard.update();
             if (this.gameRunning) {

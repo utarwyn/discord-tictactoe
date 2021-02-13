@@ -3,5 +3,6 @@
   "language": "en",
   "command": "!ttt",
   "requestExpireTime": 60,
-  "gameExpireTime": 30
+  "gameExpireTime": 30,
+  "gameBoardDelete": false
 }

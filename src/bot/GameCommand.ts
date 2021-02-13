@@ -1,7 +1,6 @@
-import Command from './Command';
 import { GuildMember, Message, TextChannel } from 'discord.js';
-import localize from '@config/localize';
 import TicTacToeBot from '@bot/TicTacToeBot';
+import localize from '@config/localize';
 
 /**
  * Command to start a duel with someone else.
@@ -9,39 +8,62 @@ import TicTacToeBot from '@bot/TicTacToeBot';
  * @author Utarwyn <maximemalgorn@gmail.com>
  * @since 2.0.0
  */
-export default class StartCommand implements Command {
+export default class GameCommand {
     /**
-     * Game controller
+     * Game controller.
+     * @private
      */
-    readonly bot: TicTacToeBot;
+    private readonly bot: TicTacToeBot;
+
     /**
-     * @inheritDoc
+     * Trigger of the command.
+     * @private
      */
-    readonly triggers: string[];
+    private readonly trigger: string;
 
     /**
      * Constructs the command to start a game.
      *
      * @param bot game client bot
+     * @param trigger string whiches triggering command
      */
-    constructor(bot: TicTacToeBot) {
+    constructor(bot: TicTacToeBot, trigger: string) {
         this.bot = bot;
-        this.triggers = [bot.controller.config.command!];
+        this.trigger = trigger;
     }
 
     /**
-     * @inheritDoc
+     *
+     * @param message
      */
-    run(message: Message, params?: string[]): void {
+    public handle(message: Message): void {
+        if (
+            !message.author.bot &&
+            message.channel.type === 'text' &&
+            message.content.startsWith(this.trigger)
+        ) {
+            this.run(message);
+        }
+    }
+
+    /**
+     * Executes the command behavior.
+     *
+     * @param message discord message object
+     * @private
+     */
+    private run(message: Message): void {
         const channel = this.bot.getorCreateGameChannel(message.channel as TextChannel);
+        const hasCustomParam = message.content.substring(this.trigger.length + 1).trim().length > 0;
+
         // Disable this command if a game is running
         if (channel.gameRunning) {
             return;
         }
 
-        if (params && params.length > 0) {
+        if (hasCustomParam) {
             const invited = message.mentions.members?.first();
-            if (invited && StartCommand.isUserReadyToPlay(invited, message)) {
+            if (invited && GameCommand.isUserReadyToPlay(invited, message)) {
                 channel.sendDuelRequest(message, invited).catch(console.error);
             } else {
                 message.reply(localize.__('duel.unknown-user')).catch(console.error);

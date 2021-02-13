@@ -1,9 +1,8 @@
-import { Client, Message, TextChannel } from 'discord.js';
-import TicTacToe from '../index';
-import CommandHandler from '@bot/CommandHandler';
-import EventHandler from '@bot/EventHandler';
-import StartCommand from '@bot/commands/StartCommand';
+import { Client, TextChannel } from 'discord.js';
 import GameChannel from '@bot/channel/GameChannel';
+import EventHandler from '@bot/EventHandler';
+import GameCommand from '@bot/GameCommand';
+import TicTacToe from '../index';
 
 /**
  * Manages all interactions with the Discord bot.
@@ -21,12 +20,12 @@ export default class TicTacToeBot {
      * Manages the command handling
      * @private
      */
-    private readonly _commandHandler: CommandHandler;
+    private readonly _eventHandler: EventHandler;
     /**
      * Manages the command handling
      * @private
      */
-    private readonly _eventHandler: EventHandler;
+    private readonly command: GameCommand;
     /**
      * Collection with all channels in which games are handled.
      * @private
@@ -42,10 +41,8 @@ export default class TicTacToeBot {
     constructor(controller: TicTacToe, eventHandler: EventHandler) {
         this._controller = controller;
         this._eventHandler = eventHandler;
-        this._commandHandler = new CommandHandler();
+        this.command = new GameCommand(this, controller.config.command!);
         this._channels = [];
-
-        this.registerCommands();
     }
 
     /**
@@ -66,7 +63,7 @@ export default class TicTacToeBot {
      * Attaches a new Discord client to the module by preparing command handing.
      */
     public attachToClient(client: Client): void {
-        client.on('message', this.onMessage.bind(this));
+        client.on('message', this.command.handle.bind(this.command));
     }
 
     /**
@@ -83,24 +80,6 @@ export default class TicTacToeBot {
             const instance = new GameChannel(this, parent);
             this._channels.push(instance);
             return instance;
-        }
-    }
-
-    /**
-     * Register all commands to be handled by the bot.
-     */
-    private registerCommands(): void {
-        this._commandHandler.addCommand(new StartCommand(this));
-    }
-
-    /**
-     * Called when a message is sent and has been detected by the bot.
-     *
-     * @param message message object received from Discord
-     */
-    private onMessage(message: Message): void {
-        if (!message.author.bot && message.channel.type === 'text') {
-            this._commandHandler.execute(message);
         }
     }
 }

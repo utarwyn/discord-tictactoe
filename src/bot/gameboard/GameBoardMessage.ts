@@ -1,9 +1,10 @@
 import { Collection, Message, MessageReaction, Snowflake } from 'discord.js';
-import localize from '@config/localize';
 import GameChannel from '@bot/channel/GameChannel';
-import Game from '@tictactoe/Game';
 import GameEntity from '@bot/channel/GameEntity';
+import GameBoardBuilder from '@bot/gameboard/GameBoardBuilder';
+import GameBoardConfig from '@bot/gameboard/GameBoardConfig';
 import AI from '@tictactoe/AI';
+import Game from '@tictactoe/Game';
 
 /**
  * Message sent to display the status of a game board.
@@ -13,14 +14,6 @@ import AI from '@tictactoe/AI';
  * @since 2.0.0
  */
 export default class GameBoardMessage {
-    /**
-     * Unicode reactions available for moves.
-     */
-    private static readonly MOVE_REACTIONS = ['↖️', '⬆️', '↗️', '⬅️', '⏺️', '➡️', '↙️', '⬇️', '↘️'];
-    /**
-     * Unicode emojis used for representing the two players.
-     */
-    private static readonly PLAYER_EMOJIS = ['⬜', '🇽', '🅾️'];
     /**
      * Channel object in which the game board has to be displayed.
      */
@@ -34,9 +27,9 @@ export default class GameBoardMessage {
      */
     private readonly _entities: Array<GameEntity>;
     /**
-     * Expiration time of a player turn
+     * Game board configuration.
      */
-    private readonly expireTime: number;
+    private readonly configuration?: GameBoardConfig;
     /**
      * Discord message object managed by the instance.
      */
@@ -50,22 +43,21 @@ export default class GameBoardMessage {
      * Constructs a new game board message.
      *
      * @param channel channel in which the message wil be sent
-     * @param game object used to operate the game
      * @param member1 first member of the game
      * @param member2 second member of the game
-     * @param expireTime expiration time of a player turn
+     * @param configuration custom configuration of the gameboard
      */
     constructor(
         channel: GameChannel,
         member1: GameEntity,
         member2: GameEntity,
-        expireTime?: number
+        configuration?: GameBoardConfig
     ) {
         this.channel = channel;
         this.game = new Game();
         this._entities = [member1, member2];
         this.reactionsLoaded = false;
-        this.expireTime = expireTime ?? 30;
+        this.configuration = configuration;
     }
 
     /**
@@ -76,12 +68,24 @@ export default class GameBoardMessage {
     }
 
     /**
+     * Converts a reaction to a move position (from 0 to 8).
+     * If the move is not valid, returns -1.
+     *
+     * @param reaction unicode reaction
+     * @private
+     */
+    private static reactionToMove(reaction: string): number {
+        return GameBoardBuilder.MOVE_REACTIONS.indexOf(reaction);
+    }
+
+    /**
      * Attempts to play the next turn by waiting
      * for the user move or playing with the AI.
      */
     public async attemptNextTurn(): Promise<void> {
-        if (this.currentEntity instanceof AI) {
-            const result = this.currentEntity.operate(this.game);
+        const currentEntity = this.getEntity(this.game.currentPlayer);
+        if (currentEntity instanceof AI) {
+            const result = currentEntity.operate(this.game);
             if (result.move !== undefined) {
                 await this.playTurn(result.move);
             }
@@ -94,11 +98,20 @@ export default class GameBoardMessage {
      * Updates the message.
      */
     public async update(): Promise<void> {
-        const text = this.generateText();
+        const builder = new GameBoardBuilder()
+            .withTitle(this.entities[0], this.entities[1])
+            .withBoard(this.game.boardSize, this.game.board)
+            .withEntityPlaying(
+                this.reactionsLoaded ? this.getEntity(this.game.currentPlayer) : undefined
+            );
+
+        if (this.game.finished) {
+            builder.withEndingMessage(this.getEntity(this.game.winner));
+        }
 
         if (!this.message) {
-            this.message = await this.channel.channel.send(text);
-            for (const reaction of GameBoardMessage.MOVE_REACTIONS) {
+            this.message = await this.channel.channel.send(builder.toString());
+            for (const reaction of GameBoardBuilder.MOVE_REACTIONS) {
                 try {
                     await this.message.react(reaction);
                 } catch {
@@ -110,34 +123,28 @@ export default class GameBoardMessage {
             this.reactionsLoaded = true;
             await this.update();
         } else {
-            await this.message.edit(text);
+            await this.message.edit(builder.toString());
         }
     }
 
     /**
-     * Converts a reaction to a move position (from 0 to 8).
-     * If the move is not valid, returns -1.
+     * Retrieves a game entity based on its playing index.
      *
-     * @param reaction unicode reaction
+     * @param index playing index of the entity
+     * @private
      */
-    private static reactionToMove(reaction: string): number {
-        return GameBoardMessage.MOVE_REACTIONS.indexOf(reaction);
-    }
-
-    /**
-     * Retrieves the entity that is playing.
-     */
-    private get currentEntity(): GameEntity {
-        return this._entities[this.game.currentPlayer - 1];
+    private getEntity(index?: number): GameEntity | undefined {
+        return index && index > 0 ? this._entities[index - 1] : undefined;
     }
 
     /**
      * Called when a player has selected a valid move emoji below the message.
      *
      * @param collected collected data from discordjs
+     * @private
      */
     private async onMoveSelected(collected: Collection<Snowflake, MessageReaction>): Promise<void> {
-        const move = GameBoardMessage.MOVE_REACTIONS.indexOf(collected.first()!.emoji.name);
+        const move = GameBoardBuilder.MOVE_REACTIONS.indexOf(collected.first()!.emoji.name);
         await this.playTurn(move);
     }
 
@@ -145,15 +152,25 @@ export default class GameBoardMessage {
      * Play the current player's turn with a specific move.
      *
      * @param move move to play for the current player
+     * @private
      */
     private async playTurn(move: number): Promise<void> {
         this.game.updateBoard(this.game.currentPlayer, move);
 
-        const winner = this.game.winner;
+        if (this.game.finished) {
+            const winner = this.getEntity(this.game.winner);
 
-        if (this.game.boardFull || winner) {
-            await this.message?.delete();
-            await this.channel.endGame(winner ? this._entities[winner - 1] : undefined);
+            if (this.configuration?.gameBoardDelete) {
+                await this.message?.delete();
+                await this.channel.channel.send(
+                    new GameBoardBuilder().withEndingMessage(winner).toString()
+                );
+            } else {
+                await this.message?.reactions?.removeAll();
+                await this.update();
+            }
+
+            this.channel.endGame(winner);
         } else {
             this.game.nextPlayer();
             await this.update();
@@ -163,6 +180,7 @@ export default class GameBoardMessage {
 
     /**
      * Called when a player has not played during the expected time.
+     * @private
      */
     private async onExpire(): Promise<void> {
         if (this.message && this.message.deletable && !this.message.deleted) {
@@ -172,60 +190,23 @@ export default class GameBoardMessage {
     }
 
     /**
-     * Waits for the current player to select
-     * a move with one reaction below the message.
+     * Waits for the current player to select a move with one reaction below the message.
+     * @private
      */
     private awaitMove(): void {
+        const expireTime = this.configuration?.gameExpireTime ?? 30;
         if (!this.message || this.message.deleted) return;
         this.message
             .awaitReactions(
                 (reaction, user) => {
                     return (
-                        user.id === this.currentEntity.id &&
+                        user.id === this.getEntity(this.game.currentPlayer)?.id &&
                         this.game.isMoveValid(GameBoardMessage.reactionToMove(reaction.emoji.name))
                     );
                 },
-                { max: 1, time: this.expireTime * 1000, errors: ['time'] }
+                { max: 1, time: expireTime * 1000, errors: ['time'] }
             )
             .then(this.onMoveSelected.bind(this))
             .catch(this.onExpire.bind(this));
-    }
-
-    /**
-     * Generates the text to construct the message.
-     */
-    private generateText(): string {
-        let message;
-
-        // Title part
-        message =
-            localize.__('game.title', {
-                player1: this._entities[0].displayName,
-                player2: this._entities[1].displayName
-            }) + '\n\n';
-
-        // Board part
-        for (let i = 0; i < this.game.boardSize * this.game.boardSize; i++) {
-            message += GameBoardMessage.PLAYER_EMOJIS[this.game.board[i]] + ' ';
-            if ((i + 1) % this.game.boardSize === 0) {
-                message += '\n';
-            }
-        }
-
-        // Action part
-        message += '\n';
-        if (this.reactionsLoaded) {
-            if (this.currentEntity instanceof AI) {
-                message += localize.__('game.waiting-ai');
-            } else {
-                message += localize.__('game.action', {
-                    player: this.currentEntity.toString()
-                });
-            }
-        } else {
-            message += localize.__('game.load');
-        }
-
-        return message;
     }
 }

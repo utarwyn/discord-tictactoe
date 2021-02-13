@@ -6,8 +6,8 @@ import {
     MessageReaction,
     Snowflake
 } from 'discord.js';
-import localize from '@config/localize';
 import GameChannel from '@bot/channel/GameChannel';
+import localize from '@config/localize';
 
 /**
  * Message sent when a user challenges someone else to a duel.
