@@ -10,7 +10,7 @@ import localize from '@config/localize';
  */
 export default class GameCommand {
     /**
-     * Game controller.
+     * Game bot handling object.
      * @private
      */
     private readonly bot: TicTacToeBot;

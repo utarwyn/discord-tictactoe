@@ -2,7 +2,7 @@ import { Client, TextChannel } from 'discord.js';
 import GameChannel from '@bot/channel/GameChannel';
 import EventHandler from '@bot/EventHandler';
 import GameCommand from '@bot/GameCommand';
-import TicTacToe from '../index';
+import Config from '@config/Config';
 
 /**
  * Manages all interactions with the Discord bot.
@@ -12,10 +12,10 @@ import TicTacToe from '../index';
  */
 export default class TicTacToeBot {
     /**
-     * Game controller
+     * Game configuration object
      * @private
      */
-    private readonly _controller: TicTacToe;
+    private readonly _configuration: Config;
     /**
      * Manages the command handling
      * @private
@@ -35,21 +35,21 @@ export default class TicTacToeBot {
     /**
      * Constructs the Discord bot interaction object.
      *
-     * @param controller   game controller
+     * @param configuration game configuration object
      * @param eventHandler event handling system
      */
-    constructor(controller: TicTacToe, eventHandler: EventHandler) {
-        this._controller = controller;
+    constructor(configuration: Config, eventHandler: EventHandler) {
+        this._configuration = configuration;
         this._eventHandler = eventHandler;
-        this.command = new GameCommand(this, controller.config.command!);
+        this.command = new GameCommand(this, configuration.command!);
         this._channels = [];
     }
 
     /**
-     * Retrieves the game controller.
+     * Retrieves the game configuration object.
      */
-    public get controller(): TicTacToe {
-        return this._controller;
+    public get configuration(): Config {
+        return this._configuration;
     }
 
     /**

@@ -16,7 +16,7 @@ class TicTacToe {
      * Bot configuration
      * @private
      */
-    private readonly _config: Config;
+    private readonly config: Config;
     /**
      * Internal event handling system
      * @private
@@ -35,20 +35,13 @@ class TicTacToe {
      * @param client Custom Discord Client to start the bot, can be empty
      */
     constructor(config?: Config) {
-        this._config = config ?? {};
+        this.config = config ?? {};
         this.eventHandler = new EventHandler();
-        this.bot = new TicTacToeBot(this, this.eventHandler);
+        this.bot = new TicTacToeBot(this.config, this.eventHandler);
 
         if (this.config.language) {
             localize.setLanguage(this.config.language);
         }
-    }
-
-    /**
-     * Retrieves configuration of the bot.
-     */
-    public get config(): Config {
-        return this._config;
     }
 
     /**

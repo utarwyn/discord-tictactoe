@@ -63,7 +63,7 @@ export default class GameChannel {
      * @param invited user invited to a duel
      */
     public async sendDuelRequest(original: Message, invited: GuildMember): Promise<void> {
-        const expireTime = this.bot.controller.config.requestExpireTime;
+        const expireTime = this.bot.configuration.requestExpireTime;
         const message = new DuelRequestMessage(this, original, invited, expireTime);
         this.requests.push(message);
         await message.send();
@@ -131,7 +131,7 @@ export default class GameChannel {
                 this,
                 member1,
                 member2 ?? new AI(),
-                this.bot.controller.config
+                this.bot.configuration
             );
             await this.gameBoard.update();
             if (this.gameRunning) {
