@@ -19,7 +19,7 @@ export default class GameCommand {
      * Trigger of the command.
      * @private
      */
-    private readonly trigger: string;
+    private readonly trigger?: string;
 
     /**
      * Constructs the command to start a game.
@@ -27,19 +27,21 @@ export default class GameCommand {
      * @param bot game client bot
      * @param trigger string whiches triggering command
      */
-    constructor(bot: TicTacToeBot, trigger: string) {
+    constructor(bot: TicTacToeBot, trigger?: string) {
         this.bot = bot;
         this.trigger = trigger;
     }
 
     /**
+     * Handles an incoming message.
      *
-     * @param message
+     * @param message discord.js message instance
      */
     public handle(message: Message): void {
         if (
+            this.trigger &&
             !message.author.bot &&
-            message.channel.type === 'text' &&
+            message.channel.isText() &&
             message.content.startsWith(this.trigger)
         ) {
             this.run(message);
@@ -52,19 +54,18 @@ export default class GameCommand {
      * @param message discord message object
      * @private
      */
-    private run(message: Message): void {
+    public run(message: Message): void {
         const channel = this.bot.getorCreateGameChannel(message.channel as TextChannel);
-        const hasCustomParam = message.content.substring(this.trigger.length + 1).trim().length > 0;
+        const mentionned = message.mentions.members?.first();
 
         // Disable this command if a game is running
         if (channel.gameRunning) {
             return;
         }
 
-        if (hasCustomParam) {
-            const invited = message.mentions.members?.first();
-            if (invited && GameCommand.isUserReadyToPlay(invited, message)) {
-                channel.sendDuelRequest(message, invited).catch(console.error);
+        if (mentionned) {
+            if (GameCommand.isUserReadyToPlay(mentionned, message)) {
+                channel.sendDuelRequest(message, mentionned).catch(console.error);
             } else {
                 message.reply(localize.__('duel.unknown-user')).catch(console.error);
             }

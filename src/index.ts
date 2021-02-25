@@ -1,4 +1,4 @@
-import { Client } from 'discord.js';
+import { Client, Message } from 'discord.js';
 import EventHandler, { EventType } from '@bot/EventHandler';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import localize from '@config/localize';
@@ -66,6 +66,15 @@ class TicTacToe {
      */
     public attach(client: Client): void {
         this.bot.attachToClient(client);
+    }
+
+    /**
+     * Programmatically handles a discord.js message to request a game.
+     *
+     * @param message Discord.js message object
+     */
+    public handleMessage(message: Message): void {
+        this.bot.handleMessage(message);
     }
 
     /**

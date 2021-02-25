@@ -1,4 +1,4 @@
-import { Client, TextChannel } from 'discord.js';
+import { Client, Message, TextChannel } from 'discord.js';
 import GameChannel from '@bot/channel/GameChannel';
 import EventHandler from '@bot/EventHandler';
 import GameCommand from '@bot/GameCommand';
@@ -41,7 +41,7 @@ export default class TicTacToeBot {
     constructor(configuration: Config, eventHandler: EventHandler) {
         this._configuration = configuration;
         this._eventHandler = eventHandler;
-        this.command = new GameCommand(this, configuration.command!);
+        this.command = new GameCommand(this, configuration.command);
         this._channels = [];
     }
 
@@ -64,6 +64,15 @@ export default class TicTacToeBot {
      */
     public attachToClient(client: Client): void {
         client.on('message', this.command.handle.bind(this.command));
+    }
+
+    /**
+     * Programmatically handles a discord.js message to request a game.
+     *
+     * @param message Discord.js message object
+     */
+    public handleMessage(message: Message): void {
+        this.command.run(message);
     }
 
     /**
