@@ -133,7 +133,7 @@ export default class DuelRequestMessage {
             .setDescription(
                 localize.__('duel.challenge', {
                     invited: this.invited.toString(),
-                    initier: this.request.member?.displayName!
+                    initier: this.request.member?.displayName ?? ''
                 }) +
                     '\n' +
                     localize.__('duel.action')
