@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import Config from './Config';
+import Config from '@config/Config';
 
 /**
  * Manages the configuration loading to operate the bot.

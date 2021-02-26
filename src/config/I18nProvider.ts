@@ -1,7 +1,6 @@
-import i18n from 'i18n';
+import { I18n } from 'i18n';
 import fs from 'fs';
 import path from 'path';
-import { I18n, Replacements } from './I18n';
 
 /**
  * Default implementation to translate messages.
@@ -10,12 +9,15 @@ import { I18n, Replacements } from './I18n';
  * @author Utarwyn <maximemalgorn@gmail.com>
  * @since 2.0.0
  */
-export default class I18nProvider implements I18n {
+export class I18nProvider {
+    private readonly instance: I18n;
+
     constructor() {
         const localesPath = path.join(__dirname, '..', '..', '..', 'config', 'locales');
         const files = fs.readdirSync(localesPath);
 
-        i18n.configure({
+        this.instance = new I18n();
+        this.instance.configure({
             locales: files.map(file => path.basename(file, '.json')),
             defaultLocale: 'en',
             directory: localesPath,
@@ -25,7 +27,7 @@ export default class I18nProvider implements I18n {
     }
 
     setLanguage(locale: string): void {
-        i18n.setLocale(locale);
+        this.instance.setLocale(locale);
     }
 
     __(id: string, replacements?: Replacements): string {
@@ -33,10 +35,17 @@ export default class I18nProvider implements I18n {
     }
 
     getLanguage(): string {
-        return i18n.getLocale();
+        return this.instance.getLocale();
     }
 
     translate(id: string, replacements?: Replacements): string {
-        return i18n.__mf(id, replacements);
+        return this.instance.__mf(id, replacements);
     }
+}
+
+/**
+ * Allows to define some replacements when translating a text.
+ */
+export interface Replacements {
+    [key: string]: string | number | string[];
 }
