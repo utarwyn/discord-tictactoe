@@ -22,6 +22,10 @@ export default interface Config {
      */
     requestExpireTime?: number;
     /**
+     * Cooldown time of a duel request.
+     */
+    requestCooldownTime?: number;
+    /**
      * Expiration time of a player turn.
      */
     gameExpireTime?: number;

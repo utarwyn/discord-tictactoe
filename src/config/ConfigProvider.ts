@@ -14,6 +14,7 @@ export default class ConfigProvider implements Config {
     public language = 'en';
     public command = '!ttt';
     public requestExpireTime = 60;
+    public requestCooldownTime = 0;
     public gameExpireTime = 30;
     public gameBoardDelete = false;
 

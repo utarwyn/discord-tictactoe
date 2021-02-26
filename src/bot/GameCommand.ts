@@ -22,14 +22,29 @@ export default class GameCommand {
     private readonly trigger?: string;
 
     /**
+     * Amount of seconds to wait after executing command
+     * @private
+     */
+    private readonly cooldown: number;
+
+    /**
+     * Stores member cooldown end times.
+     * @private
+     */
+    private memberCooldownEndTimes: Map<string, number>;
+
+    /**
      * Constructs the command to start a game.
      *
      * @param bot game client bot
      * @param trigger string whiches triggering command
+     * @param cooldown amount of seconds to wait after executing command
      */
-    constructor(bot: TicTacToeBot, trigger?: string) {
+    constructor(bot: TicTacToeBot, trigger?: string, cooldown = 0) {
         this.bot = bot;
         this.trigger = trigger;
+        this.cooldown = cooldown;
+        this.memberCooldownEndTimes = new Map();
     }
 
     /**
@@ -58,8 +73,8 @@ export default class GameCommand {
         const channel = this.bot.getorCreateGameChannel(message.channel as TextChannel);
         const mentionned = message.mentions.members?.first();
 
-        // Disable this command if a game is running
-        if (channel.gameRunning) {
+        // Disable this command if a game is running or member cooldown active
+        if (channel.gameRunning || this.isRefusedDueToCooldown(message.author.id)) {
             return;
         }
 
@@ -72,6 +87,23 @@ export default class GameCommand {
         } else {
             channel.createGame(message.member!).catch(console.error);
         }
+    }
+
+    /**
+     * Verifies if a member can run the command based on its cooldown.
+     *
+     * @param author identifier of message author
+     */
+    private isRefusedDueToCooldown(author: string): boolean {
+        if (this.cooldown > 0) {
+            if ((this.memberCooldownEndTimes.get(author) ?? 0) > Date.now()) {
+                return true;
+            } else {
+                this.memberCooldownEndTimes.set(author, Date.now() + this.cooldown * 1000);
+            }
+        }
+
+        return false;
     }
 
     /**
