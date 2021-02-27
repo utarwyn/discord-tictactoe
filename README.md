@@ -44,6 +44,9 @@ Then, you can install the bot via Docker or npm (check below!). If you are not a
 The bot works **out-of-the-box**. Otherwise if you want to configure it, check the file `config.example.json` in the config folder.
 Create a file called `config.json` to change default options.
 
+> :warning: Check that your Discord bot has these permissions in all channels where games can be played:\
+> *"Add reactions", "Manage messages", "Read message history", "Send messages", "View channel"*
+
 Running via Docker
 ------------
 
