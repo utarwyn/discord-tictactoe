@@ -1,4 +1,4 @@
-import { Client, Message, TextChannel } from 'discord.js';
+import { Client, Message, PermissionString, TextChannel } from 'discord.js';
 import GameChannel from '@bot/channel/GameChannel';
 import EventHandler from '@bot/EventHandler';
 import GameCommand from '@bot/GameCommand';
@@ -11,6 +11,18 @@ import Config from '@config/Config';
  * @since 2.0.0
  */
 export default class TicTacToeBot {
+    /**
+     * List with all permissions that the bot needs to work properly.
+     * @private
+     */
+    private static readonly PERM_LIST: PermissionString[] = [
+        'ADD_REACTIONS',
+        'MANAGE_MESSAGES',
+        'READ_MESSAGE_HISTORY',
+        'SEND_MESSAGES',
+        'VIEW_CHANNEL'
+    ];
+
     /**
      * Game configuration object
      * @private
@@ -83,16 +95,29 @@ export default class TicTacToeBot {
      * Retrieves a game channel from the Discord object.
      * Creates a new game channel innstance if not found in the cache.
      *
-     * @param parent parent Discord channel object
+     * @param channel parent Discord channel object
+     * @return created game channel, null if bot does not have proper permissions
      */
-    public getorCreateGameChannel(parent: TextChannel): GameChannel {
-        const found = this._channels.find(channel => channel.channel === parent);
+    public getorCreateGameChannel(channel: TextChannel): GameChannel | null {
+        const found = this._channels.find(gameChannel => gameChannel.channel === channel);
         if (found) {
             return found;
-        } else {
-            const instance = new GameChannel(this, parent);
+        } else if (TicTacToeBot.hasPermissionsInChannel(channel)) {
+            const instance = new GameChannel(this, channel);
             this._channels.push(instance);
             return instance;
+        } else {
+            return null;
         }
+    }
+
+    /**
+     * Checks if bot has permissions to operate in a specific channel.
+     *
+     * @param channel discord.js text channel object
+     * @return true if bot got all permissions, false otherwise
+     */
+    private static hasPermissionsInChannel(channel: TextChannel): boolean {
+        return channel.guild.me?.permissionsIn(channel)?.has(TicTacToeBot.PERM_LIST) ?? false;
     }
 }

@@ -73,6 +73,15 @@ export default class GameCommand {
         const channel = this.bot.getorCreateGameChannel(message.channel as TextChannel);
         const mentionned = message.mentions.members?.first();
 
+        // Stop here if cannot create a game channel
+        if (channel == null) {
+            const name = (message.channel as TextChannel).name;
+            console.error(
+                `Cannot operate because of a lack of permissions in the channel #${name}`
+            );
+            return;
+        }
+
         // Disable this command if a game is running or member cooldown active
         if (channel.gameRunning || this.isRefusedDueToCooldown(message.author.id)) {
             return;

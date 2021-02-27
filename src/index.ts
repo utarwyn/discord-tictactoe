@@ -31,8 +31,7 @@ class TicTacToe {
     /**
      * Constructs the game controller.
      *
-     * @param config tictactoe configuration
-     * @param client Custom Discord Client to start the bot, can be empty
+     * @param config tictactoe configuration, default if not provided
      */
     constructor(config?: Config) {
         this.config = config ?? {};
