@@ -57,7 +57,8 @@ export default class TicTacToeBot {
         this.command = new GameCommand(
             this,
             configuration.command,
-            configuration.requestCooldownTime
+            configuration.requestCooldownTime,
+            configuration.allowedRoleIds
         );
     }
 

@@ -2,6 +2,7 @@
   "token": "YOUR_BOT_USER_TOKEN",
   "language": "en",
   "command": "!ttt",
+  "allowedRoleIds": [],
   "requestExpireTime": 60,
   "requestCooldownTime": 0,
   "gameExpireTime": 30,

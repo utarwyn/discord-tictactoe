@@ -18,6 +18,10 @@ export default interface Config {
      */
     command?: string;
     /**
+     * List of role identifiers that can start a game.
+     */
+    allowedRoleIds?: string[];
+    /**
      * Expiration time of a duel request.
      */
     requestExpireTime?: number;

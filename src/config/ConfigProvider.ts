@@ -13,6 +13,7 @@ export default class ConfigProvider implements Config {
     public token = '';
     public language = 'en';
     public command = '!ttt';
+    public allowedRoleIds = [];
     public requestExpireTime = 60;
     public requestCooldownTime = 0;
     public gameExpireTime = 30;
@@ -47,9 +48,6 @@ export default class ConfigProvider implements Config {
 
                 // Ignore the default Node variable LANGUAGE
                 if (camelCaseKey === 'language') return;
-                /*if (camelCaseKey === 'language' && value.indexOf('_') > 0) {
-                    value = value.split('_')[0];
-                }*/
 
                 // Operate types checking
                 switch (typeof this[camelCaseKey]) {
@@ -63,6 +61,10 @@ export default class ConfigProvider implements Config {
                     case 'object':
                     default:
                         newValue = value.toString();
+
+                        if (Array.isArray(this[camelCaseKey])) {
+                            newValue = newValue.split(',');
+                        }
                         break;
                 }
 

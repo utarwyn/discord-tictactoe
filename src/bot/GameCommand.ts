@@ -1,4 +1,4 @@
-import { GuildMember, Message, TextChannel } from 'discord.js';
+import { GuildMember, Message, TextChannel, User } from 'discord.js';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import localize from '@config/localize';
 
@@ -22,10 +22,16 @@ export default class GameCommand {
     private readonly trigger?: string;
 
     /**
-     * Amount of seconds to wait after executing command
+     * Amount of seconds to wait after executing command.
      * @private
      */
     private readonly cooldown: number;
+
+    /**
+     * List of role identifiers that can use the command.
+     * @private
+     */
+    private readonly allowedRoleIds: string[];
 
     /**
      * Stores member cooldown end times.
@@ -39,11 +45,13 @@ export default class GameCommand {
      * @param bot game client bot
      * @param trigger string whiches triggering command
      * @param cooldown amount of seconds to wait after executing command
+     * @param allowedRoleIds list of role identifiers that can use the command.
      */
-    constructor(bot: TicTacToeBot, trigger?: string, cooldown = 0) {
+    constructor(bot: TicTacToeBot, trigger?: string, cooldown = 0, allowedRoleIds: string[] = []) {
         this.bot = bot;
         this.trigger = trigger;
         this.cooldown = cooldown;
+        this.allowedRoleIds = allowedRoleIds;
         this.memberCooldownEndTimes = new Map();
     }
 
@@ -83,7 +91,11 @@ export default class GameCommand {
         }
 
         // Disable this command if a game is running or member cooldown active
-        if (channel.gameRunning || this.isRefusedDueToCooldown(message.author.id)) {
+        if (
+            channel.gameRunning ||
+            this.isRefusedDueToRoles(message.member) ||
+            this.isRefusedDueToCooldown(message.author)
+        ) {
             return;
         }
 
@@ -99,16 +111,32 @@ export default class GameCommand {
     }
 
     /**
+     * Verifies if a member can run the command based on its roles.
+     *
+     * @param member discord.js member object
+     * @private
+     */
+    private isRefusedDueToRoles(member: GuildMember | null): boolean {
+        return (
+            member != null &&
+            this.allowedRoleIds.length > 0 &&
+            !member.permissions.has('ADMINISTRATOR') &&
+            !member.roles.cache.some(role => this.allowedRoleIds.includes(role.id))
+        );
+    }
+
+    /**
      * Verifies if a member can run the command based on its cooldown.
      *
      * @param author identifier of message author
+     * @private
      */
-    private isRefusedDueToCooldown(author: string): boolean {
+    private isRefusedDueToCooldown(author: User): boolean {
         if (this.cooldown > 0) {
-            if ((this.memberCooldownEndTimes.get(author) ?? 0) > Date.now()) {
+            if ((this.memberCooldownEndTimes.get(author.id) ?? 0) > Date.now()) {
                 return true;
             } else {
-                this.memberCooldownEndTimes.set(author, Date.now() + this.cooldown * 1000);
+                this.memberCooldownEndTimes.set(author.id, Date.now() + this.cooldown * 1000);
             }
         }
 
@@ -122,6 +150,8 @@ export default class GameCommand {
      * @param invited member invited to enter a duel
      * @param invitation message used to invite a member to enter a duel
      * @return true if invited member can duel with the sender, false otherwise
+     * @private
+     * @static
      */
     private static isUserReadyToPlay(invited: GuildMember, invitation: Message): boolean {
         return (
