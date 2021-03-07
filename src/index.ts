@@ -32,14 +32,20 @@ class TicTacToe {
      * Constructs the game controller.
      *
      * @param config tictactoe configuration, default if not provided
+     * @param client deprecated: if you want to attach a client to the module. Now use attach method.
      */
-    constructor(config?: Config) {
+    constructor(config?: Config, client?: Client) {
         this.config = config ?? {};
         this.eventHandler = new EventHandler();
         this.bot = new TicTacToeBot(this.config, this.eventHandler);
 
         if (this.config.language) {
             localize.setLanguage(this.config.language);
+        }
+
+        // Deprecated, remove this in a next future
+        if (client) {
+            this.attach(client);
         }
     }
 
@@ -84,6 +90,16 @@ class TicTacToe {
      */
     public on(eventName: EventType, listener: (data?: any) => void): void {
         this.eventHandler.registerListener(eventName, listener);
+    }
+
+    /**
+     * Old method which connects the module through an internal Discord client.
+     * Please now use {@link login} method. Will be removed in a next future.
+     *
+     * @deprecated
+     */
+    public async connect(): Promise<void> {
+        return this.login();
     }
 }
 
