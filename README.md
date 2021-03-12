@@ -41,7 +41,7 @@ Installation
 Before installing the bot, you need to create your own [Discord Application][6].
 Then, you can install the bot via Docker or npm (check below!). If you are not a programmer, I recommend you to opt for Docker because its the simplest solution.
 
-The bot works **out-of-the-box**. Otherwise if you want to configure it, check the file `config.example.json` in the config folder.
+The bot works **out-of-the-box**. Otherwise if you want to configure it, check [config.example.json][7] file in the config folder.
 Create a file called `config.json` to change default options.
 
 > :warning: Check that your Discord bot has these permissions in all channels where games can be played:\
@@ -68,25 +68,35 @@ Running via Node.js
 3. Use as an independent bot:
    ```javascript
    const TicTacToe = require('discord-tictactoe');
-   const bot = new TicTacToe({
-     token: 'YOUR_BOT_USER_TOKEN',
-     language: 'en',
-     command: '!ttt'
-   }); 
-   bot.connect().catch(() => console.error("Cannot connect TicTacToe bot"));
+   new TicTacToe({ language: 'en', command: '!ttt' })
+     .login('YOUR_BOT_TOKEN')
+     .then(() => console.error('TicTacToe bot ready to be used.'));
    ```
 4. **OR** use it in your own bot:
    ```javascript
    const TicTacToe = require('discord-tictactoe');
    const Discord = require('discord.js');
-   const yourBot = new Discord.Client();
+   const client = new Discord.Client();
    
-   new TicTacToe({
-     language: 'fr',
-     command: '!ttt'
-   }, yourBot);
+   new TicTacToe({ language: 'fr', command: '-ttt' })
+     .attach(client);
    
-   yourBot.login('YOUR_BOT_TOKEN');
+   client.login('YOUR_BOT_TOKEN');
+   ```
+5. **OR** use it with a custom command handling system:
+   ```javascript
+   const TicTacToe = require('discord-tictactoe');
+   const Discord = require('discord.js');
+   const client = new Discord.Client();
+   const game = new TicTacToe({ language: 'de' })
+   
+   client.on('message', message => {
+     if (message.content.startsWith('-tictactoe')) {
+       game.handleMessage(message);
+     }
+   });
+   
+   client.login('YOUR_BOT_TOKEN');
    ```
 
 License
@@ -100,7 +110,8 @@ License
 
 [1]: https://hub.docker.com/r/utarwyn/discord-tictactoe
 [2]: https://www.npmjs.com/package/discord-tictactoe
-[3]: https://github.com/utarwyn/discord-tictactoe/blob/master/LICENSE
+[3]: https://github.com/utarwyn/discord-tictactoe/blob/next/LICENSE
 [4]: https://github.com/utarwyn
 [5]: https://twitter.com/Utarwyn
 [6]: https://discordapp.com/developers/applications
+[7]: https://github.com/utarwyn/discord-tictactoe/blob/next/config/config.example.json
