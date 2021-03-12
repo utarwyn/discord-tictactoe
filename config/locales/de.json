@@ -1,0 +1,20 @@
+{
+  "duel": {
+    "title": ":crossed_swords: Neues Duell",
+    "challenge": "{invited} fordert **{initier}** zu einem Duell heraus!",
+    "action": "Zum Annehmen reagieren.",
+    "expire": ":x: `{invited}` ist nicht zum Match angetreten.",
+    "reject": ":x: `{invited}` hat das Match abgelehnt.",
+    "unknown-user": "Du kannst diesen User nicht herausfordern."
+  },
+  "game": {
+    "title": ":game_die: `{player1}` **VS** `{player2}`",
+    "action": "{player} ist am Zug:",
+    "load": "Spiel wird geladen, bitte warten...",
+    "end": "Kein Sieger, unentschieden! Nochmal?",
+    "win": ":tada: {player} hat gewonnen!",
+    "expire": ":x: Spiel ist **abgelaufen**... da war wohl keiner mehr da.",
+    "waiting-ai": ":robot: KI ist am Zug, bitte warten...",
+    "ai": "KI"
+  }
+}
