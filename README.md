@@ -70,7 +70,7 @@ Running via Node.js
    const TicTacToe = require('discord-tictactoe');
    new TicTacToe({ language: 'en', command: '!ttt' })
      .login('YOUR_BOT_TOKEN')
-     .then(() => console.error('TicTacToe bot ready to be used.'));
+     .then(() => console.log('TicTacToe bot is ready to be used.'));
    ```
 4. **OR** use it in your own bot:
    ```javascript
