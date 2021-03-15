@@ -18,6 +18,10 @@ export default interface Config {
      */
     command?: string;
     /**
+     * List of channel identifiers where games can be started.
+     */
+    allowedChannelIds?: string[];
+    /**
      * List of role identifiers that can start a game.
      */
     allowedRoleIds?: string[];

@@ -58,6 +58,7 @@ export default class TicTacToeBot {
             this,
             configuration.command,
             configuration.requestCooldownTime,
+            configuration.allowedChannelIds,
             configuration.allowedRoleIds
         );
     }

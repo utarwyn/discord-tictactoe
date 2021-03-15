@@ -1,5 +1,6 @@
 import { GuildMember, Message, TextChannel, User } from 'discord.js';
 import TicTacToeBot from '@bot/TicTacToeBot';
+import GameChannel from '@bot/channel/GameChannel';
 import localize from '@config/localize';
 
 /**
@@ -28,6 +29,12 @@ export default class GameCommand {
     private readonly cooldown: number;
 
     /**
+     * List of channel identifiers where the command can be used.
+     * @private
+     */
+    private readonly allowedChannelIds: string[];
+
+    /**
      * List of role identifiers that can use the command.
      * @private
      */
@@ -47,10 +54,17 @@ export default class GameCommand {
      * @param cooldown amount of seconds to wait after executing command
      * @param allowedRoleIds list of role identifiers that can use the command.
      */
-    constructor(bot: TicTacToeBot, trigger?: string, cooldown = 0, allowedRoleIds: string[] = []) {
+    constructor(
+        bot: TicTacToeBot,
+        trigger?: string,
+        cooldown = 0,
+        allowedChannelIds: string[] = [],
+        allowedRoleIds: string[] = []
+    ) {
         this.bot = bot;
         this.trigger = trigger;
         this.cooldown = cooldown;
+        this.allowedChannelIds = allowedChannelIds;
         this.allowedRoleIds = allowedRoleIds;
         this.memberCooldownEndTimes = new Map();
     }
@@ -79,35 +93,53 @@ export default class GameCommand {
      */
     public run(message: Message): void {
         const channel = this.bot.getorCreateGameChannel(message.channel as TextChannel);
-        const mentionned = message.mentions.members?.first();
 
-        // Stop here if cannot create a game channel
+        if (this.canStartGame(message, channel)) {
+            const mentionned = message.mentions.members?.first();
+
+            if (mentionned) {
+                if (GameCommand.isUserReadyToPlay(mentionned, message)) {
+                    channel!.sendDuelRequest(message, mentionned).catch(console.error);
+                } else {
+                    message.reply(localize.__('duel.unknown-user')).catch(console.error);
+                }
+            } else {
+                channel!.createGame(message.member!).catch(console.error);
+            }
+        }
+    }
+
+    /**
+     * Checks if the command can be executed based on a specific message context.
+     *
+     * @param message discord.js message
+     * @param channel game channel where the game will be starte, can be null
+     */
+    private canStartGame(message: Message, channel: GameChannel | null): boolean {
+        // Disable the command if the channel is not allowed
+        if (
+            this.allowedChannelIds.length > 0 &&
+            !this.allowedChannelIds.includes(message.channel.id)
+        ) {
+            return false;
+        }
+
+        // Check if game channel created
         if (channel == null) {
             const name = (message.channel as TextChannel).name;
             console.error(
                 `Cannot operate because of a lack of permissions in the channel #${name}`
             );
-            return;
+            return false;
         }
 
-        // Disable this command if a game is running or member cooldown active
-        if (
-            channel.gameRunning ||
-            this.isRefusedDueToRoles(message.member) ||
-            this.isRefusedDueToCooldown(message.author)
-        ) {
-            return;
-        }
-
-        if (mentionned) {
-            if (GameCommand.isUserReadyToPlay(mentionned, message)) {
-                channel.sendDuelRequest(message, mentionned).catch(console.error);
-            } else {
-                message.reply(localize.__('duel.unknown-user')).catch(console.error);
-            }
-        } else {
-            channel.createGame(message.member!).catch(console.error);
-        }
+        // Disable the command if a game is running or member cooldown active
+        return (
+            !channel.gameRunning &&
+            message.member != null &&
+            this.isAllowedMemberByRole(message.member) &&
+            this.isAllowedUserByCooldown(message.author)
+        );
     }
 
     /**
@@ -116,31 +148,30 @@ export default class GameCommand {
      * @param member discord.js member object
      * @private
      */
-    private isRefusedDueToRoles(member: GuildMember | null): boolean {
+    private isAllowedMemberByRole(member: GuildMember): boolean {
         return (
-            member != null &&
-            this.allowedRoleIds.length > 0 &&
-            !member.permissions.has('ADMINISTRATOR') &&
-            !member.roles.cache.some(role => this.allowedRoleIds.includes(role.id))
+            this.allowedRoleIds.length == 0 ||
+            member.permissions.has('ADMINISTRATOR') ||
+            member.roles.cache.some(role => this.allowedRoleIds.includes(role.id))
         );
     }
 
     /**
-     * Verifies if a member can run the command based on its cooldown.
+     * Verifies if an user can run the command based on its cooldown.
      *
      * @param author identifier of message author
      * @private
      */
-    private isRefusedDueToCooldown(author: User): boolean {
+    private isAllowedUserByCooldown(author: User): boolean {
         if (this.cooldown > 0) {
             if ((this.memberCooldownEndTimes.get(author.id) ?? 0) > Date.now()) {
-                return true;
+                return false;
             } else {
                 this.memberCooldownEndTimes.set(author.id, Date.now() + this.cooldown * 1000);
             }
         }
 
-        return false;
+        return true;
     }
 
     /**

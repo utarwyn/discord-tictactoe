@@ -2,6 +2,7 @@
   "token": "YOUR_BOT_USER_TOKEN",
   "language": "en",
   "command": "!ttt",
+  "allowedChannelIds": [],
   "allowedRoleIds": [],
   "requestExpireTime": 60,
   "requestCooldownTime": 0,

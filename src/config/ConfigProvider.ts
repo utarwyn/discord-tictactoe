@@ -13,6 +13,7 @@ export default class ConfigProvider implements Config {
     public token = '';
     public language = 'en';
     public command = '!ttt';
+    public allowedChannelIds = [];
     public allowedRoleIds = [];
     public requestExpireTime = 60;
     public requestCooldownTime = 0;
