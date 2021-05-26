@@ -7,5 +7,6 @@
   "requestExpireTime": 60,
   "requestCooldownTime": 0,
   "gameExpireTime": 30,
-  "gameBoardDelete": false
+  "gameBoardDelete": false,
+  "gameBoardEmojies": []
 }

@@ -19,6 +19,7 @@ export default class ConfigProvider implements Config {
     public requestCooldownTime = 0;
     public gameExpireTime = 30;
     public gameBoardDelete = false;
+    public gameBoardEmojies = [];
 
     [key: string]: any;
 

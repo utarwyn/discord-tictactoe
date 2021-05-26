@@ -13,4 +13,8 @@ export default interface GameBoardConfig {
      * Should bot needs to delete the game board message.
      */
     gameBoardDelete?: boolean;
+    /**
+     * List of emojies used to identify players.
+     */
+    gameBoardEmojies?: string[];
 }

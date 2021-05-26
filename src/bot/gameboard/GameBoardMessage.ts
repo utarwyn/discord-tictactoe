@@ -109,6 +109,11 @@ export default class GameBoardMessage {
             builder.withEndingMessage(this.getEntity(this.game.winner));
         }
 
+        const emojies = this.configuration?.gameBoardEmojies;
+        if (emojies && emojies.length === 2) {
+            builder.withEmojies(emojies[0], emojies[1]);
+        }
+
         if (!this.message) {
             this.message = await this.channel.channel.send(builder.toString());
             for (const reaction of GameBoardBuilder.MOVE_REACTIONS) {
