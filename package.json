@@ -45,7 +45,7 @@
     "node": ">= 14.0.0"
   },
   "scripts": {
-    "clean": "rimraf coverage build tmp",
+    "clean": "rimraf coverage dist tmp",
     "build": "tsc -p tsconfig.release.json",
     "build:watch": "tsc -w -p tsconfig.release.json",
     "format:check": "prettier --config .prettierrc --list-different \"**/**.ts\"",
