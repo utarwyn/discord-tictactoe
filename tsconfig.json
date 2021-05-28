@@ -15,6 +15,5 @@
     },
     "incremental": true
   },
-  "include": ["src/**/*", "bin/**/*"],
-  "exclude": ["**/__tests__"]
+  "include": ["src/**/*", "bin/**/*"]
 }

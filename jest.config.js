@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
     clearMocks: true,
     testEnvironment: 'node',
@@ -10,9 +12,10 @@ module.exports = {
         '@config/(.*)': '<rootDir>/src/config/$1',
         '@tictactoe/(.*)': '<rootDir>/src/tictactoe/$1'
     },
+    globals: {
+        __dirname: path.join(__dirname, 'test', 'runtime', 'env')
+    },
     moduleFileExtensions: ['js', 'json', 'ts'],
-    coverageDirectory: 'coverage',
     collectCoverage: true,
-    coverageReporters: ['lcov'],
     coveragePathIgnorePatterns: ['/node_modules/', '.d.ts']
 };

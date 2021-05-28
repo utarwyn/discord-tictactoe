@@ -13,7 +13,8 @@ export class I18nProvider {
     private readonly instance: I18n;
 
     constructor() {
-        const localesPath = path.join(__dirname, '..', '..', '..', 'config', 'locales');
+        const workingDirectory = global.__dirname ?? __dirname;
+        const localesPath = path.join(workingDirectory, '..', '..', '..', 'config', 'locales');
         const files = fs.readdirSync(localesPath);
 
         this.instance = new I18n();
