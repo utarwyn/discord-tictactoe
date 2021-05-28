@@ -7,8 +7,8 @@ Created with <a href="https://github.com/discordjs/discord.js">discord.js</a>.
 </h4>
 
 <p align="center">
-    <a href="https://github.com/utarwyn/discord-tictactoe/actions">
-        <img src="https://github.com/utarwyn/discord-tictactoe/workflows/Node.js%20CI/badge.svg" alt="Node.js CI">
+    <a href="https://sonarcloud.io/dashboard?id=utarwyn_discord-tictactoe">
+        <img src="https://sonarcloud.io/api/project_badges/measure?project=utarwyn_discord-tictactoe&metric=alert_status" alt="Quality Gate Status">
     </a>
     <a href="https://hub.docker.com/r/utarwyn/discord-tictactoe">
         <img src="https://img.shields.io/docker/cloud/build/utarwyn/discord-tictactoe" alt="Docker Build status">
