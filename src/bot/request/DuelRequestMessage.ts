@@ -1,11 +1,4 @@
-import {
-    Collection,
-    GuildMember,
-    Message,
-    MessageEmbed,
-    MessageReaction,
-    Snowflake
-} from 'discord.js';
+import { Collection, GuildMember, Message, MessageReaction, Snowflake } from 'discord.js';
 import GameChannel from '@bot/channel/GameChannel';
 import localize from '@config/localize';
 
@@ -61,7 +54,8 @@ export default class DuelRequestMessage {
      * Send the challenge embed message in the channel.
      */
     async send(): Promise<void> {
-        this.message = await this.request.channel.send(this.createEmbed());
+        this.message = await this.sendMessage();
+
         for (const reaction of DuelRequestMessage.REACTIONS) {
             await this.message.react(reaction);
         }
@@ -124,19 +118,24 @@ export default class DuelRequestMessage {
     }
 
     /**
-     * Constructs the Discord object to send in the channel.
+     * Sends the duel request message into Discord channel.
+     * @returns sent message
      */
-    private createEmbed(): MessageEmbed {
-        return new MessageEmbed()
-            .setColor('#2980b9')
-            .setTitle(localize.__('duel.title'))
-            .setDescription(
-                localize.__('duel.challenge', {
-                    invited: this.invited.toString(),
-                    initier: this.request.member?.displayName ?? ''
-                }) +
-                    '\n' +
-                    localize.__('duel.action')
-            );
+    private async sendMessage(): Promise<Message> {
+        const content =
+            localize.__('duel.challenge', {
+                invited: this.invited.toString(),
+                initier: this.request.member?.displayName ?? ''
+            }) +
+            '\n' +
+            localize.__('duel.action');
+
+        return this.request.channel.send({
+            embed: {
+                color: '#2980b9',
+                title: localize.__('duel.title'),
+                description: content
+            }
+        });
     }
 }
