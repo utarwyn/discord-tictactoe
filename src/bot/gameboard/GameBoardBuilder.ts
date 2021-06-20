@@ -1,4 +1,5 @@
 import GameEntity from '@bot/channel/GameEntity';
+import { formatDiscordName } from '@bot/util';
 import localize from '@config/localize';
 import AI from '@tictactoe/AI';
 import { Player } from '@tictactoe/Player';
@@ -61,8 +62,8 @@ export default class GameBoardBuilder {
     withTitle(player1: GameEntity, player2: GameEntity): GameBoardBuilder {
         this.title =
             localize.__('game.title', {
-                player1: player1.displayName,
-                player2: player2.displayName
+                player1: formatDiscordName(player1.displayName),
+                player2: formatDiscordName(player2.displayName)
             }) + '\n\n';
         return this;
     }
