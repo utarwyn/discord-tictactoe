@@ -1,6 +1,7 @@
-import { Collection, GuildMember, Message, MessageReaction, Snowflake } from 'discord.js';
 import GameChannel from '@bot/channel/GameChannel';
+import { formatDiscordName } from '@bot/util';
 import localize from '@config/localize';
+import { Collection, GuildMember, Message, MessageReaction, Snowflake } from 'discord.js';
 
 /**
  * Message sent when a user challenges someone else to a duel.
@@ -102,7 +103,7 @@ export default class DuelRequestMessage {
         } else {
             await this.channel.closeDuelRequest(
                 this,
-                localize.__('duel.reject', { invited: this.invited.displayName })
+                localize.__('duel.reject', { invited: formatDiscordName(this.invited.displayName) })
             );
         }
     }
@@ -113,7 +114,7 @@ export default class DuelRequestMessage {
     private async challengeExpired(): Promise<void> {
         await this.channel.closeDuelRequest(
             this,
-            localize.__('duel.expire', { invited: this.invited.displayName })
+            localize.__('duel.expire', { invited: formatDiscordName(this.invited.displayName) })
         );
     }
 
@@ -125,7 +126,7 @@ export default class DuelRequestMessage {
         const content =
             localize.__('duel.challenge', {
                 invited: this.invited.toString(),
-                initier: this.request.member?.displayName ?? ''
+                initier: formatDiscordName(this.request.member?.displayName ?? '')
             }) +
             '\n' +
             localize.__('duel.action');
