@@ -1,6 +1,6 @@
 {
   "name": "discord-tictactoe",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "A modern Discord Bot for playing Tic-Tac-Toe",
   "author": "Utarwyn <maximemalgorn@gmail.com>",
   "license": "Apache-2.0",
