@@ -46,15 +46,15 @@
   },
   "scripts": {
     "clean": "rimraf coverage dist tmp",
-    "build": "tsc -p tsconfig.release.json",
+    "build": "tsc -p tsconfig.release.json && node lib/replacePaths.js",
     "build:watch": "tsc -w -p tsconfig.release.json",
     "format:check": "prettier --config .prettierrc --list-different \"**/**.ts\"",
     "format": "prettier --config .prettierrc --write \"**/**.ts\"",
     "lint": "eslint . --ext .ts,.tsx",
-    "serve": "node lib/replacePaths.js && node dist/bin/tictactoe.js",
+    "serve": "node dist/bin/tictactoe.js",
     "start": "npm run build && npm run serve",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
-    "release": "npm run clean && npm run lint && npm run test && npm run format && npm run build && node lib/replacePaths.js"
+    "release": "npm run clean && npm run lint && npm run test && npm run format && npm run build"
   }
 }
