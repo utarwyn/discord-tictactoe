@@ -20,10 +20,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install dependencies
-        run: npm install
+        run: yarn install
       - name: Check formatting
-        run: npm run format:check
+        run: yarn format:check
       - name: Lint
-        run: npm run lint
+        run: yarn lint
       - name: Test
-        run: npm run test
+        run: yarn test

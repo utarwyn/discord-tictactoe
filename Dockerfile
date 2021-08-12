@@ -9,8 +9,8 @@ WORKDIR /app
 FROM base as build
 
 COPY --chown=node:node . /app
-RUN npm install --silent
-RUN npm run build
+RUN yarn install --silent --pure-lockfile && yarn autoclean --force && yarn cache clean
+RUN yarn build
 
 ####################################################################################################
 
@@ -20,4 +20,4 @@ COPY --from=build --chown=node:node /app .
 
 USER node
 ENV NODE_ENV=production
-CMD ["npm", "run", "serve"]
+CMD ["yarn", "serve"]

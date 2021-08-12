@@ -13,17 +13,17 @@ jobs:
         with:
           node-version: '14.x'
           registry-url: 'https://registry.npmjs.org'
-      - run: npm install
-      - run: npm run release
+      - run: yarn install
+      - run: yarn release
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   npm-github:
-    runs-on: ubuntu-latest 
-    permissions: 
+    runs-on: ubuntu-latest
+    permissions:
       contents: read
-      packages: write 
+      packages: write
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -31,8 +31,8 @@ jobs:
           node-version: '14.x'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@utarwyn'
-      - run: npm install
-      - run: npm run release
+      - run: yarn install
+      - run: yarn release
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
