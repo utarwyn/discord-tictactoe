@@ -9,8 +9,7 @@ WORKDIR /app
 FROM base as build
 
 COPY --chown=node:node . /app
-RUN yarn install --silent --pure-lockfile && yarn autoclean --force && yarn cache clean
-RUN yarn build
+RUN yarn install --silent --pure-lockfile && yarn build && rm -rf node_modules && yarn install --production --silent --pure-lockfile && yarn cache clean
 
 ####################################################################################################
 
