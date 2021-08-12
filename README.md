@@ -11,7 +11,7 @@ Created with <a href="https://github.com/discordjs/discord.js">discord.js</a>.
         <img src="https://sonarcloud.io/api/project_badges/measure?project=utarwyn_discord-tictactoe&metric=alert_status" alt="Quality Gate Status">
     </a>
     <a href="https://hub.docker.com/r/utarwyn/discord-tictactoe">
-        <img src="https://img.shields.io/docker/cloud/build/utarwyn/discord-tictactoe" alt="Docker Build status">
+        <img src="https://img.shields.io/github/workflow/status/utarwyn/discord-tictactoe/Docker%20Image%20Build%20and%20Push?label=docker%20build" alt="Docker Build status">
     </a>
     <a href="https://github.com/utarwyn/discord-tictactoe/releases">
         <img src="https://img.shields.io/github/package-json/v/utarwyn/discord-tictactoe" alt="Npm version">
