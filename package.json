@@ -25,16 +25,16 @@
     "@types/jest": "^27.0.1",
     "@types/node": "^14.17.9",
     "@types/ws": "^7.4.4",
-    "@typescript-eslint/eslint-plugin": "^4.31.0",
-    "@typescript-eslint/parser": "^4.31.0",
-    "eslint": "^7.27.0",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
+    "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-jest": "^24.3.6",
-    "jest": "^27.1.1",
+    "eslint-plugin-jest": "^25.2.2",
+    "jest": "^27.3.1",
     "prettier": "^2.3.0",
-    "replace-in-file": "^6.2.0",
+    "replace-in-file": "^6.3.2",
     "rimraf": "^3.0.2",
-    "ts-jest": "^27.0.5",
+    "ts-jest": "^27.0.7",
     "typescript": "^4.2.4"
   },
   "dependencies": {
@@ -52,9 +52,9 @@
     "format": "prettier --config .prettierrc --write \"**/**.ts\"",
     "lint": "eslint . --ext .ts,.tsx",
     "serve": "node dist/bin/tictactoe.js",
-    "start": "npm run build && npm run serve",
+    "start": "yarn build && yarn serve",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
-    "release": "npm run clean && npm run lint && npm run test && npm run format && npm run build"
+    "release": "yarn clean && yarn lint && yarn test && yarn format && yarn build"
   }
 }
