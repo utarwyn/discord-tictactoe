@@ -6,7 +6,7 @@ import Config from '@config/Config';
  * Manages the configuration loading to operate the bot.
  * Loads values from a static file and environement variables.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
 export default class ConfigProvider implements Config {

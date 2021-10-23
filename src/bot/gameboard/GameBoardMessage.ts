@@ -10,7 +10,7 @@ import Game from '@tictactoe/Game';
  * Message sent to display the status of a game board.
  * Users must use reactions to play in the grid.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
 export default class GameBoardMessage {

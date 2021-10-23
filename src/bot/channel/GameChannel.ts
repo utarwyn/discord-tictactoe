@@ -9,7 +9,7 @@ import AI from '@tictactoe/AI';
 /**
  * Manages a channel in which games can be played.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
 export default class GameChannel {

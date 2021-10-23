@@ -6,7 +6,7 @@ export type EventType = 'win' | 'tie';
 /**
  * Handles events emitted during games.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.1.0
  */
 export default class EventHandler {

@@ -1,7 +1,7 @@
 /**
  * Represents a player during a game.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
 export const enum Player {

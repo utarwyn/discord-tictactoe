@@ -1,7 +1,7 @@
 /**
  * Configuration values to initialize a gameboard.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.1.0
  */
 export default interface GameBoardConfig {

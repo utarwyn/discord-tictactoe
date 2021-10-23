@@ -3,7 +3,7 @@ import { getOpponent, Player } from '@tictactoe/Player';
 /**
  * Back implementation of a game.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
 export default class Game {

@@ -6,7 +6,7 @@ import localize from '@config/localize';
 /**
  * Operate the AI behavior (using the minimax alghorithm).
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
 export default class AI implements GameEntity {

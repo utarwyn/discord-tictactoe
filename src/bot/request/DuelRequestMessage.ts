@@ -7,7 +7,7 @@ import { Collection, GuildMember, Message, MessageReaction, Snowflake } from 'di
  * Message sent when a user challenges someone else to a duel.
  * Invited user must uses reactions to answer the request.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
 export default class DuelRequestMessage {

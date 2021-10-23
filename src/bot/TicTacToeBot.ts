@@ -7,7 +7,7 @@ import Config from '@config/Config';
 /**
  * Manages all interactions with the Discord bot.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
 export default class TicTacToeBot {

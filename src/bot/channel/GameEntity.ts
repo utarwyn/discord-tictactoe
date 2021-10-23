@@ -1,7 +1,7 @@
 /**
  * Represents a game entity. Can be a real user or an AI.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
 export default interface GameEntity {

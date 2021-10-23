@@ -8,7 +8,7 @@ import Config from '@config/Config';
  * Controls all interactions between modules of the bot.
  * Loads configuration, language files and the client.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
 class TicTacToe {

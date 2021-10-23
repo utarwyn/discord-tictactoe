@@ -6,7 +6,7 @@ import localize from '@config/localize';
 /**
  * Command to start a duel with someone else.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
 export default class GameCommand {

@@ -6,7 +6,7 @@ import path from 'path';
  * Default implementation to translate messages.
  * Use the npm package "i18n" and load messages from locale files.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
 export class I18nProvider {
