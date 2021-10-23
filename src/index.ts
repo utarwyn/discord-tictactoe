@@ -39,9 +39,7 @@ class TicTacToe {
         this.eventHandler = new EventHandler();
         this.bot = new TicTacToeBot(this.config, this.eventHandler);
 
-        if (this.config.language) {
-            localize.setLanguage(this.config.language);
-        }
+        localize.loadFromLocale(this.config.language);
 
         // Deprecated, remove this in a next future
         if (client) {

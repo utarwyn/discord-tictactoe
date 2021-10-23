@@ -1,9 +1,14 @@
 import GameBoardBuilder from '@bot/gameboard/GameBoardBuilder';
+import localize from '@config/localize';
 import AI from '@tictactoe/AI';
 import { Player } from '@tictactoe/Player';
 
 describe('GameBoardBuilder', () => {
     let builder: GameBoardBuilder;
+
+    beforeAll(() => {
+        localize.loadFromLocale('en');
+    });
 
     beforeEach(() => {
         builder = new GameBoardBuilder();
