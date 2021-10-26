@@ -16,7 +16,7 @@ Created with <a href="https://github.com/discordjs/discord.js">discord.js</a>.
     <a href="https://github.com/utarwyn/discord-tictactoe/releases">
         <img src="https://img.shields.io/github/package-json/v/utarwyn/discord-tictactoe" alt="Npm version">
     </a>
-    <a href="https://github.com/utarwyn/discord-tictactoe/blob/master/LICENSE">
+    <a href="https://github.com/utarwyn/discord-tictactoe/blob/next/LICENSE">
         <img src="https://img.shields.io/github/license/utarwyn/discord-tictactoe" alt="License">
     </a>
 </p>

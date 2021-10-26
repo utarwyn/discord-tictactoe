@@ -2,7 +2,7 @@ name: Docker Image Build and Push
 
 on:
   push:
-    branches: [master, next]
+    branches: [main, next]
     tags: ['v*.*.*']
 
 jobs:
