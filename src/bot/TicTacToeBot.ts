@@ -81,7 +81,7 @@ export default class TicTacToeBot {
      * Attaches a new Discord client to the module by preparing command handing.
      */
     public attachToClient(client: Client): void {
-        client.on('message', this.command.handle.bind(this.command));
+        client.on('messageCreate', this.command.handle.bind(this.command));
     }
 
     /**

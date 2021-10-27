@@ -62,15 +62,15 @@ export default class DuelRequestMessage {
         }
 
         this.message
-            .awaitReactions(
-                (reaction, user) => {
-                    return (
-                        DuelRequestMessage.REACTIONS.includes(reaction.emoji.name) &&
-                        user.id === this.invited.id
-                    );
-                },
-                { max: 1, time: this.expireTime * 1000, errors: ['time'] }
-            )
+            .awaitReactions({
+                filter: (reaction, user) =>
+                    reaction.emoji.name != null &&
+                    DuelRequestMessage.REACTIONS.includes(reaction.emoji.name) &&
+                    user.id === this.invited.id,
+                max: 1,
+                time: this.expireTime * 1000,
+                errors: ['time']
+            })
             .then(this.challengeAnswered.bind(this))
             .catch(this.challengeExpired.bind(this));
     }
@@ -82,9 +82,12 @@ export default class DuelRequestMessage {
      * @param message message to answer if needed
      */
     public async close(message?: string): Promise<void> {
-        if (this.message && this.message.deletable && !this.message.deleted) {
-            await this.message.delete();
+        try {
+            await this.message?.delete();
+        } catch {
+            // ignore api error
         }
+
         if (message) {
             await this.request.channel.send(message);
         }
@@ -132,11 +135,13 @@ export default class DuelRequestMessage {
             localize.__('duel.action');
 
         return this.request.channel.send({
-            embed: {
-                color: '#2980b9',
-                title: localize.__('duel.title'),
-                description: content
-            }
+            embeds: [
+                {
+                    color: '#2980b9',
+                    title: localize.__('duel.title'),
+                    description: content
+                }
+            ]
         });
     }
 }

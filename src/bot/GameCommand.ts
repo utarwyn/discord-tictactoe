@@ -1,6 +1,6 @@
-import { GuildMember, Message, TextChannel, User } from 'discord.js';
-import TicTacToeBot from '@bot/TicTacToeBot';
+import { GuildMember, Message, Permissions, TextChannel, User } from 'discord.js';
 import GameChannel from '@bot/channel/GameChannel';
+import TicTacToeBot from '@bot/TicTacToeBot';
 import localize from '@config/localize';
 
 /**
@@ -189,7 +189,8 @@ export default class GameCommand {
             invited &&
             !invited.user.bot &&
             invitation.member !== invited &&
-            invited.permissionsIn(invitation.channel).has('VIEW_CHANNEL')
+            invitation.channel instanceof TextChannel &&
+            invited.permissionsIn(invitation.channel).has(Permissions.FLAGS.VIEW_CHANNEL)
         );
     }
 }

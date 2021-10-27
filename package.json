@@ -21,12 +21,11 @@
     "typescript"
   ],
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "discord.js": "^13.2.0"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
     "@types/node": "^16.11.6",
-    "@types/ws": "^7.4.4",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
     "eslint": "^8.1.0",
@@ -48,7 +47,7 @@
     "build:watch": "tsc -w -p tsconfig.release.json",
     "format:check": "prettier --config .prettierrc --list-different \"**/**.ts\"",
     "format": "prettier --config .prettierrc --write \"**/**.ts\"",
-    "lint": "eslint . --ext .ts,.tsx",
+    "lint": "eslint . --ext .ts",
     "serve": "node dist/bin/tictactoe.js",
     "start": "yarn build && yarn serve",
     "test": "jest --coverage",

@@ -149,7 +149,7 @@ export default class GameBoardMessage {
      * @private
      */
     private async onMoveSelected(collected: Collection<Snowflake, MessageReaction>): Promise<void> {
-        const move = GameBoardBuilder.MOVE_REACTIONS.indexOf(collected.first()!.emoji.name);
+        const move = GameBoardBuilder.MOVE_REACTIONS.indexOf(collected.first()!.emoji.name!);
         await this.playTurn(move);
     }
 
@@ -188,8 +188,10 @@ export default class GameBoardMessage {
      * @private
      */
     private async onExpire(): Promise<void> {
-        if (this.message && this.message.deletable && !this.message.deleted) {
-            await this.message.delete();
+        try {
+            await this.message?.delete();
+        } catch {
+            // ignore api error
         }
         await this.channel.expireGame();
     }
@@ -202,15 +204,15 @@ export default class GameBoardMessage {
         const expireTime = this.configuration?.gameExpireTime ?? 30;
         if (!this.message || this.message.deleted) return;
         this.message
-            .awaitReactions(
-                (reaction, user) => {
-                    return (
-                        user.id === this.getEntity(this.game.currentPlayer)?.id &&
-                        this.game.isMoveValid(GameBoardMessage.reactionToMove(reaction.emoji.name))
-                    );
-                },
-                { max: 1, time: expireTime * 1000, errors: ['time'] }
-            )
+            .awaitReactions({
+                filter: (reaction, user) =>
+                    reaction.emoji.name != null &&
+                    user.id === this.getEntity(this.game.currentPlayer)?.id &&
+                    this.game.isMoveValid(GameBoardMessage.reactionToMove(reaction.emoji.name)),
+                max: 1,
+                time: expireTime * 1000,
+                errors: ['time']
+            })
             .then(this.onMoveSelected.bind(this))
             .catch(this.onExpire.bind(this));
     }

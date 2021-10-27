@@ -1,4 +1,4 @@
-import { Client, Message } from 'discord.js';
+import { Client, Intents, Message } from 'discord.js';
 import EventHandler, { EventType } from '@bot/EventHandler';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import localize from '@config/localize';
@@ -59,7 +59,14 @@ class TicTacToe {
             throw new Error('Game command needed to start Discord client.');
         }
 
-        const client = new Client();
+        const client = new Client({
+            intents: [
+                Intents.FLAGS.GUILDS,
+                Intents.FLAGS.GUILD_MESSAGES,
+                Intents.FLAGS.GUILD_MESSAGE_REACTIONS
+            ]
+        });
+
         this.bot.attachToClient(client);
         await client.login(loginToken);
     }
