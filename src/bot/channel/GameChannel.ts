@@ -2,7 +2,7 @@ import GameEntity from '@bot/channel/GameEntity';
 import GameBoardMessage from '@bot/gameboard/GameBoardMessage';
 import DuelRequestMessage from '@bot/request/DuelRequestMessage';
 import TicTacToeBot from '@bot/TicTacToeBot';
-import localize from '@config/localize';
+import localize from '@i18n/localize';
 import AI from '@tictactoe/AI';
 import { GuildMember, TextChannel } from 'discord.js';
 

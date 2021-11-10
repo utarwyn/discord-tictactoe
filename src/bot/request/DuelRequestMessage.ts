@@ -1,6 +1,6 @@
 import GameChannel from '@bot/channel/GameChannel';
 import { formatDiscordName } from '@bot/util';
-import localize from '@config/localize';
+import localize from '@i18n/localize';
 import { Collection, GuildMember, Message, MessageReaction, Snowflake } from 'discord.js';
 
 /**

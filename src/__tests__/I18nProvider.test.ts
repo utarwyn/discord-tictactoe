@@ -1,4 +1,4 @@
-import { I18nProvider } from '@config/I18nProvider';
+import { I18nProvider } from '@i18n/I18nProvider';
 
 describe('I18nProvider', () => {
     let provider: I18nProvider;

@@ -1,7 +1,7 @@
 import GameEntity from '@bot/channel/GameEntity';
-import { getOpponent, Player, PlayerComputeType } from '@tictactoe/Player';
+import localize from '@i18n/localize';
 import Game from '@tictactoe/Game';
-import localize from '@config/localize';
+import { getOpponent, Player, PlayerComputeType } from '@tictactoe/Player';
 
 /**
  * Operate the AI behavior (using the minimax alghorithm).

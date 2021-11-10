@@ -54,13 +54,7 @@ export default class TicTacToeBot {
         this._configuration = configuration;
         this._eventHandler = eventHandler;
         this._channels = [];
-        this.command = new GameCommand(
-            this,
-            configuration.command,
-            configuration.requestCooldownTime,
-            configuration.allowedChannelIds,
-            configuration.allowedRoleIds
-        );
+        this.command = new GameCommand(this, configuration);
     }
 
     /**

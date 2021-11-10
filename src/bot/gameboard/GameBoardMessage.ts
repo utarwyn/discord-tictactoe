@@ -1,10 +1,10 @@
-import { Collection, Message, MessageReaction, Snowflake } from 'discord.js';
 import GameChannel from '@bot/channel/GameChannel';
 import GameEntity from '@bot/channel/GameEntity';
 import GameBoardBuilder from '@bot/gameboard/GameBoardBuilder';
-import GameBoardConfig from '@bot/gameboard/GameBoardConfig';
+import GameConfig from '@config/GameConfig';
 import AI from '@tictactoe/AI';
 import Game from '@tictactoe/Game';
+import { Collection, Message, MessageReaction, Snowflake } from 'discord.js';
 
 /**
  * Message sent to display the status of a game board.
@@ -29,7 +29,7 @@ export default class GameBoardMessage {
     /**
      * Game board configuration.
      */
-    private readonly configuration?: GameBoardConfig;
+    private readonly configuration: GameConfig;
     /**
      * Discord message object managed by the instance.
      */
@@ -51,7 +51,7 @@ export default class GameBoardMessage {
         channel: GameChannel,
         member1: GameEntity,
         member2: GameEntity,
-        configuration?: GameBoardConfig
+        configuration: GameConfig
     ) {
         this.channel = channel;
         this.game = new Game();
@@ -109,7 +109,7 @@ export default class GameBoardMessage {
             builder.withEndingMessage(this.getEntity(this.game.winner));
         }
 
-        const emojies = this.configuration?.gameBoardEmojies;
+        const emojies = this.configuration.gameBoardEmojies;
         if (emojies && emojies.length === 2) {
             builder.withEmojies(emojies[0], emojies[1]);
         }
@@ -165,7 +165,7 @@ export default class GameBoardMessage {
         if (this.game.finished) {
             const winner = this.getEntity(this.game.winner);
 
-            if (this.configuration?.gameBoardDelete) {
+            if (this.configuration.gameBoardDelete) {
                 await this.message?.delete();
                 await this.channel.channel.send(
                     new GameBoardBuilder().withEndingMessage(winner).toString()
@@ -199,7 +199,7 @@ export default class GameBoardMessage {
      * @private
      */
     private awaitMove(): void {
-        const expireTime = this.configuration?.gameExpireTime ?? 30;
+        const expireTime = this.configuration.gameExpireTime ?? 30;
         if (!this.message || this.message.deleted) return;
         this.message
             .awaitReactions(

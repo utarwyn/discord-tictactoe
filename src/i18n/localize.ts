@@ -1,4 +1,4 @@
-import { I18nProvider, Replacements } from '@config/I18nProvider';
+import { I18nProvider, Replacements } from '@i18n/I18nProvider';
 
 const provider = new I18nProvider();
 

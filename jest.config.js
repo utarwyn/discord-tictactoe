@@ -10,6 +10,7 @@ module.exports = {
     moduleNameMapper: {
         '@bot/(.*)': '<rootDir>/src/bot/$1',
         '@config/(.*)': '<rootDir>/src/config/$1',
+        '@i18n/(.*)': '<rootDir>/src/i18n/$1',
         '@tictactoe/(.*)': '<rootDir>/src/tictactoe/$1'
     },
     globals: {

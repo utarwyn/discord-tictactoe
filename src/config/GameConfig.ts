@@ -1,10 +1,10 @@
 /**
- * Configuration values to initialize a gameboard.
+ * Configuration values to handle a game as wanted.
  *
  * @author Utarwyn
  * @since 2.1.0
  */
-export default interface GameBoardConfig {
+export default interface GameConfig {
     /**
      * Expiration time of a player turn.
      */

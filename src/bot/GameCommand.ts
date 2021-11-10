@@ -1,5 +1,6 @@
 import TicTacToeBot from '@bot/TicTacToeBot';
-import localize from '@config/localize';
+import CommandConfig from '@config/CommandConfig';
+import localize from '@i18n/localize';
 import { GuildMember, Message, TextChannel, User } from 'discord.js';
 
 /**
@@ -49,22 +50,14 @@ export default class GameCommand {
      * Constructs the command to start a game.
      *
      * @param bot game client bot
-     * @param trigger string whiches triggering command
-     * @param cooldown amount of seconds to wait after executing command
-     * @param allowedRoleIds list of role identifiers that can use the command.
+     * @param config custom configuration of the command
      */
-    constructor(
-        bot: TicTacToeBot,
-        trigger?: string,
-        cooldown = 0,
-        allowedChannelIds: string[] = [],
-        allowedRoleIds: string[] = []
-    ) {
+    constructor(bot: TicTacToeBot, config: CommandConfig) {
         this.bot = bot;
-        this.trigger = trigger;
-        this.cooldown = cooldown;
-        this.allowedChannelIds = allowedChannelIds;
-        this.allowedRoleIds = allowedRoleIds;
+        this.trigger = config.command;
+        this.cooldown = config.requestCooldownTime ?? 0;
+        this.allowedChannelIds = config.allowedChannelIds ?? [];
+        this.allowedRoleIds = config.allowedRoleIds ?? [];
         this.memberCooldownEndTimes = new Map();
     }
 

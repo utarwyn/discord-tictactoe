@@ -1,6 +1,6 @@
 import GameEntity from '@bot/channel/GameEntity';
 import { formatDiscordName } from '@bot/util';
-import localize from '@config/localize';
+import localize from '@i18n/localize';
 import AI from '@tictactoe/AI';
 import { Player } from '@tictactoe/Player';
 
