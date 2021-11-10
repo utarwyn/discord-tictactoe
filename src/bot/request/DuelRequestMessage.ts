@@ -20,11 +20,11 @@ export default class DuelRequestMessage {
      */
     private readonly channel: GameChannel;
     /**
-     * Message sent by the user who wants to start a duel.
+     * Member who has created the invitation
      */
-    private readonly request: Message;
+    private readonly inviter: GuildMember;
     /**
-     * Invited member in the same guild.
+     * Member who has been invited to play
      */
     private readonly invited: GuildMember;
     /**
@@ -40,13 +40,18 @@ export default class DuelRequestMessage {
      * Constructs a new duel request based on a message.
      *
      * @param channel game channel object
-     * @param message request message object
-     * @param invited invited user object
+     * @param inviter inviter member object
+     * @param invited invited member object
      * @param expireTime expiration time of the mesage
      */
-    constructor(channel: GameChannel, message: Message, invited: GuildMember, expireTime?: number) {
+    constructor(
+        channel: GameChannel,
+        inviter: GuildMember,
+        invited: GuildMember,
+        expireTime?: number
+    ) {
         this.channel = channel;
-        this.request = message;
+        this.inviter = inviter;
         this.invited = invited;
         this.expireTime = expireTime ?? 60;
     }
@@ -86,7 +91,7 @@ export default class DuelRequestMessage {
             await this.message.delete();
         }
         if (message) {
-            await this.request.channel.send(message);
+            await this.channel.channel.send(message);
         }
     }
 
@@ -99,7 +104,7 @@ export default class DuelRequestMessage {
         collected: Collection<Snowflake, MessageReaction>
     ): Promise<void> {
         if (collected.first()!.emoji.name === DuelRequestMessage.REACTIONS[0]) {
-            await this.channel.createGame(this.request.member!, this.invited);
+            await this.channel.createGame(this.inviter, this.invited);
         } else {
             await this.channel.closeDuelRequest(
                 this,
@@ -126,12 +131,12 @@ export default class DuelRequestMessage {
         const content =
             localize.__('duel.challenge', {
                 invited: this.invited.toString(),
-                initier: formatDiscordName(this.request.member?.displayName ?? '')
+                initier: formatDiscordName(this.inviter.displayName ?? '')
             }) +
             '\n' +
             localize.__('duel.action');
 
-        return this.request.channel.send({
+        return this.channel.channel.send({
             embed: {
                 color: '#2980b9',
                 title: localize.__('duel.title'),

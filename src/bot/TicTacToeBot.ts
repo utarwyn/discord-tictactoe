@@ -1,8 +1,8 @@
-import { Client, Message, PermissionString, TextChannel } from 'discord.js';
 import GameChannel from '@bot/channel/GameChannel';
 import EventHandler from '@bot/EventHandler';
 import GameCommand from '@bot/GameCommand';
 import Config from '@config/Config';
+import { Client, Message, PermissionString, TextChannel } from 'discord.js';
 
 /**
  * Manages all interactions with the Discord bot.
@@ -81,7 +81,7 @@ export default class TicTacToeBot {
      * Attaches a new Discord client to the module by preparing command handing.
      */
     public attachToClient(client: Client): void {
-        client.on('message', this.command.handle.bind(this.command));
+        client.on('message', this.command.handleMessage.bind(this.command));
     }
 
     /**
@@ -90,7 +90,7 @@ export default class TicTacToeBot {
      * @param message Discord.js message object
      */
     public handleMessage(message: Message): void {
-        this.command.run(message);
+        this.command.handleMessage(message, true);
     }
 
     /**
@@ -109,6 +109,9 @@ export default class TicTacToeBot {
             this._channels.push(instance);
             return instance;
         } else {
+            console.error(
+                `Cannot operate because of a lack of permissions in the channel #${channel.name}`
+            );
             return null;
         }
     }

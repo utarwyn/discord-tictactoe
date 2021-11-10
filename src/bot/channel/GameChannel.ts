@@ -1,10 +1,10 @@
-import { GuildMember, Message, TextChannel } from 'discord.js';
 import GameEntity from '@bot/channel/GameEntity';
 import GameBoardMessage from '@bot/gameboard/GameBoardMessage';
 import DuelRequestMessage from '@bot/request/DuelRequestMessage';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import localize from '@config/localize';
 import AI from '@tictactoe/AI';
+import { GuildMember, TextChannel } from 'discord.js';
 
 /**
  * Manages a channel in which games can be played.
@@ -59,12 +59,12 @@ export default class GameChannel {
     /**
      * Sends a new duel request managed by the bot.
      *
-     * @param original original message sent by the requester
-     * @param invited user invited to a duel
+     * @param inviter member who has invited to a duel
+     * @param invited member invited to a duel
      */
-    public async sendDuelRequest(original: Message, invited: GuildMember): Promise<void> {
+    public async sendDuelRequest(inviter: GuildMember, invited: GuildMember): Promise<void> {
         const expireTime = this.bot.configuration.requestExpireTime;
-        const message = new DuelRequestMessage(this, original, invited, expireTime);
+        const message = new DuelRequestMessage(this, inviter, invited, expireTime);
         this.requests.push(message);
         await message.send();
     }
