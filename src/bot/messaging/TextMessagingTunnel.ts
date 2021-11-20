@@ -1,5 +1,5 @@
 import MessagingTunnel, { MessagingAnswer } from '@bot/messaging/MessagingTunnel';
-import { Base64String, GuildMember, Message, TextChannel } from 'discord.js';
+import { GuildMember, Message, TextChannel } from 'discord.js';
 
 /**
  * Represents a text messaging channel
@@ -62,7 +62,7 @@ export default class TextMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async end(reason?: Base64String): Promise<void> {
+    public async end(reason?: string): Promise<void> {
         if (this.reply) {
             if (this.reply.deletable && !this.reply.deleted) {
                 await this.reply.delete();
