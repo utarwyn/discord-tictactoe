@@ -1,8 +1,10 @@
-import GameChannel from '@bot/channel/GameChannel';
-import GameEntity from '@bot/channel/GameEntity';
-import GameBoardBuilder from '@bot/gameboard/GameBoardBuilder';
+import GameBoardBuilder from '@bot/entity/GameBoardBuilder';
+import MessagingTunnel from '@bot/messaging/MessagingTunnel';
+import GameStateManager from '@bot/state/GameStateManager';
 import GameConfig from '@config/GameConfig';
+import localize from '@i18n/localize';
 import AI from '@tictactoe/AI';
+import Entity from '@tictactoe/Entity';
 import Game from '@tictactoe/Game';
 import { Collection, Message, MessageReaction, Snowflake } from 'discord.js';
 
@@ -13,49 +15,56 @@ import { Collection, Message, MessageReaction, Snowflake } from 'discord.js';
  * @author Utarwyn
  * @since 2.0.0
  */
-export default class GameBoardMessage {
+export default class GameBoard {
     /**
-     * Channel object in which the game board has to be displayed.
+     * Global game state manager.o
+     * @private
      */
-    private readonly channel: GameChannel;
+    private readonly manager: GameStateManager;
+    /**
+     * Tunnel that initiated the game board.
+     * @private
+     */
+    private readonly tunnel: MessagingTunnel;
     /**
      * Object used to operate the game.
+     * @private
      */
     private readonly game: Game;
     /**
      * List of all entities of the game.
+     * @private
      */
-    private readonly _entities: Array<GameEntity>;
+    private readonly _entities: Array<Entity>;
     /**
-     * Game board configuration.
+     * Game configuration.
+     * @private
      */
     private readonly configuration: GameConfig;
     /**
-     * Discord message object managed by the instance.
-     */
-    private message?: Message;
-    /**
      * Stores reactions state.
+     * @private
      */
     private reactionsLoaded: boolean;
 
     /**
      * Constructs a new game board message.
      *
-     * @param channel channel in which the message wil be sent
-     * @param member1 first member of the game
+     * @param manager global game state manager instance
+     * @param tunnel messaging tunnel that created the game board
      * @param member2 second member of the game
-     * @param configuration custom configuration of the gameboard
+     * @param configuration custom game configuration
      */
     constructor(
-        channel: GameChannel,
-        member1: GameEntity,
-        member2: GameEntity,
+        manager: GameStateManager,
+        tunnel: MessagingTunnel,
+        member2: Entity,
         configuration: GameConfig
     ) {
-        this.channel = channel;
+        this.manager = manager;
+        this.tunnel = tunnel;
         this.game = new Game();
-        this._entities = [member1, member2];
+        this._entities = [tunnel.author, member2];
         this.reactionsLoaded = false;
         this.configuration = configuration;
     }
@@ -63,8 +72,31 @@ export default class GameBoardMessage {
     /**
      * Retrieves entites which are playing on this board.
      */
-    public get entities(): Array<GameEntity> {
+    public get entities(): Array<Entity> {
         return this._entities;
+    }
+
+    /**
+     * Creates or retrieves message of the gameboard.
+     */
+    public get content(): string {
+        const builder = new GameBoardBuilder()
+            .withTitle(this.entities[0], this.entities[1])
+            .withBoard(this.game.boardSize, this.game.board)
+            .withEntityPlaying(
+                this.reactionsLoaded ? this.getEntity(this.game.currentPlayer) : undefined
+            );
+
+        if (this.game.finished) {
+            builder.withEndingMessage(this.getEntity(this.game.winner));
+        }
+
+        const emojies = this.configuration.gameBoardEmojies;
+        if (emojies && emojies.length === 2) {
+            builder.withEmojies(emojies[0], emojies[1]);
+        }
+
+        return builder.toString();
     }
 
     /**
@@ -76,6 +108,27 @@ export default class GameBoardMessage {
      */
     private static reactionToMove(reaction: string): number {
         return GameBoardBuilder.MOVE_REACTIONS.indexOf(reaction);
+    }
+
+    /**
+     * Attachs the duel request to a specific message
+     * and reacts to it in order to get processed.
+     *
+     * @param message discord.js message object to attach
+     */
+    public async attachTo(message: Message): Promise<void> {
+        for (const reaction of GameBoardBuilder.MOVE_REACTIONS) {
+            try {
+                await message.react(reaction);
+            } catch {
+                await this.onExpire();
+                return;
+            }
+        }
+
+        this.reactionsLoaded = true;
+        await this.update();
+        await this.attemptNextTurn();
     }
 
     /**
@@ -98,37 +151,8 @@ export default class GameBoardMessage {
      * Updates the message.
      */
     public async update(): Promise<void> {
-        const builder = new GameBoardBuilder()
-            .withTitle(this.entities[0], this.entities[1])
-            .withBoard(this.game.boardSize, this.game.board)
-            .withEntityPlaying(
-                this.reactionsLoaded ? this.getEntity(this.game.currentPlayer) : undefined
-            );
-
-        if (this.game.finished) {
-            builder.withEndingMessage(this.getEntity(this.game.winner));
-        }
-
-        const emojies = this.configuration.gameBoardEmojies;
-        if (emojies && emojies.length === 2) {
-            builder.withEmojies(emojies[0], emojies[1]);
-        }
-
-        if (!this.message) {
-            this.message = await this.channel.channel.send(builder.toString());
-            for (const reaction of GameBoardBuilder.MOVE_REACTIONS) {
-                try {
-                    await this.message.react(reaction);
-                } catch {
-                    await this.onExpire();
-                    return;
-                }
-            }
-
-            this.reactionsLoaded = true;
-            await this.update();
-        } else {
-            await this.message.edit(builder.toString());
+        if (this.tunnel.reply) {
+            await this.tunnel.reply.edit(this.content);
         }
     }
 
@@ -138,7 +162,7 @@ export default class GameBoardMessage {
      * @param index playing index of the entity
      * @private
      */
-    private getEntity(index?: number): GameEntity | undefined {
+    private getEntity(index?: number): Entity | undefined {
         return index && index > 0 ? this._entities[index - 1] : undefined;
     }
 
@@ -166,16 +190,13 @@ export default class GameBoardMessage {
             const winner = this.getEntity(this.game.winner);
 
             if (this.configuration.gameBoardDelete) {
-                await this.message?.delete();
-                await this.channel.channel.send(
-                    new GameBoardBuilder().withEndingMessage(winner).toString()
-                );
+                await this.tunnel.end(new GameBoardBuilder().withEndingMessage(winner).toString());
             } else {
-                await this.message?.reactions?.removeAll();
+                await this.tunnel.reply?.reactions?.removeAll();
                 await this.update();
             }
 
-            this.channel.endGame(winner);
+            this.manager.endGame(this, winner ?? null);
         } else {
             this.game.nextPlayer();
             await this.update();
@@ -188,10 +209,8 @@ export default class GameBoardMessage {
      * @private
      */
     private async onExpire(): Promise<void> {
-        if (this.message && this.message.deletable && !this.message.deleted) {
-            await this.message.delete();
-        }
-        await this.channel.expireGame();
+        await this.tunnel.end(localize.__('game.expire'));
+        await this.manager.endGame(this);
     }
 
     /**
@@ -200,13 +219,13 @@ export default class GameBoardMessage {
      */
     private awaitMove(): void {
         const expireTime = this.configuration.gameExpireTime ?? 30;
-        if (!this.message || this.message.deleted) return;
-        this.message
+        if (!this.tunnel.reply || this.tunnel.reply.deleted) return;
+        this.tunnel.reply
             .awaitReactions(
                 (reaction, user) => {
                     return (
                         user.id === this.getEntity(this.game.currentPlayer)?.id &&
-                        this.game.isMoveValid(GameBoardMessage.reactionToMove(reaction.emoji.name))
+                        this.game.isMoveValid(GameBoard.reactionToMove(reaction.emoji.name))
                     );
                 },
                 { max: 1, time: expireTime * 1000, errors: ['time'] }

@@ -1,4 +1,4 @@
-import GameBoardBuilder from '@bot/gameboard/GameBoardBuilder';
+import GameBoardBuilder from '@bot/entity/GameBoardBuilder';
 import localize from '@i18n/localize';
 import AI from '@tictactoe/AI';
 import { Player } from '@tictactoe/Player';
