@@ -11,6 +11,7 @@
     "paths": {
       "@bot/*": ["src/bot/*"],
       "@config/*": ["src/config/*"],
+      "@i18n/*": ["src/i18n/*"],
       "@tictactoe/*": ["src/tictactoe/*"]
     },
     "incremental": true

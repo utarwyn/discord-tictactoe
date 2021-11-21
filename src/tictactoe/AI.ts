@@ -1,7 +1,7 @@
-import GameEntity from '@bot/channel/GameEntity';
-import { getOpponent, Player, PlayerComputeType } from '@tictactoe/Player';
+import localize from '@i18n/localize';
+import Entity from '@tictactoe/Entity';
 import Game from '@tictactoe/Game';
-import localize from '@config/localize';
+import { getOpponent, Player, PlayerComputeType } from '@tictactoe/Player';
 
 /**
  * Operate the AI behavior (using the minimax alghorithm).
@@ -9,7 +9,7 @@ import localize from '@config/localize';
  * @author Utarwyn
  * @since 2.0.0
  */
-export default class AI implements GameEntity {
+export default class AI implements Entity {
     /**
      * Identifier of the AI is always "AI"
      */

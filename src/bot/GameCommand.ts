@@ -1,7 +1,8 @@
-import { GuildMember, Message, Permissions, TextChannel, User } from 'discord.js';
-import GameChannel from '@bot/channel/GameChannel';
-import TicTacToeBot from '@bot/TicTacToeBot';
-import localize from '@config/localize';
+import TextMessagingTunnel from '@bot/messaging/TextMessagingTunnel';
+import GameStateManager from '@bot/state/GameStateManager';
+import CommandConfig from '@config/CommandConfig';
+import localize from '@i18n/localize';
+import { GuildMember, Message, Permissions, TextChannel } from 'discord.js';
 
 /**
  * Command to start a duel with someone else.
@@ -11,186 +12,68 @@ import localize from '@config/localize';
  */
 export default class GameCommand {
     /**
-     * Game bot handling object.
+     * Global game manager of the module.
      * @private
      */
-    private readonly bot: TicTacToeBot;
-
+    private readonly manager: GameStateManager;
     /**
-     * Trigger of the command.
+     * Configuration of the game command.
      * @private
      */
-    private readonly trigger?: string;
-
-    /**
-     * Amount of seconds to wait after executing command.
-     * @private
-     */
-    private readonly cooldown: number;
-
-    /**
-     * List of channel identifiers where the command can be used.
-     * @private
-     */
-    private readonly allowedChannelIds: string[];
-
-    /**
-     * List of role identifiers that can use the command.
-     * @private
-     */
-    private readonly allowedRoleIds: string[];
-
-    /**
-     * Stores member cooldown end times.
-     * @private
-     */
-    private memberCooldownEndTimes: Map<string, number>;
+    private readonly config: CommandConfig;
 
     /**
      * Constructs the command to start a game.
      *
-     * @param bot game client bot
-     * @param trigger string whiches triggering command
-     * @param cooldown amount of seconds to wait after executing command
-     * @param allowedRoleIds list of role identifiers that can use the command.
+     * @param manager game state manager
      */
-    constructor(
-        bot: TicTacToeBot,
-        trigger?: string,
-        cooldown = 0,
-        allowedChannelIds: string[] = [],
-        allowedRoleIds: string[] = []
-    ) {
-        this.bot = bot;
-        this.trigger = trigger;
-        this.cooldown = cooldown;
-        this.allowedChannelIds = allowedChannelIds;
-        this.allowedRoleIds = allowedRoleIds;
-        this.memberCooldownEndTimes = new Map();
+    constructor(manager: GameStateManager) {
+        this.manager = manager;
+        this.config = manager.bot.configuration;
     }
 
     /**
      * Handles an incoming message.
      *
      * @param message discord.js message instance
+     * @param noTrigger true to bypass trigger checks
      */
-    public handle(message: Message): void {
+    public async handleMessage(message: Message, noTrigger = false): Promise<void> {
         if (
-            this.trigger &&
+            message.member &&
             !message.author.bot &&
             message.channel.isText() &&
-            message.content.startsWith(this.trigger)
+            (noTrigger || (this.config.command && message.content.startsWith(this.config.command)))
         ) {
-            this.run(message);
-        }
-    }
+            const tunnel = new TextMessagingTunnel(message);
+            const invited = message.mentions.members?.first();
 
-    /**
-     * Executes the command behavior.
-     *
-     * @param message discord message object
-     * @private
-     */
-    public run(message: Message): void {
-        const channel = this.bot.getorCreateGameChannel(message.channel as TextChannel);
-
-        if (this.canStartGame(message, channel)) {
-            const mentionned = message.mentions.members?.first();
-
-            if (mentionned) {
-                if (GameCommand.isUserReadyToPlay(mentionned, message)) {
-                    channel!.sendDuelRequest(message, mentionned).catch(console.error);
+            if (invited) {
+                if (this.isInvitationValid(message, invited)) {
+                    await this.manager.requestDuel(tunnel, invited);
                 } else {
-                    message.reply(localize.__('duel.unknown-user')).catch(console.error);
+                    await message.reply(localize.__('duel.unknown-user'));
                 }
             } else {
-                channel!.createGame(message.member!).catch(console.error);
+                await this.manager.createGame(tunnel);
             }
         }
     }
 
     /**
-     * Checks if the command can be executed based on a specific message context.
+     * Checks if an invitation between two guild members is valid.
      *
-     * @param message discord.js message
-     * @param channel game channel where the game will be starte, can be null
-     */
-    private canStartGame(message: Message, channel: GameChannel | null): boolean {
-        // Disable the command if the channel is not allowed
-        if (
-            this.allowedChannelIds.length > 0 &&
-            !this.allowedChannelIds.includes(message.channel.id)
-        ) {
-            return false;
-        }
-
-        // Check if game channel created
-        if (channel == null) {
-            const name = (message.channel as TextChannel).name;
-            console.error(
-                `Cannot operate because of a lack of permissions in the channel #${name}`
-            );
-            return false;
-        }
-
-        // Disable the command if a game is running or member cooldown active
-        return (
-            !channel.gameRunning &&
-            message.member != null &&
-            this.isAllowedMemberByRole(message.member) &&
-            this.isAllowedUserByCooldown(message.author)
-        );
-    }
-
-    /**
-     * Verifies if a member can run the command based on its roles.
-     *
-     * @param member discord.js member object
-     * @private
-     */
-    private isAllowedMemberByRole(member: GuildMember): boolean {
-        return (
-            this.allowedRoleIds.length == 0 ||
-            member.permissions.has('ADMINISTRATOR') ||
-            member.roles.cache.some(role => this.allowedRoleIds.includes(role.id))
-        );
-    }
-
-    /**
-     * Verifies if an user can run the command based on its cooldown.
-     *
-     * @param author identifier of message author
-     * @private
-     */
-    private isAllowedUserByCooldown(author: User): boolean {
-        if (this.cooldown > 0) {
-            if ((this.memberCooldownEndTimes.get(author.id) ?? 0) > Date.now()) {
-                return false;
-            } else {
-                this.memberCooldownEndTimes.set(author.id, Date.now() + this.cooldown * 1000);
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Retrieves the first valid member mentionned in a message.
-     * Should be a real person, who has right permissions and not the requester.
-     *
+     * @param message discord.js message instance
      * @param invited member invited to enter a duel
-     * @param invitation message used to invite a member to enter a duel
-     * @return true if invited member can duel with the sender, false otherwise
+     * @returns true if invited member can duel with the sender, false otherwise
      * @private
-     * @static
      */
-    private static isUserReadyToPlay(invited: GuildMember, invitation: Message): boolean {
+    private isInvitationValid(message: Message, invited: GuildMember): boolean {
         return (
-            invited &&
             !invited.user.bot &&
-            invitation.member !== invited &&
-            invitation.channel instanceof TextChannel &&
-            invited.permissionsIn(invitation.channel).has(Permissions.FLAGS.VIEW_CHANNEL)
+            message.member !== invited &&
+            message.channel instanceof TextChannel &&
+            invited.permissionsIn(message.channel).has(Permissions.FLAGS.VIEW_CHANNEL)
         );
     }
 }

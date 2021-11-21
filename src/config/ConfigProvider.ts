@@ -1,6 +1,6 @@
-import path from 'path';
-import fs from 'fs';
 import Config from '@config/Config';
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Manages the configuration loading to operate the bot.
@@ -13,6 +13,7 @@ export default class ConfigProvider implements Config {
     public token = '';
     public language = 'en';
     public command = '!ttt';
+    public slashCommand = undefined;
     public allowedChannelIds = [];
     public allowedRoleIds = [];
     public requestExpireTime = 60;

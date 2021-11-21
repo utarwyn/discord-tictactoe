@@ -1,7 +1,7 @@
 import { Client, Intents, Message } from 'discord.js';
 import EventHandler, { EventType } from '@bot/EventHandler';
 import TicTacToeBot from '@bot/TicTacToeBot';
-import localize from '@config/localize';
+import localize from '@i18n/localize';
 import Config from '@config/Config';
 
 /**
