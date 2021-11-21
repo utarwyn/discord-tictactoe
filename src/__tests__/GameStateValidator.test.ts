@@ -89,17 +89,19 @@ describe('GameStateValidator', () => {
     );
 
     it.each`
-        cooldownTime | currentTime       | expected
-        ${10}        | ${undefined}      | ${false}
-        ${10}        | ${1000}           | ${false}
-        ${20}        | ${Date.now()}     | ${false}
-        ${undefined} | ${0}              | ${true}
-        ${0}         | ${undefined}      | ${true}
-        ${5}         | ${Date.now() * 2} | ${true}
+        cooldownTime | currentTime         | expected
+        ${10}        | ${Number.MAX_VALUE} | ${false}
+        ${20}        | ${Date.now() * 2}   | ${false}
+        ${undefined} | ${0}                | ${true}
+        ${0}         | ${undefined}        | ${true}
+        ${10}        | ${undefined}        | ${true}
+        ${5}         | ${Date.now() - 20}  | ${true}
     `(
         'should check with cooldown time $cooldownTime and current time $currentTime',
         ({ cooldownTime, currentTime, expected }) => {
-            manager.memberCooldownEndTimes.set('1', currentTime);
+            if (currentTime !== undefined) {
+                manager.memberCooldownEndTimes.set('1', currentTime);
+            }
             manager.bot.configuration.requestCooldownTime = cooldownTime;
             expect(validator.isInteractionValid(tunnel)).toBe(expected);
         }

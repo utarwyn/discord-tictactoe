@@ -146,7 +146,8 @@ export default class GameStateValidator {
         return (
             !this.config.requestCooldownTime ||
             this.config.requestCooldownTime === 0 ||
-            (this.cooldownEndTimes.get(member.id) ?? 0) > Date.now()
+            !this.cooldownEndTimes.has(member.id) ||
+            this.cooldownEndTimes.get(member.id)! < Date.now()
         );
     }
 }
