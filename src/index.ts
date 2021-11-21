@@ -66,6 +66,8 @@ class TicTacToe {
 
     /**
      * Attaches an external Discord Client to the module.
+     *
+     * @param client Discord.js client instance
      */
     public attach(client: Client): void {
         this.bot.attachToClient(client);
@@ -78,6 +80,16 @@ class TicTacToe {
      */
     public handleMessage(message: Message): void {
         this.bot.handleMessage(message);
+    }
+
+    /**
+     * Programmatically handles a discord.js interaction to request a game.
+     *
+     * @param interaction Discord.js interaction object
+     * @param client Discord.js client instance
+     */
+    public handleInteraction(interaction: any, client: Client): void {
+        this.bot.handleInteraction(interaction, client);
     }
 
     /**

@@ -1,9 +1,9 @@
+import AppCommandRegister from '@bot/command/AppCommandRegister';
 import GameCommand from '@bot/command/GameCommand';
 import EventHandler from '@bot/EventHandler';
 import GameStateManager from '@bot/state/GameStateManager';
 import Config from '@config/Config';
 import { Client, Message, WSEventType } from 'discord.js';
-import AppCommandRegister from './command/AppCommandRegister';
 
 /**
  * Manages all interactions with the Discord bot.
@@ -83,5 +83,15 @@ export default class TicTacToeBot {
      */
     public handleMessage(message: Message): void {
         this.command.handleMessage(message, true);
+    }
+
+    /**
+     * Programmatically handles a discord.js interaction to request a game.
+     *
+     * @param interaction Discord.js interaction object
+     * @param client Discord.js client instance
+     */
+    public handleInteraction(interaction: any, client: Client): void {
+        this.command.handleInteraction(client, interaction, true);
     }
 }

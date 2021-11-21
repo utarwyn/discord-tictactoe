@@ -57,32 +57,35 @@ export default class GameCommand {
     /**
      * Handles an incoming interaction.
      *
+     * @param client discord.js client
      * @param interaction discord.js interaction instance
+     * @param noTrigger true to bypass trigger checks
      */
-    public async handleInteraction(client: Client, interaction: any): Promise<void> {
-        // Retrieve all interaction entities from cache or Discord API
-        const channel = client.channels.cache.get(interaction.channel_id);
-        const guild = client.guilds.cache.get(interaction.guild_id);
-        const user = await client.users.fetch(interaction.member.user.id);
-
+    public async handleInteraction(
+        client: Client,
+        interaction: any,
+        noTrigger = false
+    ): Promise<void> {
         if (
-            guild &&
-            user &&
-            channel instanceof TextChannel &&
-            interaction.data.type === 1 &&
-            interaction.data.name === this.config.slashCommand &&
-            !user.bot
+            noTrigger ||
+            (interaction.data.type === 1 && interaction.data.name === this.config.slashCommand)
         ) {
-            // Retrieve the inviter and create an interaction tunnel
-            const inviter = await guild.members.fetch(user.id);
-            const tunnel = new InteractionMessagingTunnel(interaction, client, inviter, channel);
+            // Retrieve all interaction entities from cache or Discord API
+            const channel = client.channels.cache.get(interaction.channel_id);
+            const guild = client.guilds.cache.get(interaction.guild_id);
 
-            // Retrieve invited user from options if provided
-            const invited = interaction.data.options
-                ? await guild.members.fetch(interaction.data.options[0]?.value)
-                : undefined;
+            if (guild && channel instanceof TextChannel) {
+                // Retrieve the inviter and create an interaction tunnel
+                const inviter = await guild.members.fetch(interaction.member.user.id);
+                const tun = new InteractionMessagingTunnel(interaction, client, inviter, channel);
 
-            return this.handleInvitation(tunnel, inviter, invited);
+                // Retrieve invited user from options if provided
+                const invited = interaction.data.options
+                    ? await guild.members.fetch(interaction.data.options[0]?.value)
+                    : undefined;
+
+                return this.handleInvitation(tun, inviter, invited);
+            }
         }
     }
 
