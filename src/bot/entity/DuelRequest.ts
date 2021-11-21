@@ -75,7 +75,7 @@ export default class DuelRequest {
             localize.__('duel.action');
 
         return {
-            color: '#2980b9',
+            color: 2719929, // #2980B9
             title: localize.__('duel.title'),
             description: content
         };

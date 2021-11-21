@@ -13,7 +13,7 @@ export default class TextMessagingTunnel extends MessagingTunnel {
      * Origin message
      * @private
      */
-    private origin: Message;
+    private readonly origin: Message;
     /**
      * Last reply sent into the tunnnel
      * @private
@@ -54,9 +54,22 @@ export default class TextMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async replyWith(answer: MessagingAnswer): Promise<Message> {
-        this._reply = await this.origin.channel.send(answer);
+    public async replyWith(answer: MessagingAnswer, direct?: boolean): Promise<Message> {
+        if (direct) {
+            this._reply = await this.origin.reply(answer);
+        } else {
+            this._reply = await this.origin.channel.send(answer);
+        }
         return this._reply;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public async editReply(answer: MessagingAnswer): Promise<void> {
+        if (this.reply) {
+            await this.reply.edit(answer);
+        }
     }
 
     /**

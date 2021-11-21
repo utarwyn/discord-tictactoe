@@ -47,26 +47,26 @@ export default class GameStateManager {
     /**
      * Requests a duel between two members.
      *
-     * @param messenger messaging tunnel that initiated the request
+     * @param tunnel messaging tunnel that initiated the request
      * @param invited member invited to be part of the duel
      */
-    public async requestDuel(messenger: MessagingTunnel, invited: GuildMember): Promise<void> {
-        if (this.validator.isInteractionValid(messenger)) {
+    public async requestDuel(tunnel: MessagingTunnel, invited: GuildMember): Promise<void> {
+        if (this.validator.isInteractionValid(tunnel)) {
             const duel = new DuelRequest(
                 this,
-                messenger,
+                tunnel,
                 invited,
                 this.bot.configuration.requestExpireTime
             );
 
             // Reply with the duel request and attach the created message
-            const message = await messenger.replyWith({ embed: duel.embed });
+            const message = await tunnel.replyWith({ embed: duel.embed });
             await duel.attachTo(message);
 
             // Setup user cooldown
             const cooldown = this.bot.configuration.requestCooldownTime ?? 0;
             if (cooldown > 0) {
-                this.memberCooldownEndTimes.set(messenger.author.id, Date.now() + cooldown * 1000);
+                this.memberCooldownEndTimes.set(tunnel.author.id, Date.now() + cooldown * 1000);
             }
         }
     }
@@ -74,14 +74,14 @@ export default class GameStateManager {
     /**
      * Creates a game with one member and another or an AI.
      *
-     * @param messenger messaging tunnel that initiated the game creation
+     * @param tunnel messaging tunnel that initiated the game creation
      * @param invited member invited to be part of the game, undefined means the AI
      */
-    public async createGame(messenger: MessagingTunnel, invited?: GuildMember): Promise<void> {
-        if (this.validator.isInteractionValid(messenger)) {
+    public async createGame(tunnel: MessagingTunnel, invited?: GuildMember): Promise<void> {
+        if (this.validator.isInteractionValid(tunnel)) {
             const gameboard = new GameBoard(
                 this,
-                messenger,
+                tunnel,
                 invited ?? new AI(),
                 this.bot.configuration
             );
@@ -90,7 +90,7 @@ export default class GameStateManager {
             this.gameboards.push(gameboard);
 
             // Reply with the gameboard and attach the created message
-            const message = await messenger.replyWith(gameboard.content);
+            const message = await tunnel.replyWith(gameboard.content);
             await gameboard.attachTo(message);
         }
     }

@@ -1,8 +1,9 @@
+import GameCommand from '@bot/command/GameCommand';
 import EventHandler from '@bot/EventHandler';
-import GameCommand from '@bot/GameCommand';
 import GameStateManager from '@bot/state/GameStateManager';
 import Config from '@config/Config';
-import { Client, Message } from 'discord.js';
+import { Client, Message, WSEventType } from 'discord.js';
+import AppCommandRegister from './command/AppCommandRegister';
 
 /**
  * Manages all interactions with the Discord bot.
@@ -60,7 +61,19 @@ export default class TicTacToeBot {
      * @param client discord.js client obbject
      */
     public attachToClient(client: Client): void {
-        client.on('message', this.command.handleMessage.bind(this.command));
+        // Handle slash command if enabled
+        if (this.configuration.slashCommand) {
+            const register = new AppCommandRegister(client, this.configuration.slashCommand);
+            client.on('message', register.handleDeployMessage.bind(register));
+            client.ws.on('INTERACTION_CREATE' as WSEventType, interaction =>
+                this.command.handleInteraction(client, interaction)
+            );
+        }
+
+        // Handle text command if enabled
+        if (this.configuration.command) {
+            client.on('message', this.command.handleMessage.bind(this.command));
+        }
     }
 
     /**

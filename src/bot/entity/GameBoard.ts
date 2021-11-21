@@ -151,9 +151,7 @@ export default class GameBoard {
      * Updates the message.
      */
     public async update(): Promise<void> {
-        if (this.tunnel.reply) {
-            await this.tunnel.reply.edit(this.content);
-        }
+        return this.tunnel.editReply(this.content);
     }
 
     /**
@@ -210,7 +208,7 @@ export default class GameBoard {
      */
     private async onExpire(): Promise<void> {
         await this.tunnel.end(localize.__('game.expire'));
-        await this.manager.endGame(this);
+        this.manager.endGame(this);
     }
 
     /**

@@ -1,8 +1,8 @@
-import { Client, Message } from 'discord.js';
 import EventHandler, { EventType } from '@bot/EventHandler';
 import TicTacToeBot from '@bot/TicTacToeBot';
-import localize from '@i18n/localize';
 import Config from '@config/Config';
+import localize from '@i18n/localize';
+import { Client, Message } from 'discord.js';
 
 /**
  * Controls all interactions between modules of the bot.
@@ -55,13 +55,13 @@ class TicTacToe {
 
         if (!loginToken) {
             throw new Error('Bot token needed to start Discord client.');
-        } else if (!this.config.command) {
-            throw new Error('Game command needed to start Discord client.');
+        } else if (!this.config.command && !this.config.slashCommand) {
+            throw new Error('Game text or slash command needed to start Discord client.');
         }
 
         const client = new Client();
-        this.bot.attachToClient(client);
         await client.login(loginToken);
+        this.bot.attachToClient(client);
     }
 
     /**

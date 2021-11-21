@@ -26,7 +26,7 @@ describe('GameStateValidator', () => {
             channel: <TextChannel>{
                 guild: <Guild>{
                     me: <GuildMember>{
-                        permissionsIn: _ => <Readonly<Permissions>>{ has: _ => true }
+                        permissionsIn: _c => <Readonly<Permissions>>{ has: _p => true }
                     }
                 }
             },
