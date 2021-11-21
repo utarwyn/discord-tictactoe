@@ -1,8 +1,9 @@
+import AppCommandRegister from '@bot/command/AppCommandRegister';
+import GameCommand from '@bot/command/GameCommand';
 import EventHandler from '@bot/EventHandler';
-import GameCommand from '@bot/GameCommand';
 import GameStateManager from '@bot/state/GameStateManager';
 import Config from '@config/Config';
-import { Client, Message } from 'discord.js';
+import { Client, CommandInteraction, Message } from 'discord.js';
 
 /**
  * Manages all interactions with the Discord bot.
@@ -60,7 +61,17 @@ export default class TicTacToeBot {
      * @param client discord.js client obbject
      */
     public attachToClient(client: Client): void {
-        client.on('messageCreate', this.command.handleMessage.bind(this.command));
+        // Handle slash command if enabled
+        if (this.configuration.slashCommand) {
+            const register = new AppCommandRegister(client, this.configuration.slashCommand);
+            client.on('messageCreate', register.handleDeployMessage.bind(register));
+            client.on('interactionCreate', this.command.handleInteraction.bind(this.command));
+        }
+
+        // Handle text command if enabled
+        if (this.configuration.command) {
+            client.on('messageCreate', this.command.handleMessage.bind(this.command));
+        }
     }
 
     /**
@@ -70,5 +81,14 @@ export default class TicTacToeBot {
      */
     public handleMessage(message: Message): void {
         this.command.handleMessage(message, true);
+    }
+
+    /**
+     * Programmatically handles a discord.js interaction to request a game.
+     *
+     * @param interaction Discord.js interaction object
+     */
+    public handleInteraction(interaction: CommandInteraction): void {
+        this.command.handleInteraction(interaction, true);
     }
 }

@@ -6,7 +6,7 @@ import localize from '@i18n/localize';
 import AI from '@tictactoe/AI';
 import Entity from '@tictactoe/Entity';
 import Game from '@tictactoe/Game';
-import { Collection, Message, MessageReaction, Snowflake } from 'discord.js';
+import { Collection, Message, MessageOptions, MessageReaction, Snowflake } from 'discord.js';
 
 /**
  * Message sent to display the status of a game board.
@@ -79,7 +79,7 @@ export default class GameBoard {
     /**
      * Creates or retrieves message of the gameboard.
      */
-    public get content(): string {
+    public get content(): MessageOptions {
         const builder = new GameBoardBuilder()
             .withTitle(this.entities[0], this.entities[1])
             .withBoard(this.game.boardSize, this.game.board)
@@ -96,7 +96,7 @@ export default class GameBoard {
             builder.withEmojies(emojies[0], emojies[1]);
         }
 
-        return builder.toString();
+        return { content: builder.toString() };
     }
 
     /**
@@ -151,9 +151,7 @@ export default class GameBoard {
      * Updates the message.
      */
     public async update(): Promise<void> {
-        if (this.tunnel.reply) {
-            await this.tunnel.reply.edit(this.content);
-        }
+        return this.tunnel.editReply(this.content);
     }
 
     /**
@@ -210,7 +208,7 @@ export default class GameBoard {
      */
     private async onExpire(): Promise<void> {
         await this.tunnel.end(localize.__('game.expire'));
-        await this.manager.endGame(this);
+        this.manager.endGame(this);
     }
 
     /**

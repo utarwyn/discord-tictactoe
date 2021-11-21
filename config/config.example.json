@@ -2,6 +2,7 @@
   "token": "YOUR_BOT_USER_TOKEN",
   "language": "en",
   "command": "!ttt",
+  "slashCommand": "tictactoe",
   "allowedChannelIds": [],
   "allowedRoleIds": [],
   "requestExpireTime": 60,

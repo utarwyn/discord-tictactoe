@@ -7,7 +7,7 @@ import { GuildMember, Message, MessageOptions, TextChannel } from 'discord.js';
  * @author Utarwyn
  * @since 2.2.0
  */
-export type MessagingAnswer = string | MessageOptions;
+export type MessagingAnswer = MessageOptions;
 
 /**
  * Represents a messaging tunnel that
@@ -37,8 +37,16 @@ export default abstract class MessagingTunnel {
      * Replies something through the messaging tunnel.
      *
      * @param answer anwser to reply with
+     * @param direct true if the reply should be direct
      */
-    public abstract replyWith(answer: MessagingAnswer): Promise<Message>;
+    public abstract replyWith(answer: MessagingAnswer, direct?: boolean): Promise<Message>;
+
+    /**
+     * Edits the last reply using a specific answer.
+     *
+     * @param answer answer to update reply with
+     */
+    public abstract editReply(answer: MessagingAnswer): Promise<void>;
 
     /**
      * Ends the tunnel and deletes the last reply sent through it.

@@ -75,13 +75,21 @@ describe('Game', () => {
         ${['   ', 'ooo', '   ']} | ${true}  | ${Player.Second}
         ${['  o', ' o ', 'o  ']} | ${true}  | ${Player.Second}
     `('should check if game is finished with a state of $rows', ({ rows, finished, winner }) => {
+        const cellToPlayer = (cell: string) => {
+            switch (cell) {
+                case 'x':
+                    return Player.First;
+                case 'o':
+                    return Player.Second;
+                default:
+                    return Player.None;
+            }
+        };
+
         // Construct a fake board
         rows.forEach((row: string, rowIndex: number) => {
             [...row].forEach((cell: string, colIndex: number) => {
-                game.updateBoard(
-                    cell === 'x' ? Player.First : cell === 'o' ? Player.Second : Player.None,
-                    rowIndex * row.length + colIndex
-                );
+                game.updateBoard(cellToPlayer(cell), rowIndex * row.length + colIndex);
             });
         });
 

@@ -29,7 +29,6 @@ export default class ConfigProvider implements Config {
     constructor() {
         this.initializeFromFile();
         this.initializeFromEnv();
-        this.verifyValues();
     }
 
     private initializeFromFile(): void {
@@ -71,15 +70,10 @@ export default class ConfigProvider implements Config {
                         break;
                 }
 
-                this[camelCaseKey] = newValue;
+                if (newValue) {
+                    this[camelCaseKey] = newValue;
+                }
             });
-    }
-
-    private verifyValues(): void {
-        const emptyKey = Object.keys(this).find(key => this[key] === '');
-        if (emptyKey) {
-            throw new Error(`Config key ${emptyKey} must be defined`);
-        }
     }
 
     private static camelCase(str: string): string {
