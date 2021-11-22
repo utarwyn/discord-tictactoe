@@ -63,7 +63,10 @@ export default class TicTacToeBot {
     public attachToClient(client: Client): void {
         // Handle slash command if enabled
         if (this.configuration.slashCommand) {
-            const register = new AppCommandRegister(client, this.configuration.slashCommand);
+            const register = new AppCommandRegister(
+                client.application!.commands,
+                this.configuration.slashCommand
+            );
             client.on('messageCreate', register.handleDeployMessage.bind(register));
             client.on('interactionCreate', this.command.handleInteraction.bind(this.command));
         }

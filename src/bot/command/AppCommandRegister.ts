@@ -1,5 +1,5 @@
 import localize from '@i18n/localize';
-import { Client, Message } from 'discord.js';
+import { ApplicationCommandManager, Message } from 'discord.js';
 
 /**
  * Manages application command used by the module.
@@ -9,10 +9,10 @@ import { Client, Message } from 'discord.js';
  */
 export default class AppCommandRegister {
     /**
-     * Discord.js client instance
+     * Discord.js application command manager instance
      * @private
      */
-    private readonly client: Client;
+    private readonly commandManager: ApplicationCommandManager;
     /**
      * Name of the application command to rregister
      * @private
@@ -22,11 +22,11 @@ export default class AppCommandRegister {
     /**
      * Constructs application command registration handler.
      *
-     * @param client discord.js client instance
+     * @param commandManager discord.js client instance
      * @param name application name to register
      */
-    constructor(client: Client, name: string) {
-        this.client = client;
+    constructor(commandManager: ApplicationCommandManager, name: string) {
+        this.commandManager = commandManager;
         this.name = name;
     }
 
@@ -59,22 +59,20 @@ export default class AppCommandRegister {
      * @private
      */
     private async registerInGuild(guildId: string): Promise<void> {
-        return (this.client['api'] as any)
-            .applications(this.client.user!.id)
-            .guilds(guildId)
-            .commands.post({
-                data: {
-                    name: this.name,
-                    description: localize.__('command.description'),
-                    options: [
-                        {
-                            type: 6,
-                            name: 'opponent',
-                            description: localize.__('command.option-user')
-                        }
-                    ]
-                }
-            });
+        await this.commandManager.create(
+            {
+                name: this.name,
+                description: localize.__('command.description'),
+                options: [
+                    {
+                        type: 6,
+                        name: 'opponent',
+                        description: localize.__('command.option-user')
+                    }
+                ]
+            },
+            guildId
+        );
     }
 
     /**
@@ -84,21 +82,11 @@ export default class AppCommandRegister {
      * @private
      */
     private async deleteInGuild(guildId: string): Promise<boolean> {
-        // Firstly, retrieve command based on its name using Discord API
-        const command = [
-            ...(await (this.client['api'] as any)
-                .applications(this.client.user!.id)
-                .guilds(guildId)
-                .commands.get())
-        ].find((command: any) => command.name === this.name);
+        const commands = await this.commandManager.fetch({ guildId });
+        const command = commands?.find(command => command.name === this.name);
 
-        // Delete it using Discord API if exists in the command list
         if (command) {
-            await (this.client['api'] as any)
-                .applications(this.client.user!.id)
-                .guilds(guildId)
-                .commands(command.id)
-                .delete();
+            await this.commandManager.delete(command.id, guildId);
             return true;
         } else {
             return false;
