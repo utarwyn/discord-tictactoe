@@ -1,6 +1,6 @@
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
-import Config from '@config/Config';
+import InteractionConfig from '@config/InteractionConfig';
 import { GuildMember, PermissionString } from 'discord.js';
 
 /**
@@ -41,7 +41,7 @@ export default class GameStateValidator {
     /**
      * Retrieves the module configuration.
      */
-    public get config(): Config {
+    public get config(): InteractionConfig {
         return this.manager.bot.configuration;
     }
 
@@ -56,13 +56,24 @@ export default class GameStateValidator {
      * Checks if an interaction through a messaging tunnel is valid or not.
      *
      * @param tunnel messaging tunnel object
+     * @param invited invited guild member, can be undefined
      * @returns true if the interaction is valid, false otherwise
      */
-    public isInteractionValid(tunnel: MessagingTunnel): boolean {
+    public isInteractionValid(tunnel: MessagingTunnel, invited?: GuildMember): boolean {
         return (
             this.isMessagingAllowed(tunnel) &&
             this.isMemberAllowed(tunnel.author) &&
-            this.manager.gameboards.length === 0
+            // Check if one of both entites is already playing
+            !this.manager.gameboards.some(gameboard =>
+                [tunnel.author, invited].some(
+                    entity => entity && gameboard.entities.includes(entity)
+                )
+            ) &&
+            // Check if there is already a game inside the channel or bypass option enabled
+            (this.config.simultaneousGames ||
+                !this.manager.gameboards.some(
+                    gameboard => gameboard.tunnel.channel === tunnel.channel
+                ))
         );
     }
 
@@ -146,7 +157,8 @@ export default class GameStateValidator {
         return (
             !this.config.requestCooldownTime ||
             this.config.requestCooldownTime === 0 ||
-            (this.cooldownEndTimes.get(member.id) ?? 0) > Date.now()
+            !this.cooldownEndTimes.has(member.id) ||
+            this.cooldownEndTimes.get(member.id)! < Date.now()
         );
     }
 }

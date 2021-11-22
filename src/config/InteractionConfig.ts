@@ -21,4 +21,8 @@ export default interface InteractionConfig {
      * Expiration time of a duel request.
      */
     requestExpireTime?: number;
+    /**
+     * Allow games to be played simultaneously in the same channel.
+     */
+    simultaneousGames?: boolean;
 }

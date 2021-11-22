@@ -7,6 +7,7 @@
   "allowedRoleIds": [],
   "requestExpireTime": 60,
   "requestCooldownTime": 0,
+  "simultaneousGames": false,
   "gameExpireTime": 30,
   "gameBoardDelete": false,
   "gameBoardEmojies": []

@@ -51,7 +51,7 @@ export default class GameStateManager {
      * @param invited member invited to be part of the duel
      */
     public async requestDuel(tunnel: MessagingTunnel, invited: GuildMember): Promise<void> {
-        if (this.validator.isInteractionValid(tunnel)) {
+        if (this.validator.isInteractionValid(tunnel, invited)) {
             const duel = new DuelRequest(
                 this,
                 tunnel,
@@ -78,7 +78,7 @@ export default class GameStateManager {
      * @param invited member invited to be part of the game, undefined means the AI
      */
     public async createGame(tunnel: MessagingTunnel, invited?: GuildMember): Promise<void> {
-        if (this.validator.isInteractionValid(tunnel)) {
+        if (this.validator.isInteractionValid(tunnel, invited)) {
             const gameboard = new GameBoard(
                 this,
                 tunnel,

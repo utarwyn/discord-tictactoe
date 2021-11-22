@@ -17,15 +17,14 @@ import { Collection, Message, MessageOptions, MessageReaction, Snowflake } from 
  */
 export default class GameBoard {
     /**
+     * Tunnel that initiated the game board.
+     */
+    public readonly tunnel: MessagingTunnel;
+    /**
      * Global game state manager.o
      * @private
      */
     private readonly manager: GameStateManager;
-    /**
-     * Tunnel that initiated the game board.
-     * @private
-     */
-    private readonly tunnel: MessagingTunnel;
     /**
      * Object used to operate the game.
      * @private

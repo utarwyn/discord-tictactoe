@@ -12,12 +12,16 @@ import path from 'path';
 export default class ConfigProvider implements Config {
     public token = '';
     public language = 'en';
+
     public command = '!ttt';
     public slashCommand = undefined;
+
     public allowedChannelIds = [];
     public allowedRoleIds = [];
     public requestExpireTime = 60;
     public requestCooldownTime = 0;
+    public simultaneousGames = false;
+
     public gameExpireTime = 30;
     public gameBoardDelete = false;
     public gameBoardEmojies = [];
