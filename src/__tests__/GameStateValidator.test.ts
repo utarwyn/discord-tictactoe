@@ -4,6 +4,7 @@ import GameStateManager from '@bot/state/GameStateManager';
 import GameStateValidator from '@bot/state/GameStateValidator';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import Config from '@config/Config';
+import Entity from '@tictactoe/Entity';
 import {
     Collection,
     Guild,
@@ -24,6 +25,7 @@ describe('GameStateValidator', () => {
         // default state is valid
         tunnel = <MessagingTunnel>{
             channel: <TextChannel>{
+                id: 'TC1',
                 guild: <Guild>{
                     me: <GuildMember>{
                         permissionsIn: _c => <Readonly<Permissions>>{ has: _p => true }
@@ -31,7 +33,7 @@ describe('GameStateValidator', () => {
                 }
             },
             author: <GuildMember>{
-                id: '1',
+                id: 'GM1',
                 roles: <GuildMemberRoleManager>{
                     cache: new Collection()
                 },
@@ -39,7 +41,9 @@ describe('GameStateValidator', () => {
             }
         };
         manager = <GameStateManager>{
-            gameboards: [] as Array<GameBoard>,
+            gameboards: [
+                { tunnel: <MessagingTunnel>{}, entities: [] as Array<Entity> }
+            ] as Array<GameBoard>,
             memberCooldownEndTimes: new Map(),
             bot: <TicTacToeBot>{
                 configuration: <Config>{}
@@ -100,10 +104,34 @@ describe('GameStateValidator', () => {
         'should check with cooldown time $cooldownTime and current time $currentTime',
         ({ cooldownTime, currentTime, expected }) => {
             if (currentTime !== undefined) {
-                manager.memberCooldownEndTimes.set('1', currentTime);
+                manager.memberCooldownEndTimes.set('GM1', currentTime);
             }
             manager.bot.configuration.requestCooldownTime = cooldownTime;
             expect(validator.isInteractionValid(tunnel)).toBe(expected);
+        }
+    );
+
+    it.each`
+        sameChannel | sameAuthor | invited      | simultaneousGames | expected
+        ${false}    | ${true}    | ${undefined} | ${false}          | ${false}
+        ${true}     | ${true}    | ${undefined} | ${true}           | ${false}
+        ${true}     | ${false}   | ${undefined} | ${false}          | ${false}
+        ${false}    | ${false}   | ${undefined} | ${false}          | ${true}
+        ${true}     | ${false}   | ${undefined} | ${true}           | ${true}
+    `(
+        'should check gameboard states with sameChannel $sameChannel, sameAuthor $sameAuthor, simultaneous option $simultaneousGames and invited $invited',
+        ({ sameChannel, sameAuthor, invited, simultaneousGames, expected }) => {
+            if (sameChannel) {
+                manager.gameboards[0] = <GameBoard>{ ...manager.gameboards[0], tunnel };
+            }
+            if (sameAuthor) {
+                manager.gameboards[0] = <GameBoard>{
+                    ...manager.gameboards[0],
+                    entities: [tunnel.author as Entity]
+                };
+            }
+            manager.bot.configuration.simultaneousGames = simultaneousGames;
+            expect(validator.isInteractionValid(tunnel, invited)).toBe(expected);
         }
     );
 });
