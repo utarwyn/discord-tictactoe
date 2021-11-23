@@ -98,14 +98,14 @@ export class I18nProvider {
 
     private static flatten<T extends Record<string, any>>(
         object: T,
-        path: string | null = null,
+        objectPath: string | null = null,
         separator = '.'
     ): T {
         return Object.keys(object).reduce((acc: T, key: string): T => {
-            const newPath = [path, key].filter(Boolean).join(separator);
+            const newObjectPath = [objectPath, key].filter(Boolean).join(separator);
             return typeof object?.[key] === 'object'
-                ? { ...acc, ...I18nProvider.flatten(object[key], newPath, separator) }
-                : { ...acc, [newPath]: object[key] };
+                ? { ...acc, ...I18nProvider.flatten(object[key], newObjectPath, separator) }
+                : { ...acc, [newObjectPath]: object[key] };
         }, {} as T);
     }
 }

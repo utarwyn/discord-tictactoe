@@ -83,7 +83,7 @@ export default class AppCommandRegister {
      */
     private async deleteInGuild(guildId: string): Promise<boolean> {
         const commands = await this.commandManager.fetch({ guildId });
-        const command = commands?.find(command => command.name === this.name);
+        const command = commands?.find(cmd => cmd.name === this.name);
 
         if (command) {
             await this.commandManager.delete(command.id, guildId);
