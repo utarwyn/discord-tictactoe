@@ -112,25 +112,27 @@ describe('GameStateValidator', () => {
     );
 
     it.each`
-        sameChannel | sameAuthor | invited      | simultaneousGames | expected
-        ${false}    | ${true}    | ${undefined} | ${false}          | ${false}
-        ${true}     | ${true}    | ${undefined} | ${true}           | ${false}
-        ${true}     | ${false}   | ${undefined} | ${false}          | ${false}
-        ${false}    | ${false}   | ${undefined} | ${false}          | ${true}
-        ${true}     | ${false}   | ${undefined} | ${true}           | ${true}
+        sameChannel | sameAuthor | sameInvited | simultaneousGames | expected
+        ${false}    | ${true}    | ${false}    | ${false}          | ${false}
+        ${true}     | ${true}    | ${false}    | ${true}           | ${false}
+        ${true}     | ${false}   | ${false}    | ${false}          | ${false}
+        ${false}    | ${false}   | ${true}     | ${false}          | ${false}
+        ${false}    | ${false}   | ${false}    | ${false}          | ${true}
+        ${true}     | ${false}   | ${false}    | ${true}           | ${true}
     `(
-        'should check gameboard states with sameChannel $sameChannel, sameAuthor $sameAuthor, simultaneous option $simultaneousGames and invited $invited',
-        ({ sameChannel, sameAuthor, invited, simultaneousGames, expected }) => {
+        'should check gameboard states with sameChannel $sameChannel, sameAuthor $sameAuthor, simultaneous option $simultaneousGames and invited $sameInvited',
+        ({ sameChannel, sameAuthor, sameInvited, simultaneousGames, expected }) => {
             if (sameChannel) {
                 manager.gameboards[0] = <GameBoard>{ ...manager.gameboards[0], tunnel };
             }
-            if (sameAuthor) {
+            if (sameAuthor || sameInvited) {
                 manager.gameboards[0] = <GameBoard>{
                     ...manager.gameboards[0],
                     entities: [tunnel.author as Entity]
                 };
             }
             manager.bot.configuration.simultaneousGames = simultaneousGames;
+            const invited = sameInvited ? tunnel.author : undefined;
             expect(validator.isInteractionValid(tunnel, invited)).toBe(expected);
         }
     );

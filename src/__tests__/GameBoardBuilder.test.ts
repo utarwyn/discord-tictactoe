@@ -3,6 +3,8 @@ import localize from '@i18n/localize';
 import AI from '@tictactoe/AI';
 import { Player } from '@tictactoe/Player';
 
+jest.mock('@tictactoe/AI');
+
 describe('GameBoardBuilder', () => {
     let builder: GameBoardBuilder;
 
