@@ -11,10 +11,10 @@
     "paths": {
       "@bot/*": ["src/bot/*"],
       "@config/*": ["src/config/*"],
+      "@i18n/*": ["src/i18n/*"],
       "@tictactoe/*": ["src/tictactoe/*"]
     },
     "incremental": true
   },
-  "include": ["src/**/*", "bin/**/*"],
-  "exclude": ["**/__tests__"]
+  "include": ["src/**/*", "bin/**/*"]
 }

@@ -1,7 +1,7 @@
-import GameEntity from '@bot/channel/GameEntity';
 import { formatDiscordName } from '@bot/util';
-import localize from '@config/localize';
+import localize from '@i18n/localize';
 import AI from '@tictactoe/AI';
+import Entity from '@tictactoe/Entity';
 import { Player } from '@tictactoe/Player';
 
 /**
@@ -18,31 +18,38 @@ export default class GameBoardBuilder {
     public static readonly MOVE_REACTIONS = ['↖️', '⬆️', '↗️', '⬅️', '⏺️', '➡️', '↙️', '⬇️', '↘️'];
     /**
      * Unicode emojis used for representing the two players.
+     * @private
      */
-    public static readonly PLAYER_EMOJIS = ['⬜', '🇽', '🅾️'];
+    private emojies = ['⬜', '🇽', '🅾️'];
     /**
      * Stores game board title message.
      * @private
      */
     private title: string;
     /**
-     * Stores game board data.
-     * @private
-     */
-    private board: string;
-    /**
      * Stores game current state.
      * @private
      */
     private state: string;
+    /**
+     * Stores game board size.
+     * @private
+     */
+    private boardSize: number;
+    /**
+     * Stores game board data.
+     * @private
+     */
+    private boardData: Player[];
 
     /**
      * Constructs a new game board builder.
      */
     constructor() {
         this.title = '';
-        this.board = '';
         this.state = '';
+        this.boardSize = 0;
+        this.boardData = [];
     }
 
     /**
@@ -50,8 +57,9 @@ export default class GameBoardBuilder {
      *
      * @param player1 first entity to play
      * @param player2 second entity to play
+     * @returns same instance
      */
-    withTitle(player1: GameEntity, player2: GameEntity): GameBoardBuilder {
+    withTitle(player1: Entity, player2: Entity): GameBoardBuilder {
         this.title =
             localize.__('game.title', {
                 player1: formatDiscordName(player1.displayName),
@@ -61,19 +69,28 @@ export default class GameBoardBuilder {
     }
 
     /**
+     * Configures emojies used for representing both entities.
+     *
+     * @param first emoji of the first entity
+     * @param second emoji of the second entity
+     * @returns same instance
+     */
+    withEmojies(first: string, second: string): GameBoardBuilder {
+        this.emojies[1] = first;
+        this.emojies[2] = second;
+        return this;
+    }
+
+    /**
      * Writes representation of a game board.
      *
      * @param boardSize size of the board
      * @param board game board data
+     * @returns same instance
      */
     withBoard(boardSize: number, board: Player[]): GameBoardBuilder {
-        this.board = '';
-        for (let i = 0; i < boardSize * boardSize; i++) {
-            this.board += GameBoardBuilder.PLAYER_EMOJIS[board[i]] + ' ';
-            if ((i + 1) % boardSize === 0) {
-                this.board += '\n';
-            }
-        }
+        this.boardSize = boardSize;
+        this.boardData = board;
         return this;
     }
 
@@ -81,8 +98,9 @@ export default class GameBoardBuilder {
      * Writes that an entity is playing.
      *
      * @param entity entity whiches is playing. If undefined: display loading message
+     * @returns same instance
      */
-    withEntityPlaying(entity?: GameEntity): GameBoardBuilder {
+    withEntityPlaying(entity?: Entity): GameBoardBuilder {
         if (entity instanceof AI) {
             this.state = localize.__('game.waiting-ai');
         } else if (!entity) {
@@ -97,8 +115,9 @@ export default class GameBoardBuilder {
      * Writes ending state of a game.
      *
      * @param winner winning entity. If undefined: display tie message
+     * @returns same instance
      */
-    withEndingMessage(winner?: GameEntity): GameBoardBuilder {
+    withEndingMessage(winner?: Entity): GameBoardBuilder {
         if (winner) {
             this.state = localize.__('game.win', { player: winner.toString() });
         } else {
@@ -111,7 +130,18 @@ export default class GameBoardBuilder {
      * Constructs final string representation of the game board.
      */
     toString(): string {
-        const state = this.state && this.board ? '\n' + this.state : this.state;
-        return this.title + this.board + state;
+        // Generate string representation of the board
+        let board = '';
+
+        for (let i = 0; i < this.boardSize * this.boardSize; i++) {
+            board += this.emojies[this.boardData[i]] + ' ';
+            if ((i + 1) % this.boardSize === 0) {
+                board += '\n';
+            }
+        }
+
+        // Generate final string
+        const state = this.state && board ? '\n' + this.state : this.state;
+        return this.title + board + state;
     }
 }

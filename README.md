@@ -7,18 +7,18 @@ Created with <a href="https://github.com/discordjs/discord.js">discord.js</a>.
 </h4>
 
 <p align="center">
-    <a href="https://github.com/utarwyn/discord-tictactoe/actions">
-        <img src="https://github.com/utarwyn/discord-tictactoe/workflows/Node.js%20CI/badge.svg" alt="Node.js CI">
-    </a>
-    <a href="https://hub.docker.com/r/utarwyn/discord-tictactoe">
-        <img src="https://img.shields.io/docker/cloud/build/utarwyn/discord-tictactoe" alt="Docker Build status">
-    </a>
-    <a href="https://github.com/utarwyn/discord-tictactoe/releases">
-        <img src="https://img.shields.io/github/package-json/v/utarwyn/discord-tictactoe" alt="Npm version">
-    </a>
-    <a href="https://github.com/utarwyn/discord-tictactoe/blob/master/LICENSE">
-        <img src="https://img.shields.io/github/license/utarwyn/discord-tictactoe" alt="License">
-    </a>
+   <a href="https://sonarcloud.io/dashboard?id=utarwyn_discord-tictactoe">
+      <img src="https://sonarcloud.io/api/project_badges/measure?project=utarwyn_discord-tictactoe&metric=alert_status" alt="Quality Gate Status">
+   </a>
+   <a href="https://npmjs.com/package/discord-tictactoe">
+      <img alt="npm" src="https://img.shields.io/npm/v/discord-tictactoe">
+   </a>
+   <a href="https://hub.docker.com/r/utarwyn/discord-tictactoe">
+      <img src="https://img.shields.io/github/workflow/status/utarwyn/discord-tictactoe/Docker%20Image%20Build%20and%20Push?label=docker%20build" alt="Docker Build status">
+   </a>
+   <a href="https://github.com/utarwyn/discord-tictactoe/blob/master/LICENSE">
+      <img src="https://img.shields.io/github/license/utarwyn/discord-tictactoe" alt="License">
+   </a>
 </p>
 
 <p align="center">
@@ -31,20 +31,18 @@ Works **out-of-the-box**, no configuration needed.
 
 If you have a problem when using the bot, or you want to propose a new feature, feel free to open an issue.
 
-Have fun!
-
-> A **SaaS-based bot** (hosted solution) is under consideration. More info soon!
+Have fun! 🥳
 
 Installation
 ------------
 
 Before installing the bot, you need to create your own [Discord Application][6].
-Then, you can install the bot via Docker or npm (check below!). If you are not a programmer, I recommend you to opt for Docker because its the simplest solution.
+Then, you can install the bot via Docker or npm (check below!). If you are not a programmer, I recommend you to opt for Docker because its the easiest solution.
 
 The bot works **out-of-the-box**. Otherwise if you want to configure it, check [config.example.json][7] file in the config folder.
 Create a file called `config.json` to change default options.
 
-> :warning: Check that your Discord bot has these permissions in all channels where games can be played:\
+> ⚠️ Make sure your Discord bot has these permissions in all channels where games can be played:\
 > *"Add reactions", "Manage messages", "Read message history", "Send messages", "View channel"*
 
 Running via Docker
@@ -99,6 +97,12 @@ Running via Node.js
    client.login('YOUR_BOT_TOKEN');
    ```
 
+Using slash command ✨
+--------
+
+Want to play TicTacToe with a slash command?\
+Follow [this detailed guide][8] to configure the module to use it! **(you must use version 2.2+)**
+
 License
 --------
 
@@ -115,3 +119,4 @@ License
 [5]: https://twitter.com/Utarwyn
 [6]: https://discordapp.com/developers/applications
 [7]: https://github.com/utarwyn/discord-tictactoe/blob/next/config/config.example.json
+[8]: https://github.com/utarwyn/discord-tictactoe/wiki/Using-slash-command

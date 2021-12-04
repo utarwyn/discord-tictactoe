@@ -4,6 +4,7 @@
 !config/locales
 !src
 !package.json
-!package-lock.json
+!.yarnclean
+!yarn.lock
 !tsconfig.json
 !tsconfig.release.json

@@ -1,10 +1,10 @@
 /**
- * Configuration values to initialize a gameboard.
+ * Configuration values to handle a game as wanted.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.1.0
  */
-export default interface GameBoardConfig {
+export default interface GameConfig {
     /**
      * Expiration time of a player turn.
      */
@@ -13,4 +13,8 @@ export default interface GameBoardConfig {
      * Should bot needs to delete the game board message.
      */
     gameBoardDelete?: boolean;
+    /**
+     * List of emojies used to identify players.
+     */
+    gameBoardEmojies?: string[];
 }

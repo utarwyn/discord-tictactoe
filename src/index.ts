@@ -1,14 +1,14 @@
-import { Client, Message } from 'discord.js';
 import EventHandler, { EventType } from '@bot/EventHandler';
 import TicTacToeBot from '@bot/TicTacToeBot';
-import localize from '@config/localize';
 import Config from '@config/Config';
+import localize from '@i18n/localize';
+import { Client, Message } from 'discord.js';
 
 /**
  * Controls all interactions between modules of the bot.
  * Loads configuration, language files and the client.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
 class TicTacToe {
@@ -39,9 +39,7 @@ class TicTacToe {
         this.eventHandler = new EventHandler();
         this.bot = new TicTacToeBot(this.config, this.eventHandler);
 
-        if (this.config.language) {
-            localize.setLanguage(this.config.language);
-        }
+        localize.loadFromLocale(this.config.language);
 
         // Deprecated, remove this in a next future
         if (client) {
@@ -57,17 +55,19 @@ class TicTacToe {
 
         if (!loginToken) {
             throw new Error('Bot token needed to start Discord client.');
-        } else if (!this.config.command) {
-            throw new Error('Game command needed to start Discord client.');
+        } else if (!this.config.command && !this.config.slashCommand) {
+            throw new Error('Game text or slash command needed to start Discord client.');
         }
 
         const client = new Client();
-        this.bot.attachToClient(client);
         await client.login(loginToken);
+        this.bot.attachToClient(client);
     }
 
     /**
      * Attaches an external Discord Client to the module.
+     *
+     * @param client Discord.js client instance
      */
     public attach(client: Client): void {
         this.bot.attachToClient(client);
@@ -80,6 +80,16 @@ class TicTacToe {
      */
     public handleMessage(message: Message): void {
         this.bot.handleMessage(message);
+    }
+
+    /**
+     * Programmatically handles a discord.js interaction to request a game.
+     *
+     * @param interaction Discord.js interaction object
+     * @param client Discord.js client instance
+     */
+    public handleInteraction(interaction: any, client: Client): void {
+        this.bot.handleInteraction(interaction, client);
     }
 
     /**

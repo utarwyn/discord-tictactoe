@@ -1,4 +1,8 @@
 {
+  "command": {
+    "description": "Jouer une partie de TicTacToe",
+    "option-user": "Membre avec lequel vous voulez jouer"
+  },
   "duel": {
     "title": ":crossed_swords: Demande de duel",
     "challenge": "{invited}, **{initier}** souhaite te défier au morpion !",

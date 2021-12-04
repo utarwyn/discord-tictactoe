@@ -1,28 +1,17 @@
-import { Client, Message, PermissionString, TextChannel } from 'discord.js';
-import GameChannel from '@bot/channel/GameChannel';
+import AppCommandRegister from '@bot/command/AppCommandRegister';
+import GameCommand from '@bot/command/GameCommand';
 import EventHandler from '@bot/EventHandler';
-import GameCommand from '@bot/GameCommand';
+import GameStateManager from '@bot/state/GameStateManager';
 import Config from '@config/Config';
+import { Client, Message, WSEventType } from 'discord.js';
 
 /**
  * Manages all interactions with the Discord bot.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
 export default class TicTacToeBot {
-    /**
-     * List with all permissions that the bot needs to work properly.
-     * @private
-     */
-    private static readonly PERM_LIST: PermissionString[] = [
-        'ADD_REACTIONS',
-        'MANAGE_MESSAGES',
-        'READ_MESSAGE_HISTORY',
-        'SEND_MESSAGES',
-        'VIEW_CHANNEL'
-    ];
-
     /**
      * Game configuration object
      * @private
@@ -38,11 +27,6 @@ export default class TicTacToeBot {
      * @private
      */
     private readonly command: GameCommand;
-    /**
-     * Collection with all channels in which games are handled.
-     * @private
-     */
-    private _channels: Array<GameChannel>;
 
     /**
      * Constructs the Discord bot interaction object.
@@ -53,13 +37,7 @@ export default class TicTacToeBot {
     constructor(configuration: Config, eventHandler: EventHandler) {
         this._configuration = configuration;
         this._eventHandler = eventHandler;
-        this._channels = [];
-        this.command = new GameCommand(
-            this,
-            configuration.command,
-            configuration.requestCooldownTime,
-            configuration.allowedRoleIds
-        );
+        this.command = new GameCommand(new GameStateManager(this));
     }
 
     /**
@@ -77,10 +55,25 @@ export default class TicTacToeBot {
     }
 
     /**
-     * Attaches a new Discord client to the module by preparing command handing.
+     * Attaches a new Discord client
+     * to the module by preparing command handing.
+     *
+     * @param client discord.js client obbject
      */
     public attachToClient(client: Client): void {
-        client.on('message', this.command.handle.bind(this.command));
+        // Handle slash command if enabled
+        if (this.configuration.slashCommand) {
+            const register = new AppCommandRegister(client, this.configuration.slashCommand);
+            client.on('message', register.handleDeployMessage.bind(register));
+            client.ws.on('INTERACTION_CREATE' as WSEventType, interaction =>
+                this.command.handleInteraction(client, interaction)
+            );
+        }
+
+        // Handle text command if enabled
+        if (this.configuration.command) {
+            client.on('message', this.command.handleMessage.bind(this.command));
+        }
     }
 
     /**
@@ -89,36 +82,16 @@ export default class TicTacToeBot {
      * @param message Discord.js message object
      */
     public handleMessage(message: Message): void {
-        this.command.run(message);
+        this.command.handleMessage(message, true);
     }
 
     /**
-     * Retrieves a game channel from the Discord object.
-     * Creates a new game channel innstance if not found in the cache.
+     * Programmatically handles a discord.js interaction to request a game.
      *
-     * @param channel parent Discord channel object
-     * @return created game channel, null if bot does not have proper permissions
+     * @param interaction Discord.js interaction object
+     * @param client Discord.js client instance
      */
-    public getorCreateGameChannel(channel: TextChannel): GameChannel | null {
-        const found = this._channels.find(gameChannel => gameChannel.channel === channel);
-        if (found) {
-            return found;
-        } else if (TicTacToeBot.hasPermissionsInChannel(channel)) {
-            const instance = new GameChannel(this, channel);
-            this._channels.push(instance);
-            return instance;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Checks if bot has permissions to operate in a specific channel.
-     *
-     * @param channel discord.js text channel object
-     * @return true if bot got all permissions, false otherwise
-     */
-    private static hasPermissionsInChannel(channel: TextChannel): boolean {
-        return channel.guild.me?.permissionsIn(channel)?.has(TicTacToeBot.PERM_LIST) ?? false;
+    public handleInteraction(interaction: any, client: Client): void {
+        this.command.handleInteraction(client, interaction, true);
     }
 }

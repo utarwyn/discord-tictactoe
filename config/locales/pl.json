@@ -1,0 +1,24 @@
+{
+  "command": {
+    "description": "Play a game of TicTacToe",
+    "option-user": "User you want to play with"
+  },
+  "duel": {
+    "title": ":crossed_swords: Nowy pojedynek",
+    "challenge": "{invited}, **{initier}** wyzwał cię na pojedynek!",
+    "action": "Zareaguj odpowiednią emotką do tej wiadomości, aby zaakceptować lub odrzucić zaproszenie.",
+    "expire": ":x: `{invited}` nie odpowiedział na zaproszenie do pojedynku.",
+    "reject": ":x: `{invited}` odrzucił zaproszenie do pojedynku.",
+    "unknown-user": "nie możesz wyzwać na pojedynek tego użytkownika."
+  },
+  "game": {
+    "title": ":game_die: `{player1}` **VS** `{player2}`",
+    "action": "{player}, wybierz swój ruch:",
+    "load": "Reakcje się ładują, proszę czekać...",
+    "end": "Remis! Nikt nie wygrał. Może spróbujcie jeszcze raz?",
+    "win": ":tada: {player} wygrał grę w kółko i krzyżyk!",
+    "expire": ":x: Gra **wygasła**... Może przez nieaktywność któregoś z graczy?",
+    "waiting-ai": ":robot: Trwa ruch Sztucznej Inteligencji, proszę czekać...",
+    "ai": "Sztuczna Inteligencja"
+  }
+}

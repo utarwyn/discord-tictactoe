@@ -1,10 +1,10 @@
 /**
  * Represents a game entity. Can be a real user or an AI.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
-export default interface GameEntity {
+export default interface Entity {
     /**
      * Unique identifier of the entity.
      */
@@ -13,9 +13,8 @@ export default interface GameEntity {
      * Display name of the entity.
      */
     displayName: string;
-
     /**
-     * Generates the text to mention the entity into a Discord chat.
+     * Generates the text to mention the entity.
      */
     toString(): string;
 }

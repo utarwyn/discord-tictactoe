@@ -1,0 +1,24 @@
+{
+  "command": {
+    "description": "Play a game of TicTacToe",
+    "option-user": "User you want to play with"
+  },
+  "duel": {
+    "title": ":crossed_swords: Nieuwe spel uitdaging!",
+    "challenge": "{invited}, **{initier}** daagt je uit voor een spel!",
+    "action": "Reageer op dit bericht om het spel te accepteren of te weigeren.",
+    "expire": ":x: `{invited}` heeft te laat gereageerd!",
+    "reject": ":x: `{invited}` heeft het spel geweigerd!",
+    "unknown-user": "Je kan dit lid niet uitdagen!"
+  },
+  "game": {
+    "title": ":game_die: `{player1}` **VS** `{player2}`",
+    "action": "{player}, het is jouw beurt:",
+    "load": "Reacties worden geladen, eventjes geduld...",
+    "end": "Gelijk spel! Niemand heeft gewonnen! Nog een keer?",
+    "win": ":tada: {player} heeft gewonnen!",
+    "expire": ":x: Het spel is **verlopen**... Misschien is iemand niet actief?",
+    "waiting-ai": ":robot: De AI is aan het spelen, eventjes geduld...",
+    "ai": "AI"
+  }
+}

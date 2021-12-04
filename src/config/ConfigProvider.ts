@@ -1,23 +1,30 @@
-import path from 'path';
-import fs from 'fs';
 import Config from '@config/Config';
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Manages the configuration loading to operate the bot.
  * Loads values from a static file and environement variables.
  *
- * @author Utarwyn <maximemalgorn@gmail.com>
+ * @author Utarwyn
  * @since 2.0.0
  */
 export default class ConfigProvider implements Config {
     public token = '';
     public language = 'en';
+
     public command = '!ttt';
+    public slashCommand = undefined;
+
+    public allowedChannelIds = [];
     public allowedRoleIds = [];
     public requestExpireTime = 60;
     public requestCooldownTime = 0;
+    public simultaneousGames = false;
+
     public gameExpireTime = 30;
     public gameBoardDelete = false;
+    public gameBoardEmojies = [];
 
     [key: string]: any;
 
@@ -26,7 +33,6 @@ export default class ConfigProvider implements Config {
     constructor() {
         this.initializeFromFile();
         this.initializeFromEnv();
-        this.verifyValues();
     }
 
     private initializeFromFile(): void {
@@ -68,15 +74,10 @@ export default class ConfigProvider implements Config {
                         break;
                 }
 
-                this[camelCaseKey] = newValue;
+                if (newValue) {
+                    this[camelCaseKey] = newValue;
+                }
             });
-    }
-
-    private verifyValues(): void {
-        const emptyKey = Object.keys(this).find(key => this[key] === '');
-        if (emptyKey) {
-            throw new Error(`Config key ${emptyKey} must be defined`);
-        }
     }
 
     private static camelCase(str: string): string {
