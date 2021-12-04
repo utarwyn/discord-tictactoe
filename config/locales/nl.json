@@ -1,4 +1,8 @@
 {
+  "command": {
+    "description": "Play a game of TicTacToe",
+    "option-user": "User you want to play with"
+  },
   "duel": {
     "title": ":crossed_swords: Nieuwe spel uitdaging!",
     "challenge": "{invited}, **{initier}** daagt je uit voor een spel!",
