@@ -7,7 +7,6 @@ import GameStateValidator from '@bot/state/GameStateValidator';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import Entity from '@tictactoe/Entity';
 import { GuildMember } from 'discord.js';
-import { mocked } from 'ts-jest/utils';
 
 jest.mock('@bot/entity/DuelRequest');
 jest.mock('@bot/entity/GameBoard');
@@ -15,8 +14,8 @@ jest.mock('@bot/state/GameStateValidator');
 jest.mock('@tictactoe/AI');
 
 describe('GameStateManager', () => {
-    const duelRequest = mocked(DuelRequest);
-    const gameBoard = mocked(GameBoard);
+    const duelRequest = jest.mocked(DuelRequest);
+    const gameBoard = jest.mocked(GameBoard);
 
     let manager: GameStateManager;
     let validator: GameStateValidator;
