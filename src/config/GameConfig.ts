@@ -10,6 +10,10 @@ export default interface GameConfig {
      */
     gameExpireTime?: number;
     /**
+     * Display gameboard using buttons instead of emojies with reactions.
+     */
+    gameBoardButtons?: boolean;
+    /**
      * Should bot needs to delete the game board message.
      */
     gameBoardDelete?: boolean;

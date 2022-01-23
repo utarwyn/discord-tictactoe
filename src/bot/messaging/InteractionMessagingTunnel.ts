@@ -82,10 +82,10 @@ export default class InteractionMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async end(reason?: string): Promise<void> {
+    public async end(reason?: MessagingAnswer): Promise<void> {
         if (this.reply) {
             try {
-                await this.editReply({ content: reason ?? '.' });
+                await this.editReply(reason ?? { content: '.' });
                 await this.reply.suppressEmbeds(true);
                 await this.reply.reactions.removeAll();
             } catch {

@@ -118,9 +118,11 @@ export default class DuelRequest {
             await this.tunnel.end();
             await this.manager.createGame(this.tunnel, this.invited);
         } else {
-            await this.tunnel.end(
-                localize.__('duel.reject', { invited: formatDiscordName(this.invited.displayName) })
-            );
+            await this.tunnel.end({
+                content: localize.__('duel.reject', {
+                    invited: formatDiscordName(this.invited.displayName)
+                })
+            });
         }
     }
 
@@ -128,8 +130,10 @@ export default class DuelRequest {
      * Called if the challenge has expired without answer.
      */
     private async challengeExpired(): Promise<void> {
-        await this.tunnel.end(
-            localize.__('duel.expire', { invited: formatDiscordName(this.invited.displayName) })
-        );
+        await this.tunnel.end({
+            content: localize.__('duel.expire', {
+                invited: formatDiscordName(this.invited.displayName)
+            })
+        });
     }
 }

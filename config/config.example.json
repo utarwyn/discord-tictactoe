@@ -9,6 +9,7 @@
   "requestCooldownTime": 0,
   "simultaneousGames": false,
   "gameExpireTime": 30,
+  "gameBoardButtons": false,
   "gameBoardDelete": false,
   "gameBoardEmojies": []
 }

@@ -75,7 +75,7 @@ export default class TextMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async end(reason?: string): Promise<void> {
+    public async end(reason?: MessagingAnswer): Promise<void> {
         if (this.reply) {
             if (this.reply.deletable && !this.reply.deleted) {
                 try {

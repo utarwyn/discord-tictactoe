@@ -17,24 +17,31 @@ describe('GameBoardBuilder', () => {
     });
 
     it('should send empty message by default', () => {
-        expect(builder.toString()).toBe('');
+        expect(builder.toMessageOptions()).toEqual({ content: '', components: [] });
     });
 
     it('should compute title based on entity names', () => {
         builder.withTitle({ id: '1', displayName: 'entity1' }, { id: '2', displayName: 'entity2' });
-        expect(builder.toString()).toBe(':game_die: `entity1` **VS** `entity2`\n\n');
+        expect(builder.toMessageOptions()).toEqual({
+            content: ':game_die: `entity1` **VS** `entity2`\n\n',
+            components: []
+        });
     });
 
     it('should compute board using custom emojies', () => {
         builder
             .withEmojies(':dog:', ':cat:')
             .withBoard(2, [Player.First, Player.Second, Player.Second, Player.First]);
-        expect(builder.toString()).toBe(':dog: :cat: \n:cat: :dog: \n');
+
+        expect(builder.toMessageOptions()).toEqual({
+            content: ':dog: :cat: \n:cat: :dog: \n',
+            components: []
+        });
     });
 
     it('should add an empty line between board and state if both defined', () => {
         builder.withBoard(1, [Player.None]).withEntityPlaying();
-        expect(builder.toString()).toContain('\n');
+        expect(builder.toMessageOptions().content).toContain('\n');
     });
 
     it.each`
@@ -44,7 +51,7 @@ describe('GameBoardBuilder', () => {
         ${{ toString: () => 'fake' }} | ${'fake, select your move:'}
     `('should set state based if playing entity is $entity', ({ entity, state }) => {
         builder.withEntityPlaying(entity);
-        expect(builder.toString()).toBe(state);
+        expect(builder.toMessageOptions()).toEqual({ content: state, components: [] });
     });
 
     it.each`
@@ -53,6 +60,6 @@ describe('GameBoardBuilder', () => {
         ${{ toString: () => 'fake' }} | ${':tada: fake has won the game!'}
     `('should set state based if winning entity is $entity', ({ entity, state }) => {
         builder.withEndingMessage(entity);
-        expect(builder.toString()).toBe(state);
+        expect(builder.toMessageOptions()).toEqual({ content: state, components: [] });
     });
 });
