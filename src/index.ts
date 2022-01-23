@@ -49,8 +49,8 @@ class TicTacToe {
 
         if (!loginToken) {
             throw new Error('Bot token needed to start Discord client.');
-        } else if (!this.config.command && !this.config.slashCommand) {
-            throw new Error('Game text or slash command needed to start Discord client.');
+        } else if (!this.config.command && !this.config.textCommand) {
+            throw new Error('Game slash or text command needed to start Discord client.');
         }
 
         const client = new Client({

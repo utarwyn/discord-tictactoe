@@ -45,7 +45,8 @@ export default class GameCommand {
             message.member &&
             !message.author.bot &&
             message.channel instanceof TextChannel &&
-            (noTrigger || (this.config.command && message.content.startsWith(this.config.command)))
+            (noTrigger ||
+                (this.config.textCommand && message.content.startsWith(this.config.textCommand)))
         ) {
             const tunnel = new TextMessagingTunnel(message);
             const invited = message.mentions.members?.first();
@@ -65,7 +66,7 @@ export default class GameCommand {
             interaction instanceof CommandInteraction &&
             interaction.channel instanceof TextChannel &&
             interaction.member instanceof GuildMember &&
-            (noTrigger || interaction.commandName === this.config.slashCommand)
+            (noTrigger || interaction.commandName === this.config.command)
         ) {
             // Retrieve the inviter and create an interaction tunnel
             const tunnnel = new InteractionMessagingTunnel(interaction);
