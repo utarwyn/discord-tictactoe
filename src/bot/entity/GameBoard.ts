@@ -87,9 +87,9 @@ export default class GameBoard {
      * Creates or retrieves message of the gameboard.
      */
     public get content(): MessageOptions {
-        const builder = this.configuration.gameBoardButtons
-            ? new GameBoardButtonBuilder()
-            : new GameBoardBuilder();
+        const builder = this.configuration.gameBoardReactions
+            ? new GameBoardBuilder()
+            : new GameBoardButtonBuilder();
 
         builder
             .withTitle(this.entities[0], this.entities[1])
@@ -139,7 +139,8 @@ export default class GameBoard {
      * @param message discord.js message object to attach
      */
     public async attachTo(message: Message): Promise<void> {
-        if (!this.configuration.gameBoardButtons) {
+        // Add reactions below message if enabled
+        if (this.configuration.gameBoardReactions) {
             for (const reaction of GameBoardBuilder.MOVE_REACTIONS) {
                 try {
                     await message.react(reaction);
@@ -264,7 +265,20 @@ export default class GameBoard {
 
         const currentEntity = this.getEntity(this.game.currentPlayer)?.id;
 
-        if (this.configuration.gameBoardButtons) {
+        if (this.configuration.gameBoardReactions) {
+            this.tunnel.reply
+                .awaitReactions({
+                    filter: (reaction, user) =>
+                        reaction.emoji.name != null &&
+                        user.id === currentEntity &&
+                        this.game.isMoveValid(GameBoard.reactionToMove(reaction.emoji.name)),
+                    max: 1,
+                    time: expireTime,
+                    errors: ['time']
+                })
+                .then(this.onEmojiMoveSelected.bind(this))
+                .catch(this.onExpire.bind(this));
+        } else {
             this.tunnel.reply
                 .createMessageComponentCollector({
                     filter: interaction =>
@@ -281,19 +295,6 @@ export default class GameBoard {
                         await this.onExpire();
                     }
                 });
-        } else {
-            this.tunnel.reply
-                .awaitReactions({
-                    filter: (reaction, user) =>
-                        reaction.emoji.name != null &&
-                        user.id === currentEntity &&
-                        this.game.isMoveValid(GameBoard.reactionToMove(reaction.emoji.name)),
-                    max: 1,
-                    time: expireTime,
-                    errors: ['time']
-                })
-                .then(this.onEmojiMoveSelected.bind(this))
-                .catch(this.onExpire.bind(this));
         }
     }
 }
