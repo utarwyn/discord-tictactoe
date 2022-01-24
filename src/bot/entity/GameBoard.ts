@@ -214,7 +214,7 @@ export default class GameBoard {
      */
     private async onButtonMoveSelected(interaction: ButtonInteraction): Promise<void> {
         const move = GameBoard.buttonIdentifierToMove(interaction.customId);
-        return await this.playTurn(move, interaction);
+        return this.playTurn(move, interaction);
     }
 
     /**
