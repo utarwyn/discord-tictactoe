@@ -3,6 +3,7 @@
   "language": "en",
   "command": "!ttt",
   "slashCommand": "tictactoe",
+  "slashCommandOptionName": "opponent",
   "allowedChannelIds": [],
   "allowedRoleIds": [],
   "requestExpireTime": 60,
