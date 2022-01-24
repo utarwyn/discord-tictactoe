@@ -15,6 +15,7 @@ export default class ConfigProvider implements Config {
 
     public command = '!ttt';
     public slashCommand = undefined;
+    public slashCommandOptionName = 'opponent';
 
     public allowedChannelIds = [];
     public allowedRoleIds = [];

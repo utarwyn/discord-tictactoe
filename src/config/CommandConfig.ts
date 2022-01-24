@@ -13,4 +13,8 @@ export default interface CommandConfig {
      * Slash command used to start a new game.
      */
     slashCommand?: string;
+    /**
+     * Name of slash command option to request a duel against another user.
+     */
+    slashCommandOptionName?: string;
 }
