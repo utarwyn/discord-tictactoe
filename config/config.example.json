@@ -2,6 +2,7 @@
   "token": "YOUR_BOT_USER_TOKEN",
   "language": "en",
   "command": "tictactoe",
+  "commandOptionName": "opponent",
   "textCommand": "!ttt",
   "allowedChannelIds": [],
   "allowedRoleIds": [],

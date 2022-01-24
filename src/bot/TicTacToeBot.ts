@@ -65,7 +65,8 @@ export default class TicTacToeBot {
         if (this.configuration.command) {
             const register = new AppCommandRegister(
                 client.application!.commands,
-                this.configuration.command
+                this.configuration.command,
+                this.configuration.commandOptionName ?? 'opponent'
             );
             client.on('messageCreate', register.handleDeployMessage.bind(register));
             client.on('interactionCreate', this.command.handleInteraction.bind(this.command));

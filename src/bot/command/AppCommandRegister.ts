@@ -14,20 +14,27 @@ export default class AppCommandRegister {
      */
     private readonly commandManager: ApplicationCommandManager;
     /**
-     * Name of the application command to rregister
+     * Name of the application command to register
      * @private
      */
     private readonly name: string;
+    /**
+     * Name of the option to mention another user
+     * @private
+     */
+    private readonly optionName: string;
 
     /**
      * Constructs application command registration handler.
      *
      * @param commandManager discord.js client instance
      * @param name application name to register
+     * @param optionName name of the option to mention another user
      */
-    constructor(commandManager: ApplicationCommandManager, name: string) {
+    constructor(commandManager: ApplicationCommandManager, name: string, optionName: string) {
         this.commandManager = commandManager;
         this.name = name;
+        this.optionName = optionName;
     }
 
     /**
@@ -66,7 +73,7 @@ export default class AppCommandRegister {
                 options: [
                     {
                         type: 6,
-                        name: 'opponent',
+                        name: this.optionName,
                         description: localize.__('command.option-user')
                     }
                 ]

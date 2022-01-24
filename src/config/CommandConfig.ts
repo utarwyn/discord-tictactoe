@@ -10,6 +10,10 @@ export default interface CommandConfig {
      */
     command?: string;
     /**
+     * Name of command option to request a duel against another user.
+     */
+    commandOptionName?: string;
+    /**
      * Text command used to start a new game.
      */
     textCommand?: string;

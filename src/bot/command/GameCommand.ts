@@ -72,7 +72,10 @@ export default class GameCommand {
             const tunnnel = new InteractionMessagingTunnel(interaction);
 
             // Retrieve invited user from options if provided
-            const mentionned = interaction.options.getMember('opponent', false);
+            const mentionned = interaction.options.getMember(
+                this.config.commandOptionName ?? 'opponent',
+                false
+            );
             const invited = mentionned instanceof GuildMember ? mentionned : undefined;
 
             return this.handleInvitation(tunnnel, interaction.member, invited);

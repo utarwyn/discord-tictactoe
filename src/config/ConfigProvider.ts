@@ -14,6 +14,7 @@ export default class ConfigProvider implements Config {
     public language = 'en';
 
     public command = 'tictactoe';
+    public commandOptionName = 'opponent';
     public textCommand = undefined;
 
     public allowedChannelIds = [];
