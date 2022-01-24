@@ -36,7 +36,7 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @inheritdoc
      * @override
      */
-    withEntityPlaying(entity?: Entity): GameBoardBuilder {
+    override withEntityPlaying(entity?: Entity): GameBoardBuilder {
         // Do not display state if game is loading
         if (entity) {
             return super.withEntityPlaying(entity);

@@ -174,10 +174,12 @@ export default class GameBoard {
 
     /**
      * Updates the message.
+     *
+     * @param interaction interaction to update if action was triggered by it
      */
     public async update(interaction?: ButtonInteraction): Promise<void> {
         if (interaction) {
-            await interaction.update(this.content);
+            return interaction.update(this.content);
         } else {
             return this.tunnel.editReply(this.content);
         }
@@ -203,7 +205,7 @@ export default class GameBoard {
         collected: Collection<Snowflake, MessageReaction>
     ): Promise<void> {
         const move = GameBoardBuilder.MOVE_REACTIONS.indexOf(collected.first()!.emoji.name!);
-        await this.playTurn(move);
+        return this.playTurn(move);
     }
 
     /**
@@ -221,6 +223,7 @@ export default class GameBoard {
      * Play the current player's turn with a specific move.
      *
      * @param move move to play for the current player
+     * @param interaction interaction to update if action was triggered by it
      * @private
      */
     private async playTurn(move: number, interaction?: ButtonInteraction): Promise<void> {
