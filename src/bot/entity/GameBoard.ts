@@ -1,4 +1,5 @@
 import GameBoardBuilder from '@bot/entity/GameBoardBuilder';
+import GameBoardButtonBuilder from '@bot/entity/GameBoardButtonBuilder';
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
 import GameConfig from '@config/GameConfig';
@@ -6,7 +7,14 @@ import localize from '@i18n/localize';
 import AI from '@tictactoe/AI';
 import Entity from '@tictactoe/Entity';
 import Game from '@tictactoe/Game';
-import { Collection, Message, MessageOptions, MessageReaction, Snowflake } from 'discord.js';
+import {
+    ButtonInteraction,
+    Collection,
+    Message,
+    MessageOptions,
+    MessageReaction,
+    Snowflake
+} from 'discord.js';
 
 /**
  * Message sent to display the status of a game board.
@@ -79,7 +87,11 @@ export default class GameBoard {
      * Creates or retrieves message of the gameboard.
      */
     public get content(): MessageOptions {
-        const builder = new GameBoardBuilder()
+        const builder = this.configuration.gameBoardReactions
+            ? new GameBoardBuilder()
+            : new GameBoardButtonBuilder();
+
+        builder
             .withTitle(this.entities[0], this.entities[1])
             .withBoard(this.game.boardSize, this.game.board)
             .withEntityPlaying(
@@ -95,7 +107,7 @@ export default class GameBoard {
             builder.withEmojies(emojies[0], emojies[1]);
         }
 
-        return { content: builder.toString() };
+        return builder.toMessageOptions();
     }
 
     /**
@@ -110,18 +122,32 @@ export default class GameBoard {
     }
 
     /**
+     * Converts a button identifier to a move position (from 0 to 8).
+     * If the move is not valid, returns -1.
+     *
+     * @param identifier button identifier
+     * @private
+     */
+    private static buttonIdentifierToMove(identifier: string): number {
+        return parseInt(identifier) ?? -1;
+    }
+
+    /**
      * Attachs the duel request to a specific message
      * and reacts to it in order to get processed.
      *
      * @param message discord.js message object to attach
      */
     public async attachTo(message: Message): Promise<void> {
-        for (const reaction of GameBoardBuilder.MOVE_REACTIONS) {
-            try {
-                await message.react(reaction);
-            } catch {
-                await this.onExpire();
-                return;
+        // Add reactions below message if enabled
+        if (this.configuration.gameBoardReactions) {
+            for (const reaction of GameBoardBuilder.MOVE_REACTIONS) {
+                try {
+                    await message.react(reaction);
+                } catch {
+                    await this.onExpire();
+                    return;
+                }
             }
         }
 
@@ -148,9 +174,15 @@ export default class GameBoard {
 
     /**
      * Updates the message.
+     *
+     * @param interaction interaction to update if action was triggered by it
      */
-    public async update(): Promise<void> {
-        return this.tunnel.editReply(this.content);
+    public async update(interaction?: ButtonInteraction): Promise<void> {
+        if (interaction) {
+            return interaction.update(this.content);
+        } else {
+            return this.tunnel.editReply(this.content);
+        }
     }
 
     /**
@@ -169,34 +201,50 @@ export default class GameBoard {
      * @param collected collected data from discordjs
      * @private
      */
-    private async onMoveSelected(collected: Collection<Snowflake, MessageReaction>): Promise<void> {
+    private async onEmojiMoveSelected(
+        collected: Collection<Snowflake, MessageReaction>
+    ): Promise<void> {
         const move = GameBoardBuilder.MOVE_REACTIONS.indexOf(collected.first()!.emoji.name!);
-        await this.playTurn(move);
+        return this.playTurn(move);
+    }
+
+    /**
+     * Called when a player has selected a valid move button.
+     *
+     * @param collected collected data from discordjs
+     * @private
+     */
+    private async onButtonMoveSelected(interaction: ButtonInteraction): Promise<void> {
+        const move = GameBoard.buttonIdentifierToMove(interaction.customId);
+        return this.playTurn(move, interaction);
     }
 
     /**
      * Play the current player's turn with a specific move.
      *
      * @param move move to play for the current player
+     * @param interaction interaction to update if action was triggered by it
      * @private
      */
-    private async playTurn(move: number): Promise<void> {
+    private async playTurn(move: number, interaction?: ButtonInteraction): Promise<void> {
         this.game.updateBoard(this.game.currentPlayer, move);
 
         if (this.game.finished) {
             const winner = this.getEntity(this.game.winner);
 
             if (this.configuration.gameBoardDelete) {
-                await this.tunnel.end(new GameBoardBuilder().withEndingMessage(winner).toString());
+                await this.tunnel.end(
+                    new GameBoardBuilder().withEndingMessage(winner).toMessageOptions()
+                );
             } else {
                 await this.tunnel.reply?.reactions?.removeAll();
-                await this.update();
+                await this.update(interaction);
             }
 
             this.manager.endGame(this, winner ?? null);
         } else {
             this.game.nextPlayer();
-            await this.update();
+            await this.update(interaction);
             await this.attemptNextTurn();
         }
     }
@@ -206,7 +254,7 @@ export default class GameBoard {
      * @private
      */
     private async onExpire(): Promise<void> {
-        await this.tunnel.end(localize.__('game.expire'));
+        await this.tunnel.end({ content: localize.__('game.expire'), components: [] });
         this.manager.endGame(this);
     }
 
@@ -215,19 +263,41 @@ export default class GameBoard {
      * @private
      */
     private awaitMove(): void {
-        const expireTime = this.configuration.gameExpireTime ?? 30;
+        const expireTime = (this.configuration.gameExpireTime ?? 30) * 1000;
         if (!this.tunnel.reply || this.tunnel.reply.deleted) return;
-        this.tunnel.reply
-            .awaitReactions({
-                filter: (reaction, user) =>
-                    reaction.emoji.name != null &&
-                    user.id === this.getEntity(this.game.currentPlayer)?.id &&
-                    this.game.isMoveValid(GameBoard.reactionToMove(reaction.emoji.name)),
-                max: 1,
-                time: expireTime * 1000,
-                errors: ['time']
-            })
-            .then(this.onMoveSelected.bind(this))
-            .catch(this.onExpire.bind(this));
+
+        const currentEntity = this.getEntity(this.game.currentPlayer)?.id;
+
+        if (this.configuration.gameBoardReactions) {
+            this.tunnel.reply
+                .awaitReactions({
+                    filter: (reaction, user) =>
+                        reaction.emoji.name != null &&
+                        user.id === currentEntity &&
+                        this.game.isMoveValid(GameBoard.reactionToMove(reaction.emoji.name)),
+                    max: 1,
+                    time: expireTime,
+                    errors: ['time']
+                })
+                .then(this.onEmojiMoveSelected.bind(this))
+                .catch(this.onExpire.bind(this));
+        } else {
+            this.tunnel.reply
+                .createMessageComponentCollector({
+                    filter: interaction =>
+                        interaction.user.id === currentEntity &&
+                        this.game.isMoveValid(
+                            GameBoard.buttonIdentifierToMove(interaction.customId)
+                        ),
+                    max: 1,
+                    time: expireTime
+                })
+                .on('collect', this.onButtonMoveSelected.bind(this))
+                .on('end', async (_, reason) => {
+                    if (reason === 'time') {
+                        await this.onExpire();
+                    }
+                });
+        }
     }
 }

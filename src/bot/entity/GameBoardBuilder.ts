@@ -3,10 +3,11 @@ import localize from '@i18n/localize';
 import AI from '@tictactoe/AI';
 import Entity from '@tictactoe/Entity';
 import { Player } from '@tictactoe/Player';
+import { MessageOptions } from 'discord.js';
 
 /**
- * Builds string representation of a game board
- * whiches will be displayed as a Discord message.
+ * Builds representation of a game board using text emojis
+ * whiches will be displayed in a Discord message.
  *
  * @author Utarwyn
  * @since 2.1.0
@@ -18,29 +19,29 @@ export default class GameBoardBuilder {
     public static readonly MOVE_REACTIONS = ['↖️', '⬆️', '↗️', '⬅️', '⏺️', '➡️', '↙️', '⬇️', '↘️'];
     /**
      * Unicode emojis used for representing the two players.
-     * @private
+     * @protected
      */
-    private emojies = ['⬜', '🇽', '🅾️'];
+    protected emojies = ['⬜', '🇽', '🅾️'];
     /**
      * Stores game board title message.
-     * @private
+     * @protected
      */
-    private title: string;
+    protected title: string;
     /**
      * Stores game current state.
-     * @private
+     * @protected
      */
-    private state: string;
+    protected state: string;
     /**
      * Stores game board size.
-     * @private
+     * @protected
      */
-    private boardSize: number;
+    protected boardSize: number;
     /**
      * Stores game board data.
-     * @private
+     * @protected
      */
-    private boardData: Player[];
+    protected boardData: Player[];
 
     /**
      * Constructs a new game board builder.
@@ -127,9 +128,11 @@ export default class GameBoardBuilder {
     }
 
     /**
-     * Constructs final string representation of the game board.
+     * Constructs final representation of the game board.
+     *
+     * @returns message options of the gameboard
      */
-    toString(): string {
+    toMessageOptions(): MessageOptions {
         // Generate string representation of the board
         let board = '';
 
@@ -142,6 +145,6 @@ export default class GameBoardBuilder {
 
         // Generate final string
         const state = this.state && board ? '\n' + this.state : this.state;
-        return this.title + board + state;
+        return { content: this.title + board + state, components: [] };
     }
 }

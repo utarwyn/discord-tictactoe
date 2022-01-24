@@ -23,6 +23,7 @@ export default class ConfigProvider implements Config {
     public simultaneousGames = false;
 
     public gameExpireTime = 30;
+    public gameBoardReactions = false;
     public gameBoardDelete = false;
     public gameBoardEmojies = [];
 
