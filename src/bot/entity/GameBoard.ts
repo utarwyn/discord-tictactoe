@@ -294,7 +294,7 @@ export default class GameBoard {
                 })
                 .on('collect', this.onButtonMoveSelected.bind(this))
                 .on('end', async (_, reason) => {
-                    if (reason === 'time') {
+                    if (reason !== 'limit') {
                         await this.onExpire();
                     }
                 });
