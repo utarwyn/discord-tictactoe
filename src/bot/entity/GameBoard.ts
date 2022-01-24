@@ -264,7 +264,7 @@ export default class GameBoard {
      */
     private awaitMove(): void {
         const expireTime = (this.configuration.gameExpireTime ?? 30) * 1000;
-        if (!this.tunnel.reply || this.tunnel.reply.deleted) return;
+        if (!this.tunnel.reply) return;
 
         const currentEntity = this.getEntity(this.game.currentPlayer)?.id;
 
