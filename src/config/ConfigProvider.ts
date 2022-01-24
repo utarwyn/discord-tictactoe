@@ -13,8 +13,8 @@ export default class ConfigProvider implements Config {
     public token = '';
     public language = 'en';
 
-    public command = '!ttt';
-    public slashCommand = undefined;
+    public command = 'tictactoe';
+    public textCommand = undefined;
 
     public allowedChannelIds = [];
     public allowedRoleIds = [];

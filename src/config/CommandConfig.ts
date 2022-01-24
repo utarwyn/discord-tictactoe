@@ -6,11 +6,11 @@
  */
 export default interface CommandConfig {
     /**
-     * Text command used to start a new game.
+     * Slash command used to start a new game.
      */
     command?: string;
     /**
-     * Slash command used to start a new game.
+     * Text command used to start a new game.
      */
-    slashCommand?: string;
+    textCommand?: string;
 }
