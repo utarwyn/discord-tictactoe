@@ -1,12 +1,11 @@
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
-import { formatDiscordName } from '@bot/util';
 import localize from '@i18n/localize';
 import {
     Collection,
     GuildMember,
     Message,
-    MessageEmbedOptions,
+    MessageOptions,
     MessageReaction,
     Snowflake
 } from 'discord.js';
@@ -61,23 +60,28 @@ export default class DuelRequest {
     }
 
     /**
-     * Creates the embed options to send the duel request.
+     * Creates the message options to send the duel request.
      *
-     * @returns embed options object for the duel message
+     * @returns message options object for the duel request
      */
-    public get embed(): MessageEmbedOptions {
+    public get content(): MessageOptions {
         const content =
             localize.__('duel.challenge', {
                 invited: this.invited.toString(),
-                initier: formatDiscordName(this.tunnel.author.displayName ?? '')
+                initier: this.tunnel.author.displayName
             }) +
             '\n' +
             localize.__('duel.action');
 
         return {
-            color: 2719929, // #2980B9
-            title: localize.__('duel.title'),
-            description: content
+            allowedMentions: { parse: [] },
+            embeds: [
+                {
+                    color: 2719929, // #2980B9
+                    title: localize.__('duel.title'),
+                    description: content
+                }
+            ]
         };
     }
 
@@ -119,9 +123,8 @@ export default class DuelRequest {
             await this.manager.createGame(this.tunnel, this.invited);
         } else {
             await this.tunnel.end({
-                content: localize.__('duel.reject', {
-                    invited: formatDiscordName(this.invited.displayName)
-                })
+                allowedMentions: { parse: [] },
+                content: localize.__('duel.reject', { invited: this.invited.displayName })
             });
         }
     }
@@ -131,9 +134,8 @@ export default class DuelRequest {
      */
     private async challengeExpired(): Promise<void> {
         await this.tunnel.end({
-            content: localize.__('duel.expire', {
-                invited: formatDiscordName(this.invited.displayName)
-            })
+            allowedMentions: { parse: [] },
+            content: localize.__('duel.expire', { invited: this.invited.displayName })
         });
     }
 }

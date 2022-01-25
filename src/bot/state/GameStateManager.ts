@@ -60,7 +60,7 @@ export default class GameStateManager {
             );
 
             // Reply with the duel request and attach the created message
-            const message = await tunnel.replyWith({ embeds: [duel.embed] });
+            const message = await tunnel.replyWith(duel.content);
             await duel.attachTo(message);
 
             // Setup user cooldown

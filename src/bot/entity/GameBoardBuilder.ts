@@ -1,4 +1,3 @@
-import { formatDiscordName } from '@bot/util';
 import localize from '@i18n/localize';
 import AI from '@tictactoe/AI';
 import Entity from '@tictactoe/Entity';
@@ -63,8 +62,8 @@ export default class GameBoardBuilder {
     withTitle(player1: Entity, player2: Entity): GameBoardBuilder {
         this.title =
             localize.__('game.title', {
-                player1: formatDiscordName(player1.displayName),
-                player2: formatDiscordName(player2.displayName)
+                player1: player1.displayName,
+                player2: player2.displayName
             }) + '\n\n';
         return this;
     }
@@ -145,6 +144,10 @@ export default class GameBoardBuilder {
 
         // Generate final string
         const state = this.state && board ? '\n' + this.state : this.state;
-        return { content: this.title + board + state, components: [] };
+        return {
+            allowedMentions: { parse: ['users'] },
+            content: this.title + board + state,
+            components: []
+        };
     }
 }
