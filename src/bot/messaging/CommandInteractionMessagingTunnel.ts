@@ -8,7 +8,7 @@ import { CommandInteraction, GuildMember, Message, TextChannel } from 'discord.j
  * @author Utarwyn
  * @since 2.2.0
  */
-export default class InteractionMessagingTunnel extends MessagingTunnel {
+export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
     /**
      * Interaction object retrieved from the Discord API
      * @private
@@ -85,8 +85,7 @@ export default class InteractionMessagingTunnel extends MessagingTunnel {
     public async end(reason?: MessagingAnswer): Promise<void> {
         if (this.reply) {
             try {
-                await this.editReply(reason ?? { content: '.' });
-                await this.reply.suppressEmbeds(true);
+                await this.editReply(reason ?? { content: '.', components: [], embeds: [] });
                 await this.reply.reactions.removeAll();
             } catch {
                 // ignore api error

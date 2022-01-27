@@ -9,7 +9,11 @@
     "action": "Reagisci a questo messaggio per accettare o no la sfida.",
     "expire": ":x: `{invited}` non ha risposto.",
     "reject": ":x: `{invited}` non ha accettato.",
-    "unknown-user": "non puoi sfidare questo utente."
+    "unknown-user": "non puoi sfidare questo utente.",
+    "button": {
+      "accept": "Accept",
+      "decline": "Decline"
+    }
   },
   "game": {
     "title": ":game_die: `{player1}` **VS** `{player2}`",

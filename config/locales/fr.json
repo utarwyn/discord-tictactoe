@@ -9,7 +9,11 @@
     "action": "Réagis à ce message pour accepter ou décliner le duel.",
     "expire": ":x: `{invited}` n'a pas répondu à la demande dans les temps.",
     "reject": ":x: `{invited}` a rejeté votre proposition de duel.",
-    "unknown-user": "vous ne pouvez pas défier ce membre."
+    "unknown-user": "vous ne pouvez pas défier ce membre.",
+    "button": {
+      "accept": "Accepter",
+      "decline": "Décliner"
+    }
   },
   "game": {
     "title": ":game_die: `{player1}` **VS** `{player2}`",

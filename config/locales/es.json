@@ -9,7 +9,11 @@
     "action": "Reacciona a este mensaje para aceptar o rechazar el duelo.",
     "expire": ":x: `{invited}` no se puso a la altura del desafío.",
     "reject": ":x: `{invited}` ha rechazado el duelo.",
-    "unknown-user": "no pudiste desafiar a ese usuario."
+    "unknown-user": "no pudiste desafiar a ese usuario.",
+    "button": {
+      "accept": "Accept",
+      "decline": "Decline"
+    }
   },
   "game": {
     "title": ":game_die: `{player1}` **VS** `{player2}`",

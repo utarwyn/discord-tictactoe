@@ -1,4 +1,4 @@
-import InteractionMessagingTunnel from '@bot/messaging/InteractionMessagingTunnel';
+import CommandInteractionMessagingTunnel from '@bot/messaging/CommandInteractionMessagingTunnel';
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import TextMessagingTunnel from '@bot/messaging/TextMessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
@@ -69,7 +69,7 @@ export default class GameCommand {
             (noTrigger || interaction.commandName === this.config.command)
         ) {
             // Retrieve the inviter and create an interaction tunnel
-            const tunnnel = new InteractionMessagingTunnel(interaction);
+            const tunnnel = new CommandInteractionMessagingTunnel(interaction);
 
             // Retrieve invited user from options if provided
             const mentionned = interaction.options.getMember(

@@ -9,7 +9,11 @@
     "action": "React vào tin nhắn này để chấp nhận hoặc từ chối lời mời",
     "expire": ":x: `{invited}` đã không phản hồi gì về lời mời của bạn",
     "reject": ":x: `{invited}` đã từ chối lời mời của bạn.",
-    "unknown-user": "Bạn không thể thách đấu **{username}**. Hãy mention một người khác."
+    "unknown-user": "Bạn không thể thách đấu **{username}**. Hãy mention một người khác.",
+    "button": {
+      "accept": "Accept",
+      "decline": "Decline"
+    }
   },
   "game": {
     "title": ":game_die: `{player1}` **VS** `{player2}`",

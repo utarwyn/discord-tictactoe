@@ -9,7 +9,11 @@
     "action": "Zum Annehmen reagieren.",
     "expire": ":x: `{invited}` ist nicht zum Match angetreten.",
     "reject": ":x: `{invited}` hat das Match abgelehnt.",
-    "unknown-user": "Du kannst diesen User nicht herausfordern."
+    "unknown-user": "Du kannst diesen User nicht herausfordern.",
+    "button": {
+      "accept": "Accept",
+      "decline": "Decline"
+    }
   },
   "game": {
     "title": ":game_die: `{player1}` **VS** `{player2}`",

@@ -211,7 +211,7 @@ export default class GameBoard {
     /**
      * Called when a player has selected a valid move button.
      *
-     * @param collected collected data from discordjs
+     * @param interaction interaction that has operated move request
      * @private
      */
     private async onButtonMoveSelected(interaction: ButtonInteraction): Promise<void> {

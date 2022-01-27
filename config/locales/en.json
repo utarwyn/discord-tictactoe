@@ -9,7 +9,11 @@
     "action": "React to this message to accept or decline the duel.",
     "expire": ":x: `{invited}` did not rise up to the challenge.",
     "reject": ":x: `{invited}` has rejected the duel.",
-    "unknown-user": "you cannot challenge that user."
+    "unknown-user": "you cannot challenge that user.",
+    "button": {
+      "accept": "Accept",
+      "decline": "Decline"
+    }
   },
   "game": {
     "title": ":game_die: `{player1}` **VS** `{player2}`",

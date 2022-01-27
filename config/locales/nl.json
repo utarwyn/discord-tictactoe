@@ -9,7 +9,11 @@
     "action": "Reageer op dit bericht om het spel te accepteren of te weigeren.",
     "expire": ":x: `{invited}` heeft te laat gereageerd!",
     "reject": ":x: `{invited}` heeft het spel geweigerd!",
-    "unknown-user": "Je kan dit lid niet uitdagen!"
+    "unknown-user": "Je kan dit lid niet uitdagen!",
+    "button": {
+      "accept": "Accept",
+      "decline": "Decline"
+    }
   },
   "game": {
     "title": ":game_die: `{player1}` **VS** `{player2}`",
