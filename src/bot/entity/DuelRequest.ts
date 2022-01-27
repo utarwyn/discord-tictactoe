@@ -153,7 +153,7 @@ export default class DuelRequest {
     }
 
     /**
-     * Called when the invited user answered to the request using an emoji.
+     * Called when the invited user answered to the request using a button.
      *
      * @param interaction interaction that has operated challenge answer
      * @private

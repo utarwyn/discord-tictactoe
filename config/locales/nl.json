@@ -11,8 +11,8 @@
     "reject": ":x: `{invited}` heeft het spel geweigerd!",
     "unknown-user": "Je kan dit lid niet uitdagen!",
     "button": {
-      "accept": "Accept",
-      "decline": "Decline"
+      "accept": "Accepteren",
+      "decline": "Refuse"
     }
   },
   "game": {

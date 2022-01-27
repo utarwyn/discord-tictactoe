@@ -11,8 +11,8 @@
     "reject": ":x: `{invited}` odrzucił zaproszenie do pojedynku.",
     "unknown-user": "nie możesz wyzwać na pojedynek tego użytkownika.",
     "button": {
-      "accept": "Accept",
-      "decline": "Decline"
+      "accept": "Akceptuj",
+      "decline": "Odmawiający"
     }
   },
   "game": {

@@ -11,8 +11,8 @@
     "reject": ":x: `{invited}` non ha accettato.",
     "unknown-user": "non puoi sfidare questo utente.",
     "button": {
-      "accept": "Accept",
-      "decline": "Decline"
+      "accept": "Accettare",
+      "decline": "Rifiutare"
     }
   },
   "game": {

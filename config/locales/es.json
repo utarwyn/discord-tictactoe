@@ -11,8 +11,8 @@
     "reject": ":x: `{invited}` ha rechazado el duelo.",
     "unknown-user": "no pudiste desafiar a ese usuario.",
     "button": {
-      "accept": "Accept",
-      "decline": "Decline"
+      "accept": "Aceptar",
+      "decline": "Rechazar"
     }
   },
   "game": {

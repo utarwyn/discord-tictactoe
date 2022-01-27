@@ -11,8 +11,8 @@
     "reject": ":x: `{invited}` Отклонил вызов на игру.",
     "unknown-user": "Вы не можете вызвать данного игрока **{username}**. Пожалуйста линканите другого пользователя.",
     "button": {
-      "accept": "Accept",
-      "decline": "Decline"
+      "accept": "Принять",
+      "decline": "отказывать"
     }
   },
   "game": {

@@ -11,8 +11,8 @@
     "reject": ":x: `{invited}` hat das Match abgelehnt.",
     "unknown-user": "Du kannst diesen User nicht herausfordern.",
     "button": {
-      "accept": "Accept",
-      "decline": "Decline"
+      "accept": "Akzeptieren",
+      "decline": "Ablehnen"
     }
   },
   "game": {
