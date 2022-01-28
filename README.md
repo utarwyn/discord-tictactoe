@@ -22,86 +22,76 @@ Created with <a href="https://github.com/discordjs/discord.js">discord.js</a>.
 </p>
 
 <p align="center">
-    <img src="https://i.imgur.com/bfl7wwm.gif" alt="demo">
+    <img src="https://i.imgur.com/QB7z1j4.gif" alt="demo">
 </p>
 
 "Discord TicTacToe" is a **self-hosted NodeJS bot** which allows you to play the popular TicTacToe game on Discord.
-Invite your friends or play against our robot, a fearsome opponent. Type `!ttt` to challenge someone else and use reactions to play, so simple!
-Works **out-of-the-box**, no configuration needed.
+Invite your friends or play against our robot, a fearsome opponent. Use `/tictactoe` command to challenge someone else
+and use buttons to play, so simple! Works **out-of-the-box**, no configuration needed.
 
 If you have a problem when using the bot, or you want to propose a new feature, feel free to open an issue.
 
 Have fun! 🥳
 
-Installation
+
+Requirements
 ------------
 
 Before installing the bot, you need to create your own [Discord Application][6].
 Then, you can install the bot via Docker or npm (check below!). If you are not a programmer, I recommend you to opt for Docker because its the easiest solution.
 
-The bot works **out-of-the-box**. Otherwise if you want to configure it, check [config.example.json][7] file in the config folder.
-Create a file called `config.json` to change default options.
-
 > ⚠️ Make sure your Discord bot has these permissions in all channels where games can be played:\
 > *"Add reactions", "Manage messages", "Read message history", "Send messages", "View channel"*
+
+
+Installation
+------------
+
+The module is suitable for discord.js **v12** and **v13**. Check the table below to see which version meets your needs.
+
+discord.js | Node.JS | Module version | NPM package          | Docker image                |
+---------- | ------- | -------------- | -------------------- | --------------------------- |
+v13.*      | 16.6+   | v3.*           | discord-tictactoe@^3 | utarwyn/discord-tictactoe@3 |
+v12.*      | 14+     | v2.*           | discord-tictactoe@^2 | utarwyn/discord-tictactoe@2 |
+
+The bot works **out-of-the-box**. But if you want to configure it, check [config.example.json][7] file in the config folder.
+
+> 🔥 Discord buttons are only supported from **v3 of the module**.
+
 
 Running via Docker
 ------------
 
 1. Make sure to have Docker installed.
-2. Pull the latest image from [DockerHub][1]:\
-   `docker pull utarwyn/discord-tictactoe`
-3. Start the Docker container by providing Discord API Token:\
-   `docker run --name tictactoebot -e TOKEN=YOUR_TOKEN utarwyn/discord-tictactoe`
-4. Add `-d` option to run the bot in the background.\
-   You can also pass others options with `-e OPTION_NAME=option_value`.
-5. Use the option `-v $(pwd)/config/config.json:/app/config/config.json` to load a custom config file.
+2. Start Docker container based on one of our [DockerHub images][1] using an API token:\
+   `docker run -e TOKEN=YOUR_TOKEN utarwyn/discord-tictactoe@3`
+3. You can pass options directly with `-e OPTION_NAME=option_value` or use the option `-v $(pwd)/config/config.json:/app/config/config.json` to load an entire config file.
+
 
 Running via Node.js
 ------------
 
-1. Check with `node -v` that you are running at least **Node.js 14.x**.
+1. Check with `node -v` that you are running appropriate Node.js version.
 2. Install the project from [npm][2]:\
-   `npm install discord-tictactoe` or `yarn add discord-tictactoe`
-3. Use as an independent bot:
+   `npm install discord-tictactoe@^3` or `yarn add discord-tictactoe@^3`
+3. Import module into your script:
    ```javascript
    const TicTacToe = require('discord-tictactoe');
-   new TicTacToe({ language: 'en', command: '!ttt' })
-     .login('YOUR_BOT_TOKEN')
-     .then(() => console.log('TicTacToe bot is ready to be used.'));
    ```
-4. **OR** use it in your own bot:
-   ```javascript
-   const TicTacToe = require('discord-tictactoe');
-   const Discord = require('discord.js');
-   const client = new Discord.Client();
-   
-   new TicTacToe({ language: 'fr', command: '-ttt' })
-     .attach(client);
-   
-   client.login('YOUR_BOT_TOKEN');
-   ```
-5. **OR** use it with a custom command handling system:
-   ```javascript
-   const TicTacToe = require('discord-tictactoe');
-   const Discord = require('discord.js');
-   const client = new Discord.Client();
-   const game = new TicTacToe({ language: 'de' })
-   
-   client.on('message', message => {
-     if (message.content.startsWith('-tictactoe')) {
-       game.handleMessage(message);
-     }
-   });
-   
-   client.login('YOUR_BOT_TOKEN');
-   ```
+4. Check usage examples in this [wiki page][10].
 
-Using slash command ✨
+
+Setup slash command ✨
 --------
 
-Want to play TicTacToe with a slash command?\
-Follow [this detailed guide][8] to configure the module to use it! **(you must use version 2.2+)**
+Slash command are enabled by default **starting from v3**!\
+Just type `?tttdeploy` somewhere in your server to install it (admin only).
+
+🚀 Want more info? Check [this detailed guide][8].
+
+> Are you using module version 2? Slash command is also supported as an option!\
+> ➡️ [Check this dedicated page][9] to setup it in your server.
+
 
 License
 --------
@@ -119,4 +109,6 @@ License
 [5]: https://twitter.com/Utarwyn
 [6]: https://discordapp.com/developers/applications
 [7]: https://github.com/utarwyn/discord-tictactoe/blob/next/config/config.example.json
-[8]: https://github.com/utarwyn/discord-tictactoe/wiki/Using-slash-command
+[8]: https://github.com/utarwyn/discord-tictactoe/wiki/Using-slash-command-in-V3
+[9]: https://github.com/utarwyn/discord-tictactoe/wiki/Using-slash-command-in-V2
+[10]: https://github.com/utarwyn/discord-tictactoe/wiki/Usage-examples-with-Node.js
