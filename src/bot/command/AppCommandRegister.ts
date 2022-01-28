@@ -72,7 +72,7 @@ export default class AppCommandRegister {
                 description: localize.__('command.description'),
                 options: [
                     {
-                        type: 6,
+                        type: 'USER',
                         name: this.optionName,
                         description: localize.__('command.option-user')
                     }

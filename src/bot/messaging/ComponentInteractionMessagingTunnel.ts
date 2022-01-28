@@ -15,6 +15,11 @@ export default class ComponentInteractionMessagingTunnel extends MessagingTunnel
      */
     private readonly interaction: MessageComponentInteraction;
     /**
+     * Original author of the message
+     * @private
+     */
+    private readonly originalAuthor?: GuildMember;
+    /**
      * Last reply sent into the tunnnel
      * @private
      */
@@ -25,17 +30,19 @@ export default class ComponentInteractionMessagingTunnel extends MessagingTunnel
      * tunnel using Discord interactions.
      *
      * @param interaction interaction generic object
+     * @param originalAuthor original author of the message if provided
      */
-    constructor(interaction: MessageComponentInteraction) {
+    constructor(interaction: MessageComponentInteraction, originalAuthor?: GuildMember) {
         super();
         this.interaction = interaction;
+        this.originalAuthor = originalAuthor;
     }
 
     /**
      * @inheritdoc
      */
     public get author(): GuildMember {
-        return this.interaction.member as GuildMember;
+        return this.originalAuthor ?? (this.interaction.member as GuildMember);
     }
 
     /**

@@ -160,7 +160,7 @@ export default class DuelRequest {
      */
     private async challengeButtonAnswered(interaction: MessageComponentInteraction): Promise<void> {
         // now that an interaction using buttons has been operated on message, use it
-        this.tunnel = new ComponentInteractionMessagingTunnel(interaction);
+        this.tunnel = new ComponentInteractionMessagingTunnel(interaction, this.tunnel.author);
         return this.challengeAnswered(interaction.customId === 'yes');
     }
 
