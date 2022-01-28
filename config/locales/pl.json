@@ -9,7 +9,11 @@
     "action": "Zareaguj odpowiednią emotką do tej wiadomości, aby zaakceptować lub odrzucić zaproszenie.",
     "expire": ":x: `{invited}` nie odpowiedział na zaproszenie do pojedynku.",
     "reject": ":x: `{invited}` odrzucił zaproszenie do pojedynku.",
-    "unknown-user": "nie możesz wyzwać na pojedynek tego użytkownika."
+    "unknown-user": "nie możesz wyzwać na pojedynek tego użytkownika.",
+    "button": {
+      "accept": "Akceptuj",
+      "decline": "Odmawiający"
+    }
   },
   "game": {
     "title": ":game_die: `{player1}` **VS** `{player2}`",

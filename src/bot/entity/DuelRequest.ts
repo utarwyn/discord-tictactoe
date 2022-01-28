@@ -1,3 +1,4 @@
+import ComponentInteractionMessagingTunnel from '@bot/messaging/ComponentInteractionMessagingTunnel';
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
 import localize from '@i18n/localize';
@@ -5,6 +6,9 @@ import {
     Collection,
     GuildMember,
     Message,
+    MessageActionRow,
+    MessageButton,
+    MessageComponentInteraction,
     MessageOptions,
     MessageReaction,
     Snowflake
@@ -27,10 +31,6 @@ export default class DuelRequest {
      */
     private readonly manager: GameStateManager;
     /**
-     * Tunnel that initiated the duel request.
-     */
-    private readonly tunnel: MessagingTunnel;
-    /**
      * Member who has been invited to play
      */
     private readonly invited: GuildMember;
@@ -38,6 +38,14 @@ export default class DuelRequest {
      * Expiration time of a request message
      */
     private readonly expireTime: number;
+    /**
+     * Interact with reactions instead of buttons
+     */
+    private readonly useReactions: boolean;
+    /**
+     * Tunnel that initiated the duel request.
+     */
+    private tunnel: MessagingTunnel;
 
     /**
      * Constructs a new duel request based on a message.
@@ -46,17 +54,20 @@ export default class DuelRequest {
      * @param tunnel messaging tunnel that created the request
      * @param invited invited member object
      * @param expireTime expiration time of the mesage, undefined for default
+     * @param useReactions interact with reactions instead of buttons
      */
     constructor(
         manager: GameStateManager,
         tunnel: MessagingTunnel,
         invited: GuildMember,
-        expireTime?: number
+        expireTime?: number,
+        useReactions?: boolean
     ) {
         this.manager = manager;
         this.tunnel = tunnel;
         this.invited = invited;
         this.expireTime = expireTime ?? 60;
+        this.useReactions = useReactions ?? false;
     }
 
     /**
@@ -75,6 +86,22 @@ export default class DuelRequest {
 
         return {
             allowedMentions: { parse: [] },
+            components: !this.useReactions
+                ? [
+                      new MessageActionRow().addComponents(
+                          new MessageButton({
+                              style: 'SUCCESS',
+                              customId: 'yes',
+                              label: localize.__('duel.button.accept')
+                          }),
+                          new MessageButton({
+                              style: 'DANGER',
+                              customId: 'no',
+                              label: localize.__('duel.button.decline')
+                          })
+                      )
+                  ]
+                : [],
             embeds: [
                 {
                     color: 2719929, // #2980B9
@@ -92,39 +119,78 @@ export default class DuelRequest {
      * @param message discord.js message object to attach
      */
     public async attachTo(message: Message): Promise<void> {
-        for (const reaction of DuelRequest.REACTIONS) {
-            await message.react(reaction);
-        }
+        if (this.useReactions) {
+            for (const reaction of DuelRequest.REACTIONS) {
+                await message.react(reaction);
+            }
 
-        message
-            .awaitReactions({
-                filter: (reaction, user) =>
-                    reaction.emoji.name != null &&
-                    DuelRequest.REACTIONS.includes(reaction.emoji.name) &&
-                    user.id === this.invited.id,
-                max: 1,
-                time: this.expireTime * 1000,
-                errors: ['time']
-            })
-            .then(this.challengeAnswered.bind(this))
-            .catch(this.challengeExpired.bind(this));
+            message
+                .awaitReactions({
+                    filter: (reaction, user) =>
+                        reaction.emoji.name != null &&
+                        DuelRequest.REACTIONS.includes(reaction.emoji.name) &&
+                        user.id === this.invited.id,
+                    max: 1,
+                    time: this.expireTime * 1000,
+                    errors: ['time']
+                })
+                .then(this.challengeEmojiAnswered.bind(this))
+                .catch(this.challengeExpired.bind(this));
+        } else {
+            message
+                .createMessageComponentCollector({
+                    filter: interaction => interaction.user.id === this.invited.id,
+                    max: 1,
+                    time: this.expireTime * 1000
+                })
+                .on('collect', this.challengeButtonAnswered.bind(this))
+                .on('end', async (_, reason) => {
+                    if (reason !== 'limit') {
+                        await this.challengeExpired();
+                    }
+                });
+        }
+    }
+
+    /**
+     * Called when the invited user answered to the request using a button.
+     *
+     * @param interaction interaction that has operated challenge answer
+     * @private
+     */
+    private async challengeButtonAnswered(interaction: MessageComponentInteraction): Promise<void> {
+        // now that an interaction using buttons has been operated on message, use it
+        this.tunnel = new ComponentInteractionMessagingTunnel(interaction);
+        return this.challengeAnswered(interaction.customId === 'yes');
+    }
+
+    /**
+     * Called when the invited user answered to the request using an emoji.
+     *
+     * @param collected collection with all reactions added
+     */
+    private async challengeEmojiAnswered(
+        collected: Collection<Snowflake, MessageReaction>
+    ): Promise<void> {
+        return this.challengeAnswered(collected.first()!.emoji.name === DuelRequest.REACTIONS[0]);
     }
 
     /**
      * Called when the invited user answered to the request.
      *
-     * @param collected collection with all reactions added
+     * @param accepted true if user accepted the request, false otherwise
+     * @param rejectFunc function called to reject the duel request
      */
-    private async challengeAnswered(
-        collected: Collection<Snowflake, MessageReaction>
-    ): Promise<void> {
-        if (collected.first()!.emoji.name === DuelRequest.REACTIONS[0]) {
+    private async challengeAnswered(accepted: boolean): Promise<void> {
+        if (accepted) {
             await this.tunnel.end();
-            await this.manager.createGame(this.tunnel, this.invited);
+            return this.manager.createGame(this.tunnel, this.invited);
         } else {
-            await this.tunnel.end({
+            return this.tunnel.end({
                 allowedMentions: { parse: [] },
-                content: localize.__('duel.reject', { invited: this.invited.displayName })
+                components: [],
+                content: localize.__('duel.reject', { invited: this.invited.displayName }),
+                embeds: []
             });
         }
     }
@@ -133,9 +199,11 @@ export default class DuelRequest {
      * Called if the challenge has expired without answer.
      */
     private async challengeExpired(): Promise<void> {
-        await this.tunnel.end({
+        return this.tunnel.end({
             allowedMentions: { parse: [] },
-            content: localize.__('duel.expire', { invited: this.invited.displayName })
+            components: [],
+            content: localize.__('duel.expire', { invited: this.invited.displayName }),
+            embeds: []
         });
     }
 }

@@ -8,6 +8,7 @@
   "allowedRoleIds": [],
   "requestExpireTime": 60,
   "requestCooldownTime": 0,
+  "requestReactions": false,
   "simultaneousGames": false,
   "gameExpireTime": 30,
   "gameBoardReactions": false,

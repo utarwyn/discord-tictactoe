@@ -22,6 +22,10 @@ export default interface InteractionConfig {
      */
     requestExpireTime?: number;
     /**
+     * Interact with a duel request message using reactions instead of buttons.
+     */
+    requestReactions?: boolean;
+    /**
      * Allow games to be played simultaneously in the same channel.
      */
     simultaneousGames?: boolean;

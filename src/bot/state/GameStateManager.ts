@@ -56,7 +56,8 @@ export default class GameStateManager {
                 this,
                 tunnel,
                 invited,
-                this.bot.configuration.requestExpireTime
+                this.bot.configuration.requestExpireTime,
+                this.bot.configuration.requestReactions
             );
 
             // Reply with the duel request and attach the created message
