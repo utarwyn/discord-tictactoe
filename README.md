@@ -40,8 +40,8 @@ Requirements
 Before installing the bot, you need to create your own [Discord Application][6].
 Then, you can install the bot via Docker or npm (check below!). If you are not a programmer, I recommend you to opt for Docker because its the easiest solution.
 
-> ⚠️ Make sure your Discord bot has these permissions in all channels where games can be played:\
-> *"Add reactions", "Manage messages", "Read message history", "Send messages", "View channel"*
+> ⚠️ Make sure your Discord bot has these permissions in all channels where games can be played:
+> "Manage messages", "Read message history", "Send messages", "View channel", "Application commands" or "Add reactions" depending on what you plan to use.
 
 
 Installation
