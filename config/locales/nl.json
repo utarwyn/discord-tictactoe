@@ -5,7 +5,7 @@
   },
   "duel": {
     "title": ":crossed_swords: Nieuwe spel uitdaging!",
-    "challenge": "{invited}, **{initier}** daagt je uit voor een spel!",
+    "challenge": "**{initier}** daagt je uit voor een spel!",
     "action": "Reageer op dit bericht om het spel te accepteren of te weigeren.",
     "expire": ":x: `{invited}` heeft te laat gereageerd!",
     "reject": ":x: `{invited}` heeft het spel geweigerd!",

@@ -5,7 +5,7 @@
   },
   "duel": {
     "title": ":crossed_swords: Sfida a tris",
-    "challenge": "{invited}, **{initier}** ti ha sfidato ad un duello!",
+    "challenge": "**{initier}** ti ha sfidato ad un duello!",
     "action": "Reagisci a questo messaggio per accettare o no la sfida.",
     "expire": ":x: `{invited}` non ha risposto.",
     "reject": ":x: `{invited}` non ha accettato.",

@@ -77,15 +77,12 @@ export default class DuelRequest {
      */
     public get content(): MessageOptions {
         const content =
-            localize.__('duel.challenge', {
-                invited: this.invited.toString(),
-                initier: this.tunnel.author.displayName
-            }) +
+            localize.__('duel.challenge', { initier: this.tunnel.author.displayName }) +
             '\n' +
             localize.__('duel.action');
 
         return {
-            allowedMentions: { parse: [] },
+            allowedMentions: { parse: ['users'] },
             components: !this.useReactions
                 ? [
                       new MessageActionRow().addComponents(
@@ -102,6 +99,7 @@ export default class DuelRequest {
                       )
                   ]
                 : [],
+            content: this.invited.toString(),
             embeds: [
                 {
                     color: 2719929, // #2980B9

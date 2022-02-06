@@ -5,7 +5,7 @@
   },
   "duel": {
     "title": ":crossed_swords: Neues Duell",
-    "challenge": "{invited} fordert **{initier}** zu einem Duell heraus!",
+    "challenge": "**{initier}** hat dich zu einem Duell heraus!",
     "action": "Zum Annehmen reagieren.",
     "expire": ":x: `{invited}` ist nicht zum Match angetreten.",
     "reject": ":x: `{invited}` hat das Match abgelehnt.",

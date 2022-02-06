@@ -5,7 +5,7 @@
   },
   "duel": {
     "title": ":crossed_swords: Demande de duel",
-    "challenge": "{invited}, **{initier}** souhaite te défier au morpion !",
+    "challenge": "**{initier}** souhaite te défier au morpion !",
     "action": "Réagis à ce message pour accepter ou décliner le duel.",
     "expire": ":x: `{invited}` n'a pas répondu à la demande dans les temps.",
     "reject": ":x: `{invited}` a rejeté votre proposition de duel.",

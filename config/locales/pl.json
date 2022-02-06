@@ -5,7 +5,7 @@
   },
   "duel": {
     "title": ":crossed_swords: Nowy pojedynek",
-    "challenge": "{invited}, **{initier}** wyzwał cię na pojedynek!",
+    "challenge": "**{initier}** wyzwał cię na pojedynek!",
     "action": "Zareaguj odpowiednią emotką do tej wiadomości, aby zaakceptować lub odrzucić zaproszenie.",
     "expire": ":x: `{invited}` nie odpowiedział na zaproszenie do pojedynku.",
     "reject": ":x: `{invited}` odrzucił zaproszenie do pojedynku.",

@@ -5,7 +5,7 @@
   },
   "duel": {
     "title": ":crossed_swords: Lời thách đấu mới",
-    "challenge": "{invited}, **{initier}** vừa thách đấu bạn!",
+    "challenge": "**{initier}** vừa thách đấu bạn!",
     "action": "React vào tin nhắn này để chấp nhận hoặc từ chối lời mời",
     "expire": ":x: `{invited}` đã không phản hồi gì về lời mời của bạn",
     "reject": ":x: `{invited}` đã từ chối lời mời của bạn.",

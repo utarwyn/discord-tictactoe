@@ -5,7 +5,7 @@
   },
   "duel": {
     "title": ":crossed_swords: Nuevo desafío de duelo",
-    "challenge": "{invited}, **{initier}** te desafió a un duelo!",
+    "challenge": "**{initier}** te desafió a un duelo!",
     "action": "Reacciona a este mensaje para aceptar o rechazar el duelo.",
     "expire": ":x: `{invited}` no se puso a la altura del desafío.",
     "reject": ":x: `{invited}` ha rechazado el duelo.",
