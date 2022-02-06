@@ -4,7 +4,7 @@ import TextMessagingTunnel from '@bot/messaging/TextMessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
 import CommandConfig from '@config/CommandConfig';
 import localize from '@i18n/localize';
-import { CommandInteraction, GuildMember, Interaction, Message, TextChannel } from 'discord.js';
+import { GuildMember, Interaction, Message } from 'discord.js';
 
 /**
  * Command to start a duel with someone else.
@@ -44,7 +44,7 @@ export default class GameCommand {
         if (
             message.member &&
             !message.author.bot &&
-            message.channel instanceof TextChannel &&
+            message.channel.isText() &&
             (noTrigger ||
                 (this.config.textCommand && message.content.startsWith(this.config.textCommand)))
         ) {
@@ -63,22 +63,21 @@ export default class GameCommand {
      */
     public async handleInteraction(interaction: Interaction, noTrigger = false): Promise<void> {
         if (
-            interaction instanceof CommandInteraction &&
-            interaction.channel instanceof TextChannel &&
-            interaction.member instanceof GuildMember &&
+            interaction?.isCommand() &&
+            interaction.inCachedGuild() &&
+            interaction.channel?.isText() &&
             (noTrigger || interaction.commandName === this.config.command)
         ) {
             // Retrieve the inviter and create an interaction tunnel
-            const tunnnel = new CommandInteractionMessagingTunnel(interaction);
+            const tunnel = new CommandInteractionMessagingTunnel(interaction);
 
             // Retrieve invited user from options if provided
-            const mentionned = interaction.options.getMember(
-                this.config.commandOptionName ?? 'opponent',
-                false
-            );
-            const invited = mentionned instanceof GuildMember ? mentionned : undefined;
+            const member = await interaction.member.fetch();
+            const mentionned =
+                interaction.options.getMember(this.config.commandOptionName ?? 'opponent', false) ??
+                undefined;
 
-            return this.handleInvitation(tunnnel, interaction.member, invited);
+            return this.handleInvitation(tunnel, member, mentionned);
         }
     }
 

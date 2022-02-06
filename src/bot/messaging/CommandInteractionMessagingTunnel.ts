@@ -56,6 +56,11 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
      * @inheritdoc
      */
     public async replyWith(answer: MessagingAnswer, _direct?: boolean): Promise<Message> {
+        // Fetch current reply if deferred externally and not register in this tunnel
+        if (!this.reply && this.interaction.deferred) {
+            this._reply = (await this.interaction.fetchReply()) as Message;
+        }
+
         // Edit the reply if already exists
         if (this.reply) {
             await this.editReply(answer);
