@@ -17,11 +17,10 @@ export default class GameStateValidator {
      */
     private static readonly PERM_LIST: PermissionString[] = [
         'ADD_REACTIONS',
-        'MANAGE_MESSAGES',
         'READ_MESSAGE_HISTORY',
         'SEND_MESSAGES',
         'VIEW_CHANNEL'
-    ];
+    ]; // bot doesn't need manage message to delete its own message
 
     /**
      * Stores configuration of the module.
