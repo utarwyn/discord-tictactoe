@@ -15,8 +15,7 @@
       "@tictactoe/*": ["src/tictactoe/*"]
     },
     "incremental": true,
-    "declaration": true,
-    "declarationMap": true
+    "declaration": true
   },
-  "include": ["src/**/*", "bin/**/*", "tsconfig.json"]
+  "include": ["src/**/*", "bin/**/*"]
 }
