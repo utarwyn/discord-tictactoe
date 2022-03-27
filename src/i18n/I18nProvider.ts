@@ -50,7 +50,7 @@ export class I18nProvider {
         if (!loaded && locale && locale.startsWith(I18nProvider.FILEPATH_PREFIX)) {
             filepath = path.resolve(
                 process.cwd(),
-                locale.substr(I18nProvider.FILEPATH_PREFIX.length)
+                locale.slice(I18nProvider.FILEPATH_PREFIX.length)
             );
         }
 
