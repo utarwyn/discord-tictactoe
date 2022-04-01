@@ -14,7 +14,8 @@
       "@i18n/*": ["src/i18n/*"],
       "@tictactoe/*": ["src/tictactoe/*"]
     },
-    "incremental": true
+    "incremental": true,
+    "declaration": true
   },
   "include": ["src/**/*", "bin/**/*"]
 }
