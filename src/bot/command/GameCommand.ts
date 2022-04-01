@@ -86,7 +86,6 @@ export default class GameCommand {
      * or requesting a duel between two members.
      *
      * @param tunnel game messaging tunnel
-     * @param channel
      * @param inviter discord.js inviter member instance
      * @param invited discord.js invited member instance, can be undefined to play against AI
      */
@@ -96,14 +95,17 @@ export default class GameCommand {
         invited?: GuildMember
     ): Promise<void> {
         if (invited) {
-            if (
-                !invited.user.bot &&
-                inviter.user.id !== invited.user.id &&
-                invited.permissionsIn(tunnel.channel).has('VIEW_CHANNEL')
-            ) {
-                await this.manager.requestDuel(tunnel, invited);
+            if (!invited.user.bot) {
+                if (
+                    inviter.user.id !== invited.user.id &&
+                    invited.permissionsIn(tunnel.channel).has('VIEW_CHANNEL')
+                ) {
+                    await this.manager.requestDuel(tunnel, invited);
+                } else {
+                    await tunnel.replyWith({ content: localize.__('duel.unknown-user') }, true);
+                }
             } else {
-                await tunnel.replyWith({ content: localize.__('duel.unknown-user') }, true);
+                await tunnel.replyWith({ content: localize.__('duel.no-bot') }, true);
             }
         } else {
             await this.manager.createGame(tunnel);

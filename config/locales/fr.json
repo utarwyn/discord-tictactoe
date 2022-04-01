@@ -10,6 +10,7 @@
     "expire": ":x: `{invited}` n'a pas répondu à la demande dans les temps.",
     "reject": ":x: `{invited}` a rejeté votre proposition de duel.",
     "unknown-user": "vous ne pouvez pas défier ce membre.",
+    "no-bot": "vous ne pouvez pas défier un robot.",
     "button": {
       "accept": "Accepter",
       "decline": "Décliner"

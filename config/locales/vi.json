@@ -10,6 +10,7 @@
     "expire": ":x: `{invited}` đã không phản hồi gì về lời mời của bạn",
     "reject": ":x: `{invited}` đã từ chối lời mời của bạn.",
     "unknown-user": "Bạn không thể thách đấu **{username}**. Hãy mention một người khác.",
+    "no-bot": "you cannot challenge bots.",
     "button": {
       "accept": "Accept",
       "decline": "Decline"

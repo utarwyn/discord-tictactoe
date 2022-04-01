@@ -10,6 +10,7 @@
     "expire": ":x: `{invited}` non ha risposto.",
     "reject": ":x: `{invited}` non ha accettato.",
     "unknown-user": "non puoi sfidare questo utente.",
+    "no-bot": "you cannot challenge bots.",
     "button": {
       "accept": "Accettare",
       "decline": "Rifiutare"

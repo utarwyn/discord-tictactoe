@@ -10,6 +10,7 @@
     "expire": ":x: `{invited}` heeft te laat gereageerd!",
     "reject": ":x: `{invited}` heeft het spel geweigerd!",
     "unknown-user": "Je kan dit lid niet uitdagen!",
+    "no-bot": "you cannot challenge bots.",
     "button": {
       "accept": "Accepteren",
       "decline": "Refuse"

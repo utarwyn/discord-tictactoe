@@ -10,6 +10,7 @@
     "expire": ":x: `{invited}` nie odpowiedział na zaproszenie do pojedynku.",
     "reject": ":x: `{invited}` odrzucił zaproszenie do pojedynku.",
     "unknown-user": "nie możesz wyzwać na pojedynek tego użytkownika.",
+    "no-bot": "you cannot challenge bots.",
     "button": {
       "accept": "Akceptuj",
       "decline": "Odmawiający"

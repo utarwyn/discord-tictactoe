@@ -10,6 +10,7 @@
     "expire": ":x: `{invited}` ist nicht zum Match angetreten.",
     "reject": ":x: `{invited}` hat das Match abgelehnt.",
     "unknown-user": "Du kannst diesen User nicht herausfordern.",
+    "no-bot": "you cannot challenge bots.",
     "button": {
       "accept": "Akzeptieren",
       "decline": "Ablehnen"

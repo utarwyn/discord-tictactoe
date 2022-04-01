@@ -10,6 +10,7 @@
     "expire": ":x: `{invited}` Не ответил на Ваше предложение.",
     "reject": ":x: `{invited}` Отклонил вызов на игру.",
     "unknown-user": "Вы не можете вызвать данного игрока **{username}**. Пожалуйста линканите другого пользователя.",
+    "no-bot": "you cannot challenge bots.",
     "button": {
       "accept": "Принять",
       "decline": "отказывать"

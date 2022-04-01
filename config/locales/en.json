@@ -10,6 +10,7 @@
     "expire": ":x: `{invited}` did not rise up to the challenge.",
     "reject": ":x: `{invited}` has rejected the duel.",
     "unknown-user": "you cannot challenge that user.",
+    "no-bot": "you cannot challenge bots.",
     "button": {
       "accept": "Accept",
       "decline": "Decline"

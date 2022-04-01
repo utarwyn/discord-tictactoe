@@ -10,6 +10,7 @@
     "expire": ":x: `{invited}` no se puso a la altura del desafío.",
     "reject": ":x: `{invited}` ha rechazado el duelo.",
     "unknown-user": "no pudiste desafiar a ese usuario.",
+    "no-bot": "you cannot challenge bots.",
     "button": {
       "accept": "Aceptar",
       "decline": "Rechazar"
