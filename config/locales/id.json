@@ -1,0 +1,29 @@
+{
+  "command": {
+    "description": "Mainkan Permainan TicTacToe",
+    "option-user": "Pengguna Yang Ingin Kamu Ajak Main"
+  },
+  "duel": {
+    "title": ":crossed_swords: Tantangan duel baru",
+    "challenge": "**{initier}** Menantangmu Untuk Bertanding!",
+    "action": "Reaksi ke pesan Ini untuk menerima tantangan atau menolak tantangan.",
+    "expire": ":x: `{invited}` Tidak menanggapi tantangan.",
+    "reject": ":x: `{invited}` Telah menolak tantangan",
+    "unknown-user": "Kamu tidak bisa menantang orang itu.",
+    "no-bot": "kamu tidak bisa melawan bot!",
+    "button": {
+      "accept": "Terima",
+      "decline": "Tolak"
+    }
+  },
+  "game": {
+    "title": ":game_die: `{player1}` **VS** `{player2}`",
+    "action": "{player}, Pilih langkahmu:",
+    "load": "Reaksi sedang memuat, tunggu sebentar...",
+    "end": "Tidak ada yang menang, Ini seri! Coba lagi?",
+    "win": ":tada: {player} Memenangkan permainan",
+    "expire": ":x: Game telah **Kadaluarsa**... Mungkin salah satu pemain tidak aktif",
+    "waiting-ai": ":robot: AI Sedang bermain, tunggu sebentar...",
+    "ai": "sang AI"
+  }
+}
