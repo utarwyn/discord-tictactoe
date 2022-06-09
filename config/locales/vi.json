@@ -1,28 +1,28 @@
 {
   "command": {
-    "description": "Play a game of TicTacToe",
-    "option-user": "User you want to play with"
+    "description": "Chơi một ván cờ caro",
+    "option-user": "Người mà bạn muốn chơi cùng"
   },
   "duel": {
     "title": ":crossed_swords: Lời thách đấu mới",
     "challenge": "**{initier}** vừa thách đấu bạn!",
-    "action": "React vào tin nhắn này để chấp nhận hoặc từ chối lời mời",
-    "expire": ":x: `{invited}` đã không phản hồi gì về lời mời của bạn",
+    "action": "Thả cảm xúc vào tin nhắn này để chấp nhận hoặc từ chối lời mời",
+    "expire": ":x: `{invited}` đã không phản hồi gì về lời mời của bạn.",
     "reject": ":x: `{invited}` đã từ chối lời mời của bạn.",
-    "unknown-user": "Bạn không thể thách đấu **{username}**. Hãy mention một người khác.",
-    "no-bot": "you cannot challenge bots.",
+    "unknown-user": "Bạn không thể thách đấu **{username}**. Hãy kiếm một người khác.",
+    "no-bot": "bạn không thể thách đấu với bots.",
     "button": {
-      "accept": "Accept",
-      "decline": "Decline"
+      "accept": "Chấp nhận",
+      "decline": "Từ chối"
     }
   },
   "game": {
     "title": ":game_die: `{player1}` **VS** `{player2}`",
     "action": "{player}, lựa chọn lượt đi của bạn:",
-    "load": "Đang tải reaction, chờ chút nha...",
+    "load": "Đang tải reactions, chờ chút nha...",
     "end": "Không ai thắng màn thách đấu này. Thử lại chứ?",
-    "win": ":tada: {player} đã thắng ván đấu",
-    "expire": ":x: Ván đấu đã **kết thúc**... Có lẽ do chỉ có một người tương tác với ván đấu",
+    "win": ":tada: {player} đã thắng ván đấu!",
+    "expire": ":x: Ván đấu đã **hết giờ**... Bởi vì một người đã không tương tác.",
     "waiting-ai": ":robot: Máy đang chơi, chờ chút nha...",
     "ai": "Máy"
   }
