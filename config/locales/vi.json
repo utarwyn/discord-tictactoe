@@ -6,7 +6,7 @@
   "duel": {
     "title": ":crossed_swords: Lời thách đấu mới",
     "challenge": "**{initier}** vừa thách đấu bạn!",
-    "action": "Thả cảm xúc vào tin nhắn này để chấp nhận hoặc từ chối lời mời",
+    "action": "Thả cảm xúc vào tin nhắn này để chấp nhận hoặc từ chối lời mời.",
     "expire": ":x: `{invited}` đã không phản hồi gì về lời mời của bạn.",
     "reject": ":x: `{invited}` đã từ chối lời mời của bạn.",
     "unknown-user": "Bạn không thể thách đấu **{username}**. Hãy kiếm một người khác.",
