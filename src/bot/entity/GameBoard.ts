@@ -11,9 +11,9 @@ import {
     ButtonInteraction,
     Collection,
     Message,
-    MessageOptions,
     MessageReaction,
-    Snowflake
+    Snowflake,
+    WebhookEditMessageOptions
 } from 'discord.js';
 
 /**
@@ -86,7 +86,7 @@ export default class GameBoard {
     /**
      * Creates or retrieves message of the gameboard.
      */
-    public get content(): MessageOptions {
+    public get content(): WebhookEditMessageOptions {
         const builder = this.configuration.gameBoardReactions
             ? new GameBoardBuilder()
             : new GameBoardButtonBuilder();

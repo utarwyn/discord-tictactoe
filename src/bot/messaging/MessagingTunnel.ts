@@ -1,4 +1,4 @@
-import { GuildMember, Message, MessageOptions, TextChannel } from 'discord.js';
+import { GuildMember, Message, TextChannel, WebhookEditMessageOptions } from 'discord.js';
 
 /**
  * Represents a possible answer
@@ -7,7 +7,7 @@ import { GuildMember, Message, MessageOptions, TextChannel } from 'discord.js';
  * @author Utarwyn
  * @since 2.2.0
  */
-export type MessagingAnswer = MessageOptions;
+export type MessagingAnswer = WebhookEditMessageOptions;
 
 /**
  * Represents a messaging tunnel that
