@@ -13,5 +13,6 @@
   "gameExpireTime": 30,
   "gameBoardReactions": false,
   "gameBoardDelete": false,
-  "gameBoardEmojies": []
+  "gameBoardEmojies": [],
+  "gameBoardDisableButtons": false
 }

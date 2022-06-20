@@ -21,4 +21,8 @@ export default interface GameConfig {
      * List of emojies used to identify players.
      */
     gameBoardEmojies?: string[];
+    /**
+     * Should disable buttons after been used.
+     */
+    gameBoardDisableButtons?: boolean;
 }

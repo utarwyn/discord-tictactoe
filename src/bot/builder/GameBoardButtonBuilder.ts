@@ -1,4 +1,4 @@
-import GameBoardBuilder from '@bot/entity/GameBoardBuilder';
+import GameBoardBuilder from '@bot/builder/GameBoardBuilder';
 import Entity from '@tictactoe/Entity';
 import { Player } from '@tictactoe/Player';
 import {
@@ -31,6 +31,21 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @private
      */
     private customEmojies = false;
+    /**
+     * Should disable buttons after been used.
+     * @private
+     */
+    private disableButtonsAfterUsed = false;
+
+    /**
+     * Should disable buttons after been used.
+     *
+     * @returns same instance
+     */
+    public withButtonsDisabledAfterUse(): GameBoardBuilder {
+        this.disableButtonsAfterUsed = true;
+        return this;
+    }
 
     /**
      * @inheritdoc
@@ -86,6 +101,10 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
                 button.setEmoji(this.emojies[buttonData]);
             } else {
                 button.setLabel(this.buttonLabels[buttonData - 1]);
+            }
+
+            if (this.disableButtonsAfterUsed) {
+                button.setDisabled(true);
             }
         } else {
             button.setLabel(' ');

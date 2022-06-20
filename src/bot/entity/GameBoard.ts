@@ -1,5 +1,5 @@
-import GameBoardBuilder from '@bot/entity/GameBoardBuilder';
-import GameBoardButtonBuilder from '@bot/entity/GameBoardButtonBuilder';
+import GameBoardBuilder from '@bot/builder/GameBoardBuilder';
+import GameBoardButtonBuilder from '@bot/builder/GameBoardButtonBuilder';
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
 import GameConfig from '@config/GameConfig';
@@ -105,6 +105,13 @@ export default class GameBoard {
         const emojies = this.configuration.gameBoardEmojies;
         if (emojies && emojies.length === 2) {
             builder.withEmojies(emojies[0], emojies[1]);
+        }
+
+        if (
+            this.configuration.gameBoardDisableButtons &&
+            builder instanceof GameBoardButtonBuilder
+        ) {
+            builder.withButtonsDisabledAfterUse();
         }
 
         return builder.toMessageOptions();
