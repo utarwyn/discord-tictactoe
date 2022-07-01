@@ -13,7 +13,7 @@
     "no-bot": "you cannot challenge bots.",
     "button": {
       "accept": "Принять",
-      "decline": "отказывать"
+      "decline": "Отклонить"
     }
   },
   "game": {
