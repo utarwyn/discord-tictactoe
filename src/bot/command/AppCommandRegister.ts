@@ -1,5 +1,5 @@
 import localize from '@i18n/localize';
-import { ApplicationCommandManager, Message } from 'discord.js';
+import { ApplicationCommandManager, ApplicationCommandOptionType, Message } from 'discord.js';
 
 /**
  * Manages application command used by the module.
@@ -44,7 +44,7 @@ export default class AppCommandRegister {
      * @param message discord.js message object
      */
     public async handleDeployMessage(message: Message): Promise<void> {
-        if (message.guild && message.member && message.member.permissions.has('ADMINISTRATOR')) {
+        if (message.guild && message.member && message.member.permissions.has('Administrator')) {
             if (message.content === '?tttdeploy') {
                 await this.registerInGuild(message.guild.id);
                 await message.reply(`Command /${this.name} has been registered.`);
@@ -72,7 +72,7 @@ export default class AppCommandRegister {
                 description: localize.__('command.description'),
                 options: [
                     {
-                        type: 'USER',
+                        type: ApplicationCommandOptionType.User,
                         name: this.optionName,
                         description: localize.__('command.option-user')
                     }

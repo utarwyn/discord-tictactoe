@@ -9,10 +9,9 @@ import {
     Collection,
     Guild,
     GuildMember,
+    GuildMemberManager,
     GuildMemberRoleManager,
-    Permissions,
-    PermissionString,
-    Role,
+    PermissionsBitField, PermissionsString, Role,
     TextChannel
 } from 'discord.js';
 
@@ -27,8 +26,10 @@ describe('GameStateValidator', () => {
             channel: <TextChannel>{
                 id: 'TC1',
                 guild: <Guild>{
+                    members: <GuildMemberManager>{
                     me: <GuildMember>{
-                        permissionsIn: _c => <Readonly<Permissions>>{ has: _p => true }
+                            permissionsIn: _c => <Readonly<PermissionsBitField>>{ has: _p => true }
+                        }
                     }
                 }
             },
@@ -37,7 +38,7 @@ describe('GameStateValidator', () => {
                 roles: <GuildMemberRoleManager>{
                     cache: new Collection()
                 },
-                permissions: <Readonly<Permissions>>{ has: _ => true }
+                permissions: <Readonly<PermissionsBitField>>{ has: _ => true }
             }
         };
         manager = <GameStateManager>{
@@ -59,10 +60,10 @@ describe('GameStateValidator', () => {
         ${GameStateValidator['PERM_LIST']} | ${true}
     `('should check for member permissions $permissions', ({ permissions, expected }) => {
         const spyError = jest.spyOn(global.console, 'error').mockImplementation();
-        jest.spyOn(tunnel.channel.guild.me!, 'permissionsIn').mockReturnValue(<
-            Readonly<Permissions>
+        jest.spyOn(tunnel.channel.guild.members.me!, 'permissionsIn').mockReturnValue(<
+            Readonly<PermissionsBitField>
         >{
-            has: list => (list as Array<PermissionString>).every(k => permissions.includes(k))
+            has: list => (list as Array<PermissionsString>).every(k => permissions.includes(k))
         });
 
         expect(validator.isInteractionValid(tunnel)).toBe(expected);

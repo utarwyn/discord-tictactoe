@@ -2,9 +2,9 @@ import GameBoardBuilder from '@bot/builder/GameBoardBuilder';
 import Entity from '@tictactoe/Entity';
 import { Player } from '@tictactoe/Player';
 import {
-    MessageActionRow,
-    MessageButton,
-    MessageButtonStyleResolvable,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
     MessageOptions
 } from 'discord.js';
 
@@ -25,7 +25,7 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * Button styles used for representing the two players.
      * @private
      */
-    private buttonStyles: MessageButtonStyleResolvable[] = ['SECONDARY', 'PRIMARY', 'DANGER'];
+    private buttonStyles: ButtonStyle[] = [ButtonStyle.Secondary, ButtonStyle.Primary, ButtonStyle.Danger];
     /**
      * Stores if emojies have been customized.
      * @private
@@ -77,7 +77,7 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
         return {
             content: this.title + this.state,
             components: [...Array(this.boardSize).keys()].map(row =>
-                new MessageActionRow().addComponents(
+                new ActionRowBuilder<ButtonBuilder>().addComponents(
                     [...Array(this.boardSize).keys()].map(col => this.createButton(row, col))
                 )
             )
@@ -91,8 +91,8 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @param col button placement column
      * @returns button discord.js object
      */
-    private createButton(row: number, col: number): MessageButton {
-        const button = new MessageButton();
+    private createButton(row: number, col: number): ButtonBuilder {
+        const button = new ButtonBuilder();
         const buttonIndex = row * this.boardSize + col;
         const buttonData = this.boardData[buttonIndex];
 

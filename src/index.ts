@@ -2,7 +2,7 @@ import EventHandler, { EventType } from '@bot/EventHandler';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import Config from '@config/Config';
 import localize from '@i18n/localize';
-import { Client, CommandInteraction, Intents, Message } from 'discord.js';
+import { ChatInputCommandInteraction, Client, GatewayIntentBits, Message } from 'discord.js';
 
 /**
  * Controls all interactions between modules of the bot.
@@ -55,9 +55,9 @@ class TicTacToe {
 
         const client = new Client({
             intents: [
-                Intents.FLAGS.GUILDS,
-                Intents.FLAGS.GUILD_MESSAGES,
-                Intents.FLAGS.GUILD_MESSAGE_REACTIONS
+                GatewayIntentBits.Guilds,
+                GatewayIntentBits.GuildMessages,
+                GatewayIntentBits.GuildMessageReactions
             ]
         });
         await client.login(loginToken);
@@ -87,7 +87,7 @@ class TicTacToe {
      *
      * @param interaction Discord.js interaction object
      */
-    public handleInteraction(interaction: CommandInteraction): void {
+    public handleInteraction(interaction: ChatInputCommandInteraction): void {
         this.bot.handleInteraction(interaction);
     }
 

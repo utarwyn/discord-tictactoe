@@ -1,7 +1,7 @@
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
 import InteractionConfig from '@config/InteractionConfig';
-import { GuildMember, PermissionString } from 'discord.js';
+import { GuildMember, PermissionsString } from 'discord.js';
 
 /**
  * Validates state of a messaging tunnel
@@ -15,11 +15,11 @@ export default class GameStateValidator {
      * List with all permissions that the bot needs to work properly.
      * @private
      */
-    private static readonly PERM_LIST: PermissionString[] = [
-        'ADD_REACTIONS',
-        'READ_MESSAGE_HISTORY',
-        'SEND_MESSAGES',
-        'VIEW_CHANNEL'
+    private static readonly PERM_LIST: PermissionsString[] = [
+        'AddReactions',
+        'ReadMessageHistory',
+        'SendMessages',
+        'ViewChannel'
     ]; // bot doesn't need manage message to delete its own message
 
     /**
@@ -102,7 +102,7 @@ export default class GameStateValidator {
      */
     private hasPermissionsInChannel(tunnel: MessagingTunnel): boolean {
         const allowed =
-            tunnel.channel.guild.me
+            tunnel.channel.guild.members.me
                 ?.permissionsIn(tunnel.channel)
                 ?.has(GameStateValidator.PERM_LIST) ?? false;
 
@@ -139,7 +139,7 @@ export default class GameStateValidator {
         return (
             !this.config.allowedRoleIds ||
             this.config.allowedRoleIds.length == 0 ||
-            member.permissions.has('ADMINISTRATOR') ||
+            member.permissions.has('Administrator') ||
             member.roles.cache.some(role => this.config.allowedRoleIds!.includes(role.id))
         );
     }

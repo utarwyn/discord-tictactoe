@@ -44,7 +44,7 @@ export default class GameCommand {
         if (
             message.member &&
             !message.author.bot &&
-            message.channel.isText() &&
+            message.channel.isTextBased() &&
             (noTrigger ||
                 (this.config.textCommand && message.content.startsWith(this.config.textCommand)))
         ) {
@@ -63,9 +63,9 @@ export default class GameCommand {
      */
     public async handleInteraction(interaction: Interaction, noTrigger = false): Promise<void> {
         if (
-            interaction?.isCommand() &&
+            interaction?.isChatInputCommand() &&
             interaction.inCachedGuild() &&
-            interaction.channel?.isText() &&
+            interaction.channel?.isTextBased() &&
             (noTrigger || interaction.commandName === this.config.command)
         ) {
             // Retrieve the inviter and create an interaction tunnel
@@ -74,7 +74,7 @@ export default class GameCommand {
             // Retrieve invited user from options if provided
             const member = await interaction.member.fetch();
             const mentionned =
-                interaction.options.getMember(this.config.commandOptionName ?? 'opponent', false) ??
+                interaction.options.getMember(this.config.commandOptionName ?? 'opponent') ??
                 undefined;
 
             return this.handleInvitation(tunnel, member, mentionned);
@@ -98,7 +98,7 @@ export default class GameCommand {
             if (!invited.user.bot) {
                 if (
                     inviter.user.id !== invited.user.id &&
-                    invited.permissionsIn(tunnel.channel).has('VIEW_CHANNEL')
+                    invited.permissionsIn(tunnel.channel).has('ViewChannel')
                 ) {
                     await this.manager.requestDuel(tunnel, invited);
                 } else {

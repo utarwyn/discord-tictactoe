@@ -3,7 +3,7 @@ import GameCommand from '@bot/command/GameCommand';
 import EventHandler from '@bot/EventHandler';
 import GameStateManager from '@bot/state/GameStateManager';
 import Config from '@config/Config';
-import { Client, CommandInteraction, Message } from 'discord.js';
+import { ChatInputCommandInteraction, Client, Message } from 'discord.js';
 
 /**
  * Manages all interactions with the Discord bot.
@@ -100,7 +100,7 @@ export default class TicTacToeBot {
      *
      * @param interaction Discord.js interaction object
      */
-    public handleInteraction(interaction: CommandInteraction): void {
+    public handleInteraction(interaction: ChatInputCommandInteraction): void {
         this.command.handleInteraction(interaction, true);
     }
 }

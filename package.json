@@ -21,7 +21,7 @@
     "typescript"
   ],
   "dependencies": {
-    "discord.js": "^13.6.0"
+    "discord.js": "^14.0.0-dev.1657152699-10ba008"
   },
   "devDependencies": {
     "@types/jest": "^28.1.2",
