@@ -27,7 +27,7 @@ describe('GameStateValidator', () => {
                 id: 'TC1',
                 guild: <Guild>{
                     members: <GuildMemberManager>{
-                    me: <GuildMember>{
+                        me: <GuildMember>{
                             permissionsIn: _c => <Readonly<PermissionsBitField>>{ has: _p => true }
                         }
                     }
@@ -62,9 +62,9 @@ describe('GameStateValidator', () => {
         const spyError = jest.spyOn(global.console, 'error').mockImplementation();
         jest.spyOn(tunnel.channel.guild.members.me!, 'permissionsIn').mockReturnValue(<
             Readonly<PermissionsBitField>
-        >{
-            has: list => (list as Array<PermissionsString>).every(k => permissions.includes(k))
-        });
+            >{
+                has: list => (list as Array<PermissionsString>).every(k => permissions.includes(k))
+            });
 
         expect(validator.isInteractionValid(tunnel)).toBe(expected);
         expect(spyError).toHaveBeenCalledTimes(expected ? 0 : 1);

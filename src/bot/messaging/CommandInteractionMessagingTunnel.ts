@@ -1,5 +1,5 @@
 import MessagingTunnel, { MessagingAnswer } from '@bot/messaging/MessagingTunnel';
-import { CommandInteraction, GuildMember, Message, TextChannel } from 'discord.js';
+import { ChatInputCommandInteraction, GuildMember, Message, TextChannel } from 'discord.js';
 
 /**
  * Represents an interaction messaging channel
@@ -13,7 +13,7 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
      * Interaction object retrieved from the Discord API
      * @private
      */
-    private readonly interaction: CommandInteraction;
+    private readonly interaction: ChatInputCommandInteraction;
     /**
      * Last reply sent into the tunnnel
      * @private
@@ -26,7 +26,7 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
      *
      * @param interaction interaction generic object
      */
-    constructor(interaction: CommandInteraction) {
+    constructor(interaction: ChatInputCommandInteraction) {
         super();
         this.interaction = interaction;
     }
