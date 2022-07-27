@@ -88,6 +88,7 @@ class TicTacToe {
      * Programmatically handles a discord.js message to request a game.
      *
      * @param message Discord.js message object
+     * @deprecated use chat command interaction instead
      */
     public handleMessage(message: Message): void {
         this.bot.handleMessage(message);

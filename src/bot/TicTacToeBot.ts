@@ -90,6 +90,7 @@ export default class TicTacToeBot {
      * Programmatically handles a discord.js message to request a game.
      *
      * @param message Discord.js message object
+     * @deprecated use chat command interaction instead
      */
     public handleMessage(message: Message): void {
         this.command.handleMessage(message, true);

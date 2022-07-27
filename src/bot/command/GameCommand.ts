@@ -39,6 +39,7 @@ export default class GameCommand {
      *
      * @param message discord.js message instance
      * @param noTrigger true to bypass trigger checks
+     * @deprecated use chat command interaction instead
      */
     public async handleMessage(message: Message, noTrigger = false): Promise<void> {
         if (

@@ -15,6 +15,8 @@ export default interface CommandConfig {
     commandOptionName?: string;
     /**
      * Text command used to start a new game.
+     *
+     * @deprecated use chat command interaction instead
      */
     textCommand?: string;
 }
