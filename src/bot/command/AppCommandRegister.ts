@@ -44,16 +44,25 @@ export default class AppCommandRegister {
      * @param message discord.js message object
      */
     public async handleDeployMessage(message: Message): Promise<void> {
-        if (message.guild && message.member && message.member.permissions.has('ADMINISTRATOR')) {
-            if (message.content === '?tttdeploy') {
-                await this.registerInGuild(message.guild.id);
-                await message.reply(`Command /${this.name} has been registered.`);
-            } else if (message.content === '?tttdelete') {
-                const executed = await this.deleteInGuild(message.guild.id);
-                if (executed) {
-                    await message.reply(`Command /${this.name} has been unregistered.`);
-                } else {
-                    await message.reply(`Command /${this.name} not found.`);
+        if (
+            message.guild &&
+            message.member &&
+            message.client.user &&
+            message.mentions.has(message.client.user) &&
+            message.member.permissions.has('ADMINISTRATOR')
+        ) {
+            const words = message.content.split(' ');
+            if (words.length === 2) {
+                if (words.includes('tttdeploy')) {
+                    await this.registerInGuild(message.guild.id);
+                    await message.reply(`Command /${this.name} has been registered.`);
+                } else if (words.includes('tttdelete')) {
+                    const executed = await this.deleteInGuild(message.guild.id);
+                    if (executed) {
+                        await message.reply(`Command /${this.name} has been unregistered.`);
+                    } else {
+                        await message.reply(`Command /${this.name} not found.`);
+                    }
                 }
             }
         }
