@@ -3,11 +3,12 @@ import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
 import localize from '@i18n/localize';
 import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
     Collection,
     GuildMember,
     Message,
-    MessageActionRow,
-    MessageButton,
     MessageComponentInteraction,
     MessageOptions,
     MessageReaction,
@@ -85,14 +86,14 @@ export default class DuelRequest {
             allowedMentions: { parse: ['users'] },
             components: !this.useReactions
                 ? [
-                      new MessageActionRow().addComponents(
-                          new MessageButton({
-                              style: 'SUCCESS',
+                    new ActionRowBuilder<ButtonBuilder>().addComponents(
+                        new ButtonBuilder({
+                              style: ButtonStyle.Success,
                               customId: 'yes',
                               label: localize.__('duel.button.accept')
                           }),
-                          new MessageButton({
-                              style: 'DANGER',
+                          new ButtonBuilder({
+                              style: ButtonStyle.Danger,
                               customId: 'no',
                               label: localize.__('duel.button.decline')
                           })
