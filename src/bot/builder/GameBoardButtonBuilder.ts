@@ -1,12 +1,7 @@
 import GameBoardBuilder from '@bot/builder/GameBoardBuilder';
 import Entity from '@tictactoe/Entity';
 import { Player } from '@tictactoe/Player';
-import {
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-    MessageOptions
-} from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageOptions } from 'discord.js';
 
 /**
  * Builds representation of a game board using buttons
@@ -25,7 +20,11 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * Button styles used for representing the two players.
      * @private
      */
-    private buttonStyles: ButtonStyle[] = [ButtonStyle.Secondary, ButtonStyle.Primary, ButtonStyle.Danger];
+    private buttonStyles: ButtonStyle[] = [
+        ButtonStyle.Secondary,
+        ButtonStyle.Primary,
+        ButtonStyle.Danger
+    ];
     /**
      * Stores if emojies have been customized.
      * @private

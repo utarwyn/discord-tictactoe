@@ -185,7 +185,9 @@ export default class GameBoard {
      *
      * @param interaction interaction to update if action was triggered by it
      */
-    public async update(interaction?: ButtonInteraction): Promise<InteractionResponse<boolean> | void> {
+    public async update(
+        interaction?: ButtonInteraction
+    ): Promise<InteractionResponse<boolean> | void> {
         if (interaction) {
             return interaction.update(this.content);
         } else {

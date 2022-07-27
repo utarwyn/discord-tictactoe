@@ -86,8 +86,8 @@ export default class DuelRequest {
             allowedMentions: { parse: ['users'] },
             components: !this.useReactions
                 ? [
-                    new ActionRowBuilder<ButtonBuilder>().addComponents(
-                        new ButtonBuilder({
+                      new ActionRowBuilder<ButtonBuilder>().addComponents(
+                          new ButtonBuilder({
                               style: ButtonStyle.Success,
                               customId: 'yes',
                               label: localize.__('duel.button.accept')
