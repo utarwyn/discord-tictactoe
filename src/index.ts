@@ -57,10 +57,21 @@ class TicTacToe {
             intents: [
                 GatewayIntentBits.Guilds,
                 GatewayIntentBits.GuildMessages,
-                GatewayIntentBits.GuildMessageReactions
+                GatewayIntentBits.GuildMessageReactions,
+                ...(this.config.textCommand ? [GatewayIntentBits.MessageContent] : [])
             ]
         });
-        await client.login(loginToken);
+
+        try {
+            await client.login(loginToken);
+        } catch (e: any) {
+            if (e.message?.startsWith('Privileged')) {
+                throw new Error('You must enable Message Content intent to use the text command.');
+            } else {
+                throw e;
+            }
+        }
+
         this.bot.attachToClient(client);
     }
 
