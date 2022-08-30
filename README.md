@@ -1,4 +1,8 @@
-![Discord TicTacToe logo](https://i.imgur.com/d9ldRKK.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://i.imgur.com/hzVv8Cx.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://i.imgur.com/d9ldRKK.png">
+  <img alt="Discord TicTacToe logo" src="https://i.imgur.com/d9ldRKK.png">
+</picture>
 
 <h4 align="center">
 An innovative Bot for playing Tic Tac Toe on Discord!
@@ -49,10 +53,10 @@ Installation
 
 The module is suitable for discord.js **v12** and **v13**. Check the table below to see which version meets your needs.
 
-discord.js | Node.JS | Module version | NPM package          | Docker image                |
----------- | ------- | -------------- | -------------------- | --------------------------- |
-v13.*      | 16.6+   | v3.*           | discord-tictactoe@^3 | utarwyn/discord-tictactoe@3 |
-v12.*      | 14+     | v2.*           | discord-tictactoe@^2 | utarwyn/discord-tictactoe@2 |
+discord.js | Node.JS | Module version | Status | NPM package          | Docker image                |
+---------- | ------- | -------------- | ------ | -------------------- | --------------------------- |
+v13.*      | 16.6+   | v3.*           | Active | discord-tictactoe@^3 | utarwyn/discord-tictactoe@3 |
+v12.*      | 14+     | v2.*           | Legacy | discord-tictactoe@^2 | utarwyn/discord-tictactoe@2 |
 
 The bot works **out-of-the-box**. But if you want to configure it, check [config.example.json][7] file in the config folder.
 
@@ -85,12 +89,9 @@ Setup slash command ✨
 --------
 
 Slash command are enabled by default **starting from v3**!\
-Just type `?tttdeploy` somewhere in your server to install it (admin only).
+Just mention the bot with `tttdeploy` somewhere in your server to install it (admin only).
 
 🚀 Want more info? Check [this detailed guide][8].
-
-> Are you using module version 2? Slash command is also supported as an option!\
-> ➡️ [Check this dedicated page][9] to setup it in your server.
 
 
 License
@@ -109,6 +110,6 @@ License
 [5]: https://twitter.com/Utarwyn
 [6]: https://discordapp.com/developers/applications
 [7]: https://github.com/utarwyn/discord-tictactoe/blob/next/config/config.example.json
-[8]: https://github.com/utarwyn/discord-tictactoe/wiki/Using-slash-command-in-V3
+[8]: https://github.com/utarwyn/discord-tictactoe/wiki/Using-slash-command-in-V3-and-V4
 [9]: https://github.com/utarwyn/discord-tictactoe/wiki/Using-slash-command-in-V2
 [10]: https://github.com/utarwyn/discord-tictactoe/wiki/Usage-examples-with-Node.js
