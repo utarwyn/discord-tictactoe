@@ -53,5 +53,5 @@ export default abstract class MessagingTunnel {
      *
      * @param reason reason of the tunnel ending
      */
-    public abstract end(reason?: MessagingAnswer): Promise<void>;
+    public abstract end(reason: MessagingAnswer): Promise<void>;
 }

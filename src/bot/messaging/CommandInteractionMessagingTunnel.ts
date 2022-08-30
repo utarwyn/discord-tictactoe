@@ -68,9 +68,11 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
         }
 
         this._reply = (await this.interaction.reply({
+            components: [],
+            embeds: [],
             ...answer,
-            fetchReply: true,
-            ephemeral: direct
+            ephemeral: direct,
+            fetchReply: true
         })) as Message;
 
         return this._reply;
@@ -88,10 +90,10 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async end(reason?: MessagingAnswer): Promise<void> {
+    public async end(reason: MessagingAnswer): Promise<void> {
         if (this.reply) {
             try {
-                await this.editReply(reason ?? { content: '.', components: [], embeds: [] });
+                await this.editReply(reason);
                 await this.reply.reactions.removeAll();
             } catch {
                 // ignore api error

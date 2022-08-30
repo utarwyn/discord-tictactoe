@@ -181,7 +181,6 @@ export default class DuelRequest {
      */
     private async challengeAnswered(accepted: boolean): Promise<void> {
         if (accepted) {
-            await this.tunnel.end();
             await this.manager.createGame(this.tunnel, this.invited);
         } else {
             return this.tunnel.end({
