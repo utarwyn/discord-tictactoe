@@ -75,7 +75,7 @@ export default class TextMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async end(reason?: MessagingAnswer): Promise<void> {
+    public async end(reason: MessagingAnswer): Promise<void> {
         if (this.reply) {
             if (this.reply.deletable) {
                 try {
@@ -84,9 +84,7 @@ export default class TextMessagingTunnel extends MessagingTunnel {
                     // ignore api error
                 }
             }
-            if (reason) {
-                await this.channel.send(reason);
-            }
+            await this.channel.send(reason);
             this._reply = undefined;
         }
     }

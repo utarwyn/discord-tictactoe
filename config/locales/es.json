@@ -23,6 +23,7 @@
     "end": "Nadie ganó el juego, ¡es un empate! ¿Intentemoslo de nuevo?",
     "win": ":tada: {player} ha ganado el juego!",
     "expire": ":x: El juego ha **caducado**... quizás debido a la inactividad de un usuario.",
+    "in-progress": "you cannot start another game, please wait for current one to end.",
     "waiting-ai": ":robot: La IA está jugando, por favor espere...",
     "ai": "La IA"
   }

@@ -67,6 +67,8 @@ export default class ComponentInteractionMessagingTunnel extends MessagingTunnel
             await this.interaction.editReply(answer);
         } else {
             this._reply = (await this.interaction.update({
+                components: [],
+                embeds: [],
                 ...answer,
                 fetchReply: true
             })) as Message;
@@ -85,9 +87,9 @@ export default class ComponentInteractionMessagingTunnel extends MessagingTunnel
     /**
      * @inheritdoc
      */
-    public async end(reason?: MessagingAnswer): Promise<void> {
+    public async end(reason: MessagingAnswer): Promise<void> {
         try {
-            await this.editReply(reason ?? { content: '.', components: [], embeds: [] });
+            await this.editReply(reason);
             await (this.interaction.message as Message).reactions.removeAll();
         } catch (e) {
             // ignore api error

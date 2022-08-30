@@ -23,6 +23,8 @@
     "end": "لم يفز أي أحد في هذه الجولة, هل تريدون لعب مرة اخرى؟",
     "win": ":tada: فاز {player} في هذه الجولة",
     "expire": ":x: **انتهت** اللعبة ... بسبب عدم تفاعل",
+    "in-progress": "you cannot start another game, please wait for current one to end.",
     "waiting-ai": ":robot: الروبوت يلعب, انتضر رجاءً...",
     "ai": "الروبوت"
   }
+}

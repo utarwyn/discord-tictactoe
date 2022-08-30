@@ -5,6 +5,7 @@ import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
 import GameStateValidator from '@bot/state/GameStateValidator';
 import TicTacToeBot from '@bot/TicTacToeBot';
+import AI from '@tictactoe/AI';
 import Entity from '@tictactoe/Entity';
 import { GuildMember } from 'discord.js';
 
@@ -46,11 +47,21 @@ describe('GameStateManager', () => {
             const invited = <GuildMember>{};
             await manager.requestDuel(tunnel, invited);
             expect(spyValidate).toHaveBeenCalledTimes(1);
+            expect(spyValidate).toHaveBeenCalledWith(tunnel);
+        });
+
+        it('should check if a new game is possible', async () => {
+            jest.spyOn(validator, 'isInteractionValid').mockReturnValue(true);
+            const spyValidate = jest.spyOn(validator, 'isNewGamePossible');
+            const invited = <GuildMember>{};
+            await manager.requestDuel(tunnel, invited);
+            expect(spyValidate).toHaveBeenCalledTimes(1);
             expect(spyValidate).toHaveBeenCalledWith(tunnel, invited);
         });
 
         it('should create a duel request and send it into the messaging tunnel', async () => {
             jest.spyOn(validator, 'isInteractionValid').mockReturnValue(true);
+            jest.spyOn(validator, 'isNewGamePossible').mockReturnValue(true);
             const spyReplyWith = jest.spyOn(tunnel, 'replyWith');
             await manager.requestDuel(tunnel, <GuildMember>{});
             expect(duelRequest).toHaveBeenCalledTimes(1);
@@ -59,6 +70,7 @@ describe('GameStateManager', () => {
 
         it('should setup user cooldown if enabled in configuration', async () => {
             jest.spyOn(validator, 'isInteractionValid').mockReturnValue(true);
+            jest.spyOn(validator, 'isNewGamePossible').mockReturnValue(true);
 
             // by default, no cooldown
             await manager.requestDuel(tunnel, <GuildMember>{});
@@ -77,18 +89,45 @@ describe('GameStateManager', () => {
             const spyValidate = jest.spyOn(validator, 'isInteractionValid');
             await manager.createGame(tunnel);
             expect(spyValidate).toHaveBeenCalledTimes(1);
-            expect(spyValidate).toHaveBeenCalledWith(tunnel, undefined);
+            expect(spyValidate).toHaveBeenCalledWith(tunnel);
+        });
+
+        it('should check if a new game is possible', async () => {
+            jest.spyOn(validator, 'isInteractionValid').mockReturnValue(true);
+            const spyValidate = jest.spyOn(validator, 'isNewGamePossible');
+            const invited = <GuildMember>{};
+            await manager.createGame(tunnel, invited);
+            expect(spyValidate).toHaveBeenCalledTimes(1);
+            expect(spyValidate).toHaveBeenCalledWith(tunnel, invited);
         });
 
         it('should create a game board and send it into the messaging tunnel', async () => {
             jest.spyOn(validator, 'isInteractionValid').mockReturnValue(true);
+            jest.spyOn(validator, 'isNewGamePossible').mockReturnValue(true);
             const spyReplyWith = jest.spyOn(tunnel, 'replyWith');
 
-            await manager.createGame(tunnel);
+            const invited = <GuildMember>{};
+            await manager.createGame(tunnel, invited);
 
             expect(manager.gameboards).toHaveLength(1);
             expect(gameBoard).toHaveBeenCalledTimes(1);
+            expect(gameBoard).toHaveBeenCalledWith(manager, tunnel, invited, expect.anything());
             expect(spyReplyWith).toHaveBeenCalledTimes(1);
+        });
+
+        it('should create a game board with AI if no invited member', async () => {
+            jest.spyOn(validator, 'isInteractionValid').mockReturnValue(true);
+            jest.spyOn(validator, 'isNewGamePossible').mockReturnValue(true);
+
+            await manager.createGame(tunnel);
+
+            expect(gameBoard).toHaveBeenCalledTimes(1);
+            expect(gameBoard).toHaveBeenCalledWith(
+                manager,
+                tunnel,
+                expect.any(AI),
+                expect.anything()
+            );
         });
     });
 

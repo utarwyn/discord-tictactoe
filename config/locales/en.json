@@ -23,6 +23,7 @@
     "end": "No one won the game, it's a tie! Let's try again?",
     "win": ":tada: {player} has won the game!",
     "expire": ":x: Game has **expired**... maybe because of one user inactivity.",
+    "in-progress": "you cannot start another game, please wait for current one to end.",
     "waiting-ai": ":robot: AI is playing, please wait...",
     "ai": "the AI"
   }

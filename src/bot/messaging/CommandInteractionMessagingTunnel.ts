@@ -55,7 +55,7 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async replyWith(answer: MessagingAnswer, _direct?: boolean): Promise<Message> {
+    public async replyWith(answer: MessagingAnswer, direct?: boolean): Promise<Message> {
         // Fetch current reply if deferred externally and not register in this tunnel
         if (!this.reply && this.interaction.deferred) {
             this._reply = (await this.interaction.fetchReply()) as Message;
@@ -68,7 +68,10 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
         }
 
         this._reply = (await this.interaction.reply({
+            components: [],
+            embeds: [],
             ...answer,
+            ephemeral: direct,
             fetchReply: true
         })) as Message;
 
@@ -87,10 +90,10 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async end(reason?: MessagingAnswer): Promise<void> {
+    public async end(reason: MessagingAnswer): Promise<void> {
         if (this.reply) {
             try {
-                await this.editReply(reason ?? { content: '.', components: [], embeds: [] });
+                await this.editReply(reason);
                 await this.reply.reactions.removeAll();
             } catch {
                 // ignore api error

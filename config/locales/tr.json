@@ -23,6 +23,7 @@
     "end": "Maçı kimse kazanamadı, berabere kaldı!",
     "win": ":tada: {player} oyunu kazandı!",
     "expire": ":x: Oyunun süresi **doldu**... Bir kullanıcının hareketsizliğinden olabilir",
+    "in-progress": "you cannot start another game, please wait for current one to end.",
     "waiting-ai": ":robot: Yapay Zeka oynuyor, lütfen bekle...",
     "ai": "Yapay Zeka"
   }

@@ -49,9 +49,14 @@ export default class GameStateManager {
      *
      * @param tunnel messaging tunnel that initiated the request
      * @param invited member invited to be part of the duel
+     * @returns true if duel request has been handled, false otherwise
      */
-    public async requestDuel(tunnel: MessagingTunnel, invited: GuildMember): Promise<void> {
-        if (this.validator.isInteractionValid(tunnel, invited)) {
+    public async requestDuel(tunnel: MessagingTunnel, invited: GuildMember): Promise<boolean> {
+        if (this.validator.isInteractionValid(tunnel)) {
+            if (!this.validator.isNewGamePossible(tunnel, invited)) {
+                return false;
+            }
+
             const duel = new DuelRequest(
                 this,
                 tunnel,
@@ -70,6 +75,8 @@ export default class GameStateManager {
                 this.memberCooldownEndTimes.set(tunnel.author.id, Date.now() + cooldown * 1000);
             }
         }
+
+        return true;
     }
 
     /**
@@ -77,9 +84,14 @@ export default class GameStateManager {
      *
      * @param tunnel messaging tunnel that initiated the game creation
      * @param invited member invited to be part of the game, undefined means the AI
+     * @returns true if game request has been handled, false otherwise
      */
-    public async createGame(tunnel: MessagingTunnel, invited?: GuildMember): Promise<void> {
-        if (this.validator.isInteractionValid(tunnel, invited)) {
+    public async createGame(tunnel: MessagingTunnel, invited?: GuildMember): Promise<boolean> {
+        if (this.validator.isInteractionValid(tunnel)) {
+            if (!this.validator.isNewGamePossible(tunnel, invited)) {
+                return false;
+            }
+
             const gameboard = new GameBoard(
                 this,
                 tunnel,
@@ -94,6 +106,8 @@ export default class GameStateManager {
             const message = await tunnel.replyWith(gameboard.content);
             await gameboard.attachTo(message);
         }
+
+        return true;
     }
 
     /**
