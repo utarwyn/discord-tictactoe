@@ -55,7 +55,7 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async replyWith(answer: MessagingAnswer, _direct?: boolean): Promise<Message> {
+    public async replyWith(answer: MessagingAnswer, direct?: boolean): Promise<Message> {
         // Fetch current reply if deferred externally and not register in this tunnel
         if (!this.reply && this.interaction.deferred) {
             this._reply = (await this.interaction.fetchReply()) as Message;
@@ -69,7 +69,8 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
 
         this._reply = (await this.interaction.reply({
             ...answer,
-            fetchReply: true
+            fetchReply: true,
+            ephemeral: direct
         })) as Message;
 
         return this._reply;
