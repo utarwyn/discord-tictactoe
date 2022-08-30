@@ -100,7 +100,9 @@ export default class GameCommand {
                     inviter.user.id !== invited.user.id &&
                     invited.permissionsIn(tunnel.channel).has('VIEW_CHANNEL')
                 ) {
-                    await this.manager.requestDuel(tunnel, invited);
+                    if (!(await this.manager.requestDuel(tunnel, invited))) {
+                        await tunnel.replyWith({ content: localize.__('game.in-progress') }, true);
+                    }
                 } else {
                     await tunnel.replyWith({ content: localize.__('duel.unknown-user') }, true);
                 }
@@ -108,7 +110,9 @@ export default class GameCommand {
                 await tunnel.replyWith({ content: localize.__('duel.no-bot') }, true);
             }
         } else {
-            await this.manager.createGame(tunnel);
+            if (!(await this.manager.createGame(tunnel))) {
+                await tunnel.replyWith({ content: localize.__('game.in-progress') }, true);
+            }
         }
     }
 }

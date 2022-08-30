@@ -23,6 +23,7 @@
     "end": "Che peccato, non ha vinto nessuno! Vuoi rigiocare?",
     "win": ":tada: {player} ha vinto!",
     "expire": ":x: Il tempo è **scaduto**... forse perché i giocatori non sono più online.",
+    "in-progress": "you cannot start another game, please wait for current one to end.",
     "waiting-ai": ":robot: L'IA sta' giocando, aspetta il tuo turno...",
     "ai": "l'IA"
   }

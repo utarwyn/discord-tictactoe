@@ -23,6 +23,7 @@
     "end": "Ничья! Может быть снова попробуем?)",
     "win": ":tada:{player} Выиграл игру!",
     "expire": ":x: Игра была досрочно завершена... Может потому что никто не активил?",
+    "in-progress": "you cannot start another game, please wait for current one to end.",
     "waiting-ai": ":robot: Компьютер думает, подождите...",
     "ai": "Кампудахтр"
   }

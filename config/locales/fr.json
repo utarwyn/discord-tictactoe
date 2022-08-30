@@ -23,6 +23,7 @@
     "end": "Personne n'a gagné la partie, c'est une égalité ! On réessaie ?",
     "win": ":tada: {player} a gagné la partie !",
     "expire": ":x: La partie vient **d'expirer**... peut-être à cause de l'inactivité d'un joueur.",
+    "in-progress": "vous ne pouvez pas démarrer de partie, attendez que celle en cours se termine.",
     "waiting-ai": ":robot: L'IA joue, merci de patienter...",
     "ai": "l'IA"
   }

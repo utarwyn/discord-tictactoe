@@ -23,6 +23,7 @@
     "end": "Không ai thắng màn thách đấu này. Thử lại chứ?",
     "win": ":tada: {player} đã thắng ván đấu!",
     "expire": ":x: Ván đấu đã **hết giờ**... Bởi vì một người đã không tương tác.",
+    "in-progress": "you cannot start another game, please wait for current one to end.",
     "waiting-ai": ":robot: Máy đang chơi, chờ chút nha...",
     "ai": "Máy"
   }

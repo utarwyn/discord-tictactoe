@@ -55,13 +55,21 @@ export default class GameStateValidator {
      * Checks if an interaction through a messaging tunnel is valid or not.
      *
      * @param tunnel messaging tunnel object
-     * @param invited invited guild member, can be undefined
      * @returns true if the interaction is valid, false otherwise
      */
-    public isInteractionValid(tunnel: MessagingTunnel, invited?: GuildMember): boolean {
+    public isInteractionValid(tunnel: MessagingTunnel): boolean {
+        return this.isMessagingAllowed(tunnel) && this.isMemberAllowed(tunnel.author);
+    }
+
+    /**
+     * Checks if creating a new game is possible based on channel state and author.
+     *
+     * @param tunnel messaging tunnel object
+     * @param invited invited guild member, can be undefined
+     * @returns true if a game can be created, false otherwise
+     */
+    public isNewGamePossible(tunnel: MessagingTunnel, invited?: GuildMember): boolean {
         return (
-            this.isMessagingAllowed(tunnel) &&
-            this.isMemberAllowed(tunnel.author) &&
             // Check if one of both entites is already playing
             !this.manager.gameboards.some(gameboard =>
                 [tunnel.author, invited].some(

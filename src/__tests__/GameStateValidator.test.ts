@@ -136,7 +136,7 @@ describe('GameStateValidator', () => {
             }
             manager.bot.configuration.simultaneousGames = simultaneousGames;
             const invited = sameInvited ? tunnel.author : undefined;
-            expect(validator.isInteractionValid(tunnel, invited)).toBe(expected);
+            expect(validator.isNewGamePossible(tunnel, invited)).toBe(expected);
         }
     );
 });

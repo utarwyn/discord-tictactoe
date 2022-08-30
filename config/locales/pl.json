@@ -23,6 +23,7 @@
     "end": "Remis! Nikt nie wygrał. Może spróbujcie jeszcze raz?",
     "win": ":tada: {player} wygrał grę w kółko i krzyżyk!",
     "expire": ":x: Gra **wygasła**... Może przez nieaktywność któregoś z graczy?",
+    "in-progress": "you cannot start another game, please wait for current one to end.",
     "waiting-ai": ":robot: Trwa ruch Sztucznej Inteligencji, proszę czekać...",
     "ai": "Sztuczna Inteligencja"
   }
