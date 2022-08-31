@@ -1,7 +1,7 @@
 {
   "command": {
-    "description": "Play a game of TicTacToe",
-    "option-user": "User you want to play with"
+    "description": "Jogue uma partida de TicTacToe",
+    "option-user": "Usuário com quem você quer jogar"
   },
   "duel": {
     "title": ":crossed_swords: Novo duelo",
@@ -10,10 +10,10 @@
     "expire": ":x: `{invited}` não apareceu para o duelo.",
     "reject": ":x: `{invited}` rejeitou o duelo.",
     "unknown-user": "você não pode desafiar este usuário.",
-    "no-bot": "you cannot challenge bots.",
+    "no-bot": "você não pode desafiar bots.",
     "button": {
-      "accept": "Accept",
-      "decline": "Decline"
+      "accept": "Aceitar",
+      "decline": "Recusar"
     }
   },
   "game": {
@@ -23,8 +23,8 @@
     "end": "Ninguém ganhou o jogo, empate! Quer tentar novamente?",
     "win": ":tada: {player} venceu a partida!",
     "expire": ":x: O jogo foi **expirado**... Talvez por causa de inatividade de um usuário.",
-    "in-progress": "you cannot start another game, please wait for current one to end.",
-    "waiting-ai": ":robot: AI está jogando, espere um momento...",
-    "ai": "a AI"
+    "in-progress": "você não pode iniciar outro jogo, por favor, aguarde o fim do atual.",
+    "waiting-ai": ":robot: IA está jogando, espere um momento...",
+    "ai": "a IA"
   }
 }
