@@ -13,9 +13,12 @@ jobs:
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
-      - run: yarn install
-      - run: yarn release
-      - run: npm publish --access public
+      - name: Install dependencies 🔧
+        run: yarn install --frozen-lockfile
+      - name: Prepare release 🚀
+        run: yarn release
+      - name: Publish package on NPM 📦
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -31,8 +34,13 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@utarwyn'
-      - run: yarn install
-      - run: yarn release
-      - run: npm publish
+      - name: Add scope to package name 📝
+        run: npx --yes change-package-name @utarwyn/discord-tictactoe
+      - name: Install dependencies 🔧
+        run: yarn install --frozen-lockfile
+      - name: Prepare release 🚀
+        run: yarn release
+      - name: Publish package on GitHub Packages 📦
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
