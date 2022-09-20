@@ -1,0 +1,30 @@
+{
+  "command": {
+    "description": "เล่นเกม TicTacToe หรือ xo นั้นแหละ",
+    "option-user": "ผู้เล่นที่จะเล่นด้วย"
+  },
+  "duel": {
+    "title": ":crossed_swords: มีคำท้าใหม่",
+    "challenge": "**{initier}** ท้าคุณในการเล่น TicTacToe!",
+    "action": "กดปุ่มเพื่อตกลงหรือปฏิเสธ",
+    "expire": ":x: `{invited}` ไม่ยอมมาเล่น",
+    "reject": ":x: `{invited}` ปฏิเสธคำท้า",
+    "unknown-user": "เล่นกับคนคนนั้นไม่ได้",
+    "no-bot": "เล่นกับบอทตัวอื่นไม่ได้",
+    "button": {
+      "accept": "เล่น",
+      "decline": "ปฏิเสธ"
+    }
+  },
+  "game": {
+    "title": ":game_die: `{player1}` **VS** `{player2}`",
+    "action": "{player}, เลือก:",
+    "load": "กำลังโหลด, กรุณารอ...",
+    "end": "ไม่มีใครชนะ, เสมอ! ลองใหม่ไหม?",
+    "win": ":tada: {player} ชนะ!",
+    "expire": ":x: เกม**หมดเวลาแล้ว**.. เพราะว่าคนที่เล่นน่าจะไม่อยู่",
+    "in-progress": "ไม่สามารถเริ่มเกมใหม่อีกเกมได้, กรุณารออันที่เล่นอยู่จบก่อน",
+    "waiting-ai": ":robot: AI กำลังเล่น, กรุณารอ...",
+    "ai": "the AI"
+  }
+}
