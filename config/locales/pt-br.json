@@ -1,7 +1,7 @@
 {
   "command": {
-    "description": "Jogue uma partida de TicTacToe",
-    "option-user": "Usuário com quem você quer jogar"
+    "description": "Jogue uma partida de TicTacToe (jogo da velha)",
+    "option-user": "Mencione com quem você quer jogar"
   },
   "duel": {
     "title": ":crossed_swords: Novo duelo",
@@ -9,21 +9,21 @@
     "action": "Reaja esta mensagem para aceitar ou recusar este duelo.",
     "expire": ":x: `{invited}` não apareceu para o duelo.",
     "reject": ":x: `{invited}` rejeitou o duelo.",
-    "unknown-user": "você não pode desafiar este usuário.",
-    "no-bot": "você não pode desafiar bots.",
+    "unknown-user": "Você não pode desafiar este usuário.",
+    "no-bot": "Você não pode desafiar bots.",
     "button": {
       "accept": "Aceitar",
       "decline": "Recusar"
     }
   },
   "game": {
-    "title": ":game_die: `{player1}` **VS** `{player2}`",
-    "action": "{player}, selecione a sua jogada:",
+    "title": ":game_die: `{player1}` **CONTRA** `{player2}`",
+    "action": "{player}, selecione sua jogada:",
     "load": "As reações estão sendo carregadas, espere um momento...",
-    "end": "Ninguém ganhou o jogo, empate! Quer tentar novamente?",
+    "end": "Ninguém ganhou o jogo, então deu um empate! Quer tentar novamente?",
     "win": ":tada: {player} venceu a partida!",
-    "expire": ":x: O jogo foi **expirado**... Talvez por causa de inatividade de um usuário.",
-    "in-progress": "você não pode iniciar outro jogo, por favor, aguarde o fim do atual.",
+    "expire": ":x: O jogo foi **expirado**... A causa disso talvez seja um usuário inativo.",
+    "in-progress": "Você não pode iniciar outro jogo, por favor, aguarde o fim do atual.",
     "waiting-ai": ":robot: IA está jogando, espere um momento...",
     "ai": "a IA"
   }
