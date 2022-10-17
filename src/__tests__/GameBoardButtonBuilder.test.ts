@@ -74,4 +74,19 @@ describe('GameBoardButtonBuilder', () => {
         expect(components[1].toJSON().components[0].disabled).toBeFalsy();
         expect(components[1].toJSON().components[1].disabled).toBeFalsy();
     });
+
+    it('should disable all buttons if game has ended', () => {
+        const options = builder
+            .withButtonsDisabledAfterUse()
+            .withBoard(2, [Player.First, Player.Second, Player.None, Player.None])
+            .withEndingMessage()
+            .toMessageOptions();
+
+        const components = <ActionRow<ButtonComponent>[]>options.components;
+
+        expect(components[0].toJSON().components[0].disabled).toBeTruthy();
+        expect(components[0].toJSON().components[1].disabled).toBeTruthy();
+        expect(components[1].toJSON().components[0].disabled).toBeTruthy();
+        expect(components[1].toJSON().components[1].disabled).toBeTruthy();
+    });
 });
