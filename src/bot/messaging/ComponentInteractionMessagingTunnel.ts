@@ -1,5 +1,11 @@
-import MessagingTunnel, { MessagingAnswer } from '@bot/messaging/MessagingTunnel';
-import { GuildMember, Message, MessageComponentInteraction, TextChannel } from 'discord.js';
+import MessagingTunnel from '@bot/messaging/MessagingTunnel';
+import {
+    GuildMember,
+    InteractionUpdateOptions,
+    Message,
+    MessageComponentInteraction,
+    TextChannel
+} from 'discord.js';
 
 /**
  * Represents an interaction messaging channel
@@ -62,7 +68,7 @@ export default class ComponentInteractionMessagingTunnel extends MessagingTunnel
     /**
      * @inheritdoc
      */
-    public async replyWith(answer: MessagingAnswer, _direct?: boolean): Promise<Message> {
+    public async replyWith(answer: InteractionUpdateOptions, _direct?: boolean): Promise<Message> {
         if (this._reply) {
             await this.interaction.editReply(answer);
         } else {
@@ -80,14 +86,14 @@ export default class ComponentInteractionMessagingTunnel extends MessagingTunnel
     /**
      * @inheritdoc
      */
-    public async editReply(answer: MessagingAnswer): Promise<void> {
+    public async editReply(answer: InteractionUpdateOptions): Promise<void> {
         await this.replyWith(answer);
     }
 
     /**
      * @inheritdoc
      */
-    public async end(reason: MessagingAnswer): Promise<void> {
+    public async end(reason: InteractionUpdateOptions): Promise<void> {
         try {
             await this.editReply(reason);
             await (this.interaction.message as Message).reactions.removeAll();

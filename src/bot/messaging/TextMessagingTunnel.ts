@@ -1,5 +1,5 @@
-import MessagingTunnel, { MessagingAnswer } from '@bot/messaging/MessagingTunnel';
-import { GuildMember, Message, TextChannel } from 'discord.js';
+import MessagingTunnel from '@bot/messaging/MessagingTunnel';
+import { BaseMessageOptions, GuildMember, Message, TextChannel } from 'discord.js';
 
 /**
  * Represents a text messaging channel
@@ -54,7 +54,7 @@ export default class TextMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async replyWith(answer: MessagingAnswer, direct?: boolean): Promise<Message> {
+    public async replyWith(answer: BaseMessageOptions, direct?: boolean): Promise<Message> {
         if (direct) {
             this._reply = await this.origin.reply(answer);
         } else {
@@ -66,7 +66,7 @@ export default class TextMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async editReply(answer: MessagingAnswer): Promise<void> {
+    public async editReply(answer: BaseMessageOptions): Promise<void> {
         if (this.reply) {
             await this.reply.edit(answer);
         }
@@ -75,7 +75,7 @@ export default class TextMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async end(reason: MessagingAnswer): Promise<void> {
+    public async end(reason: BaseMessageOptions): Promise<void> {
         if (this.reply) {
             if (this.reply.deletable) {
                 try {

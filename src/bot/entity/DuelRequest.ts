@@ -4,13 +4,13 @@ import GameStateManager from '@bot/state/GameStateManager';
 import localize from '@i18n/localize';
 import {
     ActionRowBuilder,
+    BaseMessageOptions,
     ButtonBuilder,
     ButtonStyle,
     Collection,
     GuildMember,
     Message,
     MessageComponentInteraction,
-    MessageOptions,
     MessageReaction,
     Snowflake
 } from 'discord.js';
@@ -76,7 +76,7 @@ export default class DuelRequest {
      *
      * @returns message options object for the duel request
      */
-    public get content(): MessageOptions {
+    public get content(): BaseMessageOptions {
         const content =
             localize.__('duel.challenge', { initier: this.tunnel.author.displayName }) +
             '\n' +

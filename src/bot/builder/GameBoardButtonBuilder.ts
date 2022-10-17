@@ -1,7 +1,7 @@
 import GameBoardBuilder from '@bot/builder/GameBoardBuilder';
 import Entity from '@tictactoe/Entity';
 import { Player } from '@tictactoe/Player';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageOptions } from 'discord.js';
+import { ActionRowBuilder, BaseMessageOptions, ButtonBuilder, ButtonStyle } from 'discord.js';
 
 /**
  * Builds representation of a game board using buttons
@@ -72,7 +72,7 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @inheritdoc
      * @override
      */
-    override toMessageOptions(): MessageOptions {
+    override toMessageOptions(): BaseMessageOptions {
         return {
             content: this.title + this.state,
             components: [...Array(this.boardSize).keys()].map(row =>

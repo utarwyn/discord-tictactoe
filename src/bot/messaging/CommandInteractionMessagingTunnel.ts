@@ -1,5 +1,11 @@
-import MessagingTunnel, { MessagingAnswer } from '@bot/messaging/MessagingTunnel';
-import { ChatInputCommandInteraction, GuildMember, Message, TextChannel } from 'discord.js';
+import MessagingTunnel from '@bot/messaging/MessagingTunnel';
+import {
+    ChatInputCommandInteraction,
+    GuildMember,
+    InteractionReplyOptions,
+    Message,
+    TextChannel
+} from 'discord.js';
 
 /**
  * Represents an interaction messaging channel
@@ -55,7 +61,7 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async replyWith(answer: MessagingAnswer, direct?: boolean): Promise<Message> {
+    public async replyWith(answer: InteractionReplyOptions, direct?: boolean): Promise<Message> {
         // Fetch current reply if deferred externally and not register in this tunnel
         if (!this.reply && this.interaction.deferred) {
             this._reply = (await this.interaction.fetchReply()) as Message;
@@ -81,7 +87,7 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async editReply(answer: MessagingAnswer): Promise<void> {
+    public async editReply(answer: InteractionReplyOptions): Promise<void> {
         if (this.reply) {
             await this.interaction.editReply(answer);
         }
@@ -90,7 +96,7 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async end(reason: MessagingAnswer): Promise<void> {
+    public async end(reason: InteractionReplyOptions): Promise<void> {
         if (this.reply) {
             try {
                 await this.editReply(reason);
