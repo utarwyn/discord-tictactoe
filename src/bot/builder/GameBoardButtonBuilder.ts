@@ -36,6 +36,11 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @private
      */
     private disableButtonsAfterUsed = false;
+    /**
+     * Stores if game has ended or not.
+     * @protected
+     */
+    private gameEnded = false;
 
     /**
      * Should disable buttons after been used.
@@ -58,6 +63,15 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
         } else {
             return this;
         }
+    }
+
+    /**
+     * @inheritdoc
+     * @override
+     */
+    override withEndingMessage(winner?: Entity): GameBoardBuilder {
+        this.gameEnded = true;
+        return super.withEndingMessage(winner);
     }
 
     /**
@@ -108,6 +122,10 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
             }
         } else {
             button.setLabel(' ');
+
+            if (this.gameEnded && this.disableButtonsAfterUsed) {
+                button.setDisabled(true);
+            }
         }
 
         return button.setCustomId(buttonIndex.toString()).setStyle(this.buttonStyles[buttonData]);

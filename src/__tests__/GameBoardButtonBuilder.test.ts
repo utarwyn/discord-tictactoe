@@ -68,4 +68,17 @@ describe('GameBoardButtonBuilder', () => {
         expect((options.components![1].components[0] as MessageButton).disabled).toBeFalsy();
         expect((options.components![1].components[1] as MessageButton).disabled).toBeFalsy();
     });
+
+    it('should disable all buttons if game has ended', () => {
+        const options = builder
+            .withButtonsDisabledAfterUse()
+            .withBoard(2, [Player.First, Player.Second, Player.None, Player.None])
+            .withEndingMessage()
+            .toMessageOptions();
+
+        expect((options.components![0].components[0] as MessageButton).disabled).toBeTruthy();
+        expect((options.components![0].components[1] as MessageButton).disabled).toBeTruthy();
+        expect((options.components![1].components[0] as MessageButton).disabled).toBeTruthy();
+        expect((options.components![1].components[1] as MessageButton).disabled).toBeTruthy();
+    });
 });
