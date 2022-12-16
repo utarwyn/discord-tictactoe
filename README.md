@@ -18,7 +18,7 @@ Created with <a href="https://github.com/discordjs/discord.js">discord.js</a>.
       <img alt="npm" src="https://img.shields.io/npm/v/discord-tictactoe">
    </a>
    <a href="https://hub.docker.com/r/utarwyn/discord-tictactoe">
-      <img src="https://img.shields.io/github/workflow/status/utarwyn/discord-tictactoe/Docker%20Image%20Build%20and%20Push?label=docker%20build" alt="Docker Build status">
+      <img src="https://img.shields.io/github/actions/workflow/status/utarwyn/discord-tictactoe/publish_docker.yml?label=docker%20build&branch=next" alt="Docker Build status">
    </a>
    <a href="https://github.com/utarwyn/discord-tictactoe/blob/next/LICENSE">
       <img src="https://img.shields.io/github/license/utarwyn/discord-tictactoe" alt="License">
