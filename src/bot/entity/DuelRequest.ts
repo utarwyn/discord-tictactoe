@@ -1,6 +1,7 @@
 import ComponentInteractionMessagingTunnel from '@bot/messaging/ComponentInteractionMessagingTunnel';
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
+import { EmbedColor } from '@config/InteractionConfig';
 import localize from '@i18n/localize';
 import {
     Collection,
@@ -43,6 +44,10 @@ export default class DuelRequest {
      */
     private readonly useReactions: boolean;
     /**
+     * Color used for the embed.
+     */
+    private readonly embedColor: EmbedColor;
+    /**
      * Tunnel that initiated the duel request.
      */
     private tunnel: MessagingTunnel;
@@ -55,19 +60,22 @@ export default class DuelRequest {
      * @param invited invited member object
      * @param expireTime expiration time of the mesage, undefined for default
      * @param useReactions interact with reactions instead of buttons
+     * @param embedColor color used for the embed
      */
     constructor(
         manager: GameStateManager,
         tunnel: MessagingTunnel,
         invited: GuildMember,
         expireTime?: number,
-        useReactions?: boolean
+        useReactions?: boolean,
+        embedColor?: EmbedColor
     ) {
         this.manager = manager;
         this.tunnel = tunnel;
         this.invited = invited;
         this.expireTime = expireTime ?? 60;
         this.useReactions = useReactions ?? false;
+        this.embedColor = embedColor ?? 2719929;
     }
 
     /**
@@ -102,7 +110,7 @@ export default class DuelRequest {
             content: this.invited.toString(),
             embeds: [
                 {
-                    color: 2719929, // #2980B9
+                    color: this.embedColor,
                     title: localize.__('duel.title'),
                     description: content
                 }

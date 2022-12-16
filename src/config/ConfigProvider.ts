@@ -19,6 +19,7 @@ export default class ConfigProvider implements Config {
 
     public allowedChannelIds = [];
     public allowedRoleIds = [];
+    public requestEmbedColor = 2719929;
     public requestExpireTime = 60;
     public requestCooldownTime = 0;
     public simultaneousGames = false;
