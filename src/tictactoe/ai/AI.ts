@@ -1,4 +1,6 @@
 import localize from '@i18n/localize';
+import { AIComputeResult } from '@tictactoe/ai/AIComputeResult';
+import { AIDifficultyLevel } from '@tictactoe/ai/AIDifficultyLevel';
 import Entity from '@tictactoe/Entity';
 import Game from '@tictactoe/Game';
 import { getOpponent, Player, PlayerComputeType } from '@tictactoe/Player';
@@ -11,13 +13,36 @@ import { getOpponent, Player, PlayerComputeType } from '@tictactoe/Player';
  */
 export default class AI implements Entity {
     /**
-     * Identifier of the AI is always "AI"
+     * Randomness rate of each difficulty level.
      */
-    id = 'AI';
+    private static readonly DIFFICULTY_RANDOM_RATES: Record<AIDifficultyLevel, number> = {
+        [AIDifficultyLevel.Easy]: 0.5,
+        [AIDifficultyLevel.Medium]: 0.25,
+        [AIDifficultyLevel.Hard]: 0.1,
+        [AIDifficultyLevel.Unbeatable]: 0
+    };
+
     /**
-     * Display name of an AI
+     * Identifier of the AI is always "AI".
      */
-    displayName = localize.__('game.ai');
+    public id = 'AI';
+    /**
+     * Display name of an AI.
+     */
+    public displayName = localize.__('game.ai');
+    /**
+     * Probability of running the randomized algorithm.
+     */
+    private randomRate: number;
+
+    /**
+     * Creates an AI.
+     *
+     * @param difficultyLevel difficulty level of the AI
+     */
+    constructor(difficultyLevel = AIDifficultyLevel.Medium) {
+        this.randomRate = AI.DIFFICULTY_RANDOM_RATES[difficultyLevel];
+    }
 
     /**
      * Operates the AI algorithm on a game instance.
@@ -25,10 +50,10 @@ export default class AI implements Entity {
      * @param game game object
      */
     public operate(game: Game): AIComputeResult {
-        if (!game.boardEmpty) {
+        if (!game.boardEmpty && (this.randomRate === 0 || Math.random() >= this.randomRate)) {
             return AI.minimax(game.clone(), game.emptyCellAmount, game.currentPlayer);
         } else {
-            return { move: Math.floor(Math.random() * game.boardSize), score: 0 };
+            return AI.randomized(game);
         }
     }
 
@@ -45,6 +70,7 @@ export default class AI implements Entity {
      * @param game game object
      * @param depth depth at which the algorithm will be operated
      * @param player player object
+     * @returns ai computation result
      */
     private static minimax(game: Game, depth: number, player: Player): AIComputeResult {
         const winner = game.winner;
@@ -102,18 +128,22 @@ export default class AI implements Entity {
             return PlayerComputeType.None;
         }
     }
-}
 
-/**
- * Represents a result of an AI computation.
- */
-export interface AIComputeResult {
     /**
-     * Poosition where the AI has decided to play. Can be empty if none found.
+     * Pick an empty cell randomly on the board.
+     *
+     * @param game game object
+     * @returns ai computation result
      */
-    move?: number;
-    /**
-     * Score computed by the algorithm to find the best move to play.
-     */
-    score: number;
+    private static randomized(game: Game): AIComputeResult {
+        const emptyCellIndexes = game.board
+            .map((cell, index) => ({ cell, index }))
+            .filter(({ cell }) => cell === Player.None)
+            .map(({ index }) => index);
+
+        return {
+            move: emptyCellIndexes[Math.floor(Math.random() * emptyCellIndexes.length)],
+            score: 0
+        };
+    }
 }

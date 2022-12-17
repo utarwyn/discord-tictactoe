@@ -11,6 +11,7 @@
   "requestExpireTime": 60,
   "requestReactions": false,
   "simultaneousGames": false,
+  "aiDifficulty": "Medium",
   "gameExpireTime": 30,
   "gameBoardReactions": false,
   "gameBoardDelete": false,
