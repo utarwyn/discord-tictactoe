@@ -5,7 +5,7 @@ import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
 import GameConfig from '@config/GameConfig';
 import localize from '@i18n/localize';
-import AI from '@tictactoe/AI';
+import AI from '@tictactoe/ai/AI';
 import Entity from '@tictactoe/Entity';
 import Game from '@tictactoe/Game';
 import { Player } from '@tictactoe/Player';

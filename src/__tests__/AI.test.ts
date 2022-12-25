@@ -31,10 +31,13 @@ describe('AI', () => {
             // Construct a fake board
             rows.forEach((row: string, rowIndex: number) => {
                 [...row].forEach((cell: string, colIndex: number) => {
-                    game.updateBoard(
-                        cell === 'x' ? Player.First : cell === 'o' ? Player.Second : Player.None,
-                        rowIndex * row.length + colIndex
-                    );
+                    let player = Player.None;
+                    if (cell === 'x') {
+                        player = Player.First;
+                    } else if (cell === 'o') {
+                        player = Player.Second;
+                    }
+                    game.updateBoard(player, rowIndex * row.length + colIndex);
                 });
             });
 

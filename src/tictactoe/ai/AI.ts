@@ -92,23 +92,46 @@ export default class AI implements Entity {
         // Go through all cells
         game.board.forEach((cell, index) => {
             if (cell === Player.None) {
-                game.updateBoard(player, index);
-                const deep = this.minimax(game, depth - 1, getOpponent(player));
-
-                game.updateBoard(Player.None, index);
-                deep.move = index;
-
-                if (type === PlayerComputeType.Computer) {
-                    if (deep.score > best.score) {
-                        best = deep;
-                    }
-                } else {
-                    if (deep.score < best.score) {
-                        best = deep;
-                    }
-                }
+                best = this.minimaxCell(game, depth, player, best, index);
             }
         });
+
+        return best;
+    }
+
+    /**
+     * Process a cell at a specific depth using the minimax algorithm.
+     *
+     * @param game game object
+     * @param depth depth at which the algorithm will be operated
+     * @param player player object
+     * @param best best move object
+     * @param index index of the cell to process
+     * @returns best move object after cell processing
+     */
+    private static minimaxCell(
+        game: Game,
+        depth: number,
+        player: Player,
+        best: AIComputeResult,
+        index: number
+    ): AIComputeResult {
+        game.updateBoard(player, index);
+        const deep = this.minimax(game, depth - 1, getOpponent(player));
+
+        game.updateBoard(Player.None, index);
+        deep.move = index;
+
+        const type = AI.getComputeType(player);
+        if (type === PlayerComputeType.Computer) {
+            if (deep.score > best.score) {
+                best = deep;
+            }
+        } else {
+            if (deep.score < best.score) {
+                best = deep;
+            }
+        }
 
         return best;
     }
