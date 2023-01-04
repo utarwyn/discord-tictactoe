@@ -18,5 +18,5 @@ module.exports = {
     },
     moduleFileExtensions: ['js', 'json', 'ts'],
     collectCoverage: true,
-    coveragePathIgnorePatterns: ['/node_modules/', '.d.ts']
+    collectCoverageFrom: ['src/**/*']
 };

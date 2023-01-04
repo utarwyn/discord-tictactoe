@@ -1,5 +1,5 @@
 import localize from '@i18n/localize';
-import AI from '@tictactoe/AI';
+import AI from '@tictactoe/ai/AI';
 import Entity from '@tictactoe/Entity';
 import { Player } from '@tictactoe/Player';
 import { MessageCreateOptions } from 'discord.js';

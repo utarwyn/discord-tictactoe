@@ -1,9 +1,9 @@
 import GameBoardBuilder from '@bot/builder/GameBoardBuilder';
 import localize from '@i18n/localize';
-import AI from '@tictactoe/AI';
+import AI from '@tictactoe/ai/AI';
 import { Player } from '@tictactoe/Player';
 
-jest.mock('@tictactoe/AI');
+jest.mock('@tictactoe/ai/AI');
 
 describe('GameBoardBuilder', () => {
     let builder: GameBoardBuilder;

@@ -5,14 +5,14 @@ import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
 import GameStateValidator from '@bot/state/GameStateValidator';
 import TicTacToeBot from '@bot/TicTacToeBot';
-import AI from '@tictactoe/AI';
+import AI from '@tictactoe/ai/AI';
 import Entity from '@tictactoe/Entity';
 import { GuildMember } from 'discord.js';
 
 jest.mock('@bot/entity/DuelRequest');
 jest.mock('@bot/entity/GameBoard');
 jest.mock('@bot/state/GameStateValidator');
-jest.mock('@tictactoe/AI');
+jest.mock('@tictactoe/ai/AI');
 
 describe('GameStateManager', () => {
     const duelRequest = jest.mocked(DuelRequest);
