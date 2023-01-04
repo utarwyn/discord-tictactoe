@@ -85,8 +85,6 @@ export default class ConfigProvider implements Config {
     }
 
     private static camelCase(str: string): string {
-        return str.toLowerCase().replace(/_([a-z])/g, g => {
-            return g[1].toUpperCase();
-        });
+        return str.toLowerCase().replace(/_([a-z])/g, g => g[1].toUpperCase());
     }
 }
