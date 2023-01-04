@@ -1,10 +1,10 @@
 import GameBoardButtonBuilder from '@bot/builder/GameBoardButtonBuilder';
 import localize from '@i18n/localize';
-import AI from '@tictactoe/AI';
+import AI from '@tictactoe/ai/AI';
 import { Player } from '@tictactoe/Player';
 import { MessageButton } from 'discord.js';
 
-jest.mock('@tictactoe/AI');
+jest.mock('@tictactoe/ai/AI');
 
 describe('GameBoardButtonBuilder', () => {
     let builder: GameBoardButtonBuilder;

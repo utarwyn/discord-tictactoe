@@ -1,4 +1,5 @@
 import Config from '@config/Config';
+import { AIDifficulty } from '@config/GameConfig';
 import fs from 'fs';
 import path from 'path';
 
@@ -24,6 +25,7 @@ export default class ConfigProvider implements Config {
     public requestCooldownTime = 0;
     public simultaneousGames = false;
 
+    public aiDifficulty: AIDifficulty = 'Medium';
     public gameExpireTime = 30;
     public gameBoardReactions = false;
     public gameBoardDelete = false;

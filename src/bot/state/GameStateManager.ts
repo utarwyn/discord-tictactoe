@@ -3,7 +3,8 @@ import GameBoard from '@bot/entity/GameBoard';
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateValidator from '@bot/state/GameStateValidator';
 import TicTacToeBot from '@bot/TicTacToeBot';
-import AI from '@tictactoe/AI';
+import AI from '@tictactoe/ai/AI';
+import { AIDifficultyLevel } from '@tictactoe/ai/AIDifficultyLevel';
 import Entity from '@tictactoe/Entity';
 import { GuildMember } from 'discord.js';
 
@@ -96,7 +97,7 @@ export default class GameStateManager {
             const gameboard = new GameBoard(
                 this,
                 tunnel,
-                invited ?? new AI(),
+                invited ?? this.createAI(),
                 this.bot.configuration
             );
 
@@ -130,5 +131,15 @@ export default class GameStateManager {
         }
 
         this.gameboards.splice(this.gameboards.indexOf(gameboard), 1);
+    }
+
+    /**
+     * Creates an AI with the difficulty defined in the configuration.
+     *
+     * @returns AI object
+     */
+    private createAI(): AI {
+        const aiDifficulty = this.bot.configuration.aiDifficulty;
+        return new AI(aiDifficulty ? AIDifficultyLevel[aiDifficulty] : undefined);
     }
 }

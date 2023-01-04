@@ -1,3 +1,5 @@
+export type AIDifficulty = 'Easy' | 'Medium' | 'Hard' | 'Unbeatable';
+
 /**
  * Configuration values to handle a game as wanted.
  *
@@ -5,6 +7,10 @@
  * @since 2.1.0
  */
 export default interface GameConfig {
+    /**
+     * Level of difficulty of the AI.
+     */
+    aiDifficulty?: AIDifficulty;
     /**
      * Expiration time of a player turn.
      */
