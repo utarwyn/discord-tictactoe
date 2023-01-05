@@ -130,7 +130,7 @@ export default class DuelRequest {
                 await message.react(reaction);
             }
 
-            message
+            return message
                 .awaitReactions({
                     filter: (reaction, user) =>
                         reaction.emoji.name != null &&
@@ -152,7 +152,7 @@ export default class DuelRequest {
                 .on('collect', this.challengeButtonAnswered.bind(this))
                 .on('end', async (_, reason) => {
                     if (reason !== 'limit') {
-                        await this.challengeExpired();
+                        return this.challengeExpired();
                     }
                 });
         }
@@ -189,7 +189,7 @@ export default class DuelRequest {
      */
     private async challengeAnswered(accepted: boolean): Promise<void> {
         if (accepted) {
-            await this.manager.createGame(this.tunnel, this.invited);
+            return this.manager.createGame(this.tunnel, this.invited);
         } else {
             return this.tunnel.end({
                 allowedMentions: { parse: [] },

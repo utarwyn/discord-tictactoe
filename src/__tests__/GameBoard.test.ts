@@ -4,7 +4,6 @@ import GameBoard from '@bot/entity/GameBoard';
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
 import GameConfig from '@config/GameConfig';
-import localize from '@i18n/localize';
 import AI from '@tictactoe/ai/AI';
 import Entity from '@tictactoe/Entity';
 import Game from '@tictactoe/Game';
@@ -13,6 +12,7 @@ import { Collection, Message } from 'discord.js';
 
 jest.mock('@bot/builder/GameBoardBuilder');
 jest.mock('@bot/builder/GameBoardButtonBuilder');
+jest.mock('@i18n/localize');
 jest.mock('@tictactoe/Game');
 
 describe('GameBoard', () => {
@@ -23,10 +23,6 @@ describe('GameBoard', () => {
     let tunnel: MessagingTunnel;
 
     let gameBoard: GameBoard;
-
-    beforeAll(() => {
-        localize.loadFromLocale('en');
-    });
 
     beforeEach(() => {
         configuration = {} as GameConfig;
@@ -235,8 +231,8 @@ describe('GameBoard', () => {
                 ${'1'}  | ${'author'} | ${true}   | ${true}
             `(
                 'should check if emoji $emoji is valid for user $userId with moveValid=$moveValid',
-                async ({ emoji, userId, valid }) => {
-                    jest.spyOn(game, 'isMoveValid').mockReturnValue(valid);
+                async ({ emoji, userId, moveValid, valid }) => {
+                    jest.spyOn(game, 'isMoveValid').mockReturnValue(moveValid);
                     const spyAwaitReactions = jest.spyOn(reply, 'awaitReactions');
                     await gameBoard.attemptNextTurn();
                     const options = spyAwaitReactions.mock.calls[0][0];
