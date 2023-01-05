@@ -51,7 +51,9 @@ export default class GameCommand {
             const tunnel = new TextMessagingTunnel(message);
             const invited = message.mentions.members?.first();
 
-            return this.handleInvitation(tunnel, message.member, invited);
+            return this.processInvitation(tunnel, message.member, invited).catch(error => {
+                tunnel.replyWith({ content: localize.__(error) }, true);
+            });
         }
     }
 
@@ -77,19 +79,20 @@ export default class GameCommand {
                 interaction.options.getMember(this.config.commandOptionName ?? 'opponent', false) ??
                 undefined;
 
-            return this.handleInvitation(tunnel, member, mentionned);
+            return this.processInvitation(tunnel, member, mentionned).catch(error => {
+                tunnel.replyWith({ content: localize.__(error) }, true);
+            });
         }
     }
 
     /**
-     * Handles an invitation by starting a game
-     * or requesting a duel between two members.
+     * Validates and handles an invitation if its valid.
      *
      * @param tunnel game messaging tunnel
      * @param inviter discord.js inviter member instance
      * @param invited discord.js invited member instance, can be undefined to play against AI
      */
-    private async handleInvitation(
+    private async processInvitation(
         tunnel: MessagingTunnel,
         inviter: GuildMember,
         invited?: GuildMember
@@ -97,22 +100,33 @@ export default class GameCommand {
         if (invited) {
             if (!invited.user.bot) {
                 if (
-                    inviter.user.id !== invited.user.id &&
-                    invited.permissionsIn(tunnel.channel).has('VIEW_CHANNEL')
+                    inviter.user.id === invited.user.id ||
+                    !invited.permissionsIn(tunnel.channel).has('VIEW_CHANNEL')
                 ) {
-                    if (!(await this.manager.requestDuel(tunnel, invited))) {
-                        await tunnel.replyWith({ content: localize.__('game.in-progress') }, true);
-                    }
-                } else {
-                    await tunnel.replyWith({ content: localize.__('duel.unknown-user') }, true);
+                    return Promise.reject('duel.unknown-user');
                 }
             } else {
-                await tunnel.replyWith({ content: localize.__('duel.no-bot') }, true);
-            }
-        } else {
-            if (!(await this.manager.createGame(tunnel))) {
-                await tunnel.replyWith({ content: localize.__('game.in-progress') }, true);
+                return Promise.reject('duel.no-bot');
             }
         }
+
+        return this.handleInvitation(tunnel, invited);
+    }
+
+    /**
+     * Handles an invitation by starting a game
+     * or requesting a duel between two members.
+     *
+     * @param tunnel game messaging tunnel
+     * @param invited discord.js invited member instance, can be undefined to play against AI
+     */
+    private async handleInvitation(tunnel: MessagingTunnel, invited?: GuildMember): Promise<void> {
+        let handler: Promise<void>;
+        if (invited) {
+            handler = this.manager.requestDuel(tunnel, invited);
+        } else {
+            handler = this.manager.createGame(tunnel);
+        }
+        return handler.catch(() => Promise.reject('game.in-progress'));
     }
 }
