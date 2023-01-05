@@ -50,12 +50,12 @@ export default class GameStateManager {
      *
      * @param tunnel messaging tunnel that initiated the request
      * @param invited member invited to be part of the duel
-     * @returns true if duel request has been handled, false otherwise
+     * @returns promise resolved if duel request has been handled, rejected otherwise
      */
-    public async requestDuel(tunnel: MessagingTunnel, invited: GuildMember): Promise<boolean> {
+    public async requestDuel(tunnel: MessagingTunnel, invited: GuildMember): Promise<void> {
         if (this.validator.isInteractionValid(tunnel)) {
             if (!this.validator.isNewGamePossible(tunnel, invited)) {
-                return false;
+                return Promise.reject();
             }
 
             const duel = new DuelRequest(
@@ -77,8 +77,6 @@ export default class GameStateManager {
                 this.memberCooldownEndTimes.set(tunnel.author.id, Date.now() + cooldown * 1000);
             }
         }
-
-        return true;
     }
 
     /**
@@ -86,12 +84,12 @@ export default class GameStateManager {
      *
      * @param tunnel messaging tunnel that initiated the game creation
      * @param invited member invited to be part of the game, undefined means the AI
-     * @returns true if game request has been handled, false otherwise
+     * @returns promise resolved if game request has been handled, rejected otherwise
      */
-    public async createGame(tunnel: MessagingTunnel, invited?: GuildMember): Promise<boolean> {
+    public async createGame(tunnel: MessagingTunnel, invited?: GuildMember): Promise<void> {
         if (this.validator.isInteractionValid(tunnel)) {
             if (!this.validator.isNewGamePossible(tunnel, invited)) {
-                return false;
+                return Promise.reject();
             }
 
             const gameboard = new GameBoard(
@@ -106,10 +104,8 @@ export default class GameStateManager {
 
             // Reply with the gameboard and attach the created message
             const message = await tunnel.replyWith(gameboard.content);
-            await gameboard.attachTo(message);
+            return gameboard.attachTo(message);
         }
-
-        return true;
     }
 
     /**

@@ -231,8 +231,8 @@ describe('GameBoard', () => {
                 ${'1'}  | ${'author'} | ${true}   | ${true}
             `(
                 'should check if emoji $emoji is valid for user $userId with moveValid=$moveValid',
-                async ({ emoji, userId, valid }) => {
-                    jest.spyOn(game, 'isMoveValid').mockReturnValue(valid);
+                async ({ emoji, userId, moveValid, valid }) => {
+                    jest.spyOn(game, 'isMoveValid').mockReturnValue(moveValid);
                     const spyAwaitReactions = jest.spyOn(reply, 'awaitReactions');
                     await gameBoard.attemptNextTurn();
                     const options = spyAwaitReactions.mock.calls[0][0];

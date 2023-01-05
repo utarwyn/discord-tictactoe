@@ -1,6 +1,5 @@
 import DuelRequest from '@bot/entity/DuelRequest';
 import GameBoard from '@bot/entity/GameBoard';
-import EventHandler from '@bot/EventHandler';
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
 import GameStateValidator from '@bot/state/GameStateValidator';
@@ -24,44 +23,40 @@ describe('GameStateManager', () => {
     let tunnel: MessagingTunnel;
 
     beforeEach(() => {
-        bot = <TicTacToeBot>{
+        bot = {
             configuration: {},
-            eventHandler: <EventHandler>{
-                emitEvent: (_type, _data) => {
-                    // empty
-                }
-            }
-        };
-        tunnel = <MessagingTunnel>{
+            eventHandler: { emitEvent: (_type, _data) => undefined }
+        } as TicTacToeBot;
+        tunnel = {
             author: { id: 'A1', displayName: 'username' },
             replyWith: _a => Promise.resolve({})
-        };
+        } as MessagingTunnel;
+        validator = {
+            isInteractionValid: jest.fn().mockReturnValue(true) as any,
+            isNewGamePossible: jest.fn().mockReturnValue(true) as any
+        } as GameStateValidator;
 
+        jest.mocked(GameStateValidator).mockImplementation(() => validator);
         manager = new GameStateManager(bot);
-        validator = manager['validator'];
     });
 
     describe('Method: requestDuel', () => {
-        it('should check if the interaction is valid', async () => {
-            const spyValidate = jest.spyOn(validator, 'isInteractionValid');
-            const invited = <GuildMember>{};
-            await manager.requestDuel(tunnel, invited);
-            expect(spyValidate).toHaveBeenCalledTimes(1);
-            expect(spyValidate).toHaveBeenCalledWith(tunnel);
+        it('should reject if interaction is invalid', async () => {
+            jest.spyOn(validator, 'isInteractionValid').mockReturnValue(false);
+            await expect(manager.requestDuel(tunnel, {} as GuildMember)).resolves.toBeUndefined();
+            expect(validator.isInteractionValid).toHaveBeenCalledTimes(1);
+            expect(validator.isInteractionValid).toHaveBeenCalledWith(tunnel);
         });
 
-        it('should check if a new game is possible', async () => {
-            jest.spyOn(validator, 'isInteractionValid').mockReturnValue(true);
-            const spyValidate = jest.spyOn(validator, 'isNewGamePossible');
-            const invited = <GuildMember>{};
-            await manager.requestDuel(tunnel, invited);
-            expect(spyValidate).toHaveBeenCalledTimes(1);
-            expect(spyValidate).toHaveBeenCalledWith(tunnel, invited);
+        it('should reject if a new game is not possible', async () => {
+            jest.spyOn(validator, 'isNewGamePossible').mockReturnValue(false);
+            const invited = {} as GuildMember;
+            await expect(manager.requestDuel(tunnel, invited)).rejects.toBeUndefined();
+            expect(validator.isNewGamePossible).toHaveBeenCalledTimes(1);
+            expect(validator.isNewGamePossible).toHaveBeenCalledWith(tunnel, invited);
         });
 
         it('should create a duel request and send it into the messaging tunnel', async () => {
-            jest.spyOn(validator, 'isInteractionValid').mockReturnValue(true);
-            jest.spyOn(validator, 'isNewGamePossible').mockReturnValue(true);
             const spyReplyWith = jest.spyOn(tunnel, 'replyWith');
             await manager.requestDuel(tunnel, <GuildMember>{});
             expect(duelRequest).toHaveBeenCalledTimes(1);
@@ -69,9 +64,6 @@ describe('GameStateManager', () => {
         });
 
         it('should setup user cooldown if enabled in configuration', async () => {
-            jest.spyOn(validator, 'isInteractionValid').mockReturnValue(true);
-            jest.spyOn(validator, 'isNewGamePossible').mockReturnValue(true);
-
             // by default, no cooldown
             await manager.requestDuel(tunnel, <GuildMember>{});
             expect(manager.memberCooldownEndTimes.size).toBe(0);
@@ -85,25 +77,22 @@ describe('GameStateManager', () => {
     });
 
     describe('Method: createGame', () => {
-        it('should check if the interaction is valid', async () => {
-            const spyValidate = jest.spyOn(validator, 'isInteractionValid');
-            await manager.createGame(tunnel);
-            expect(spyValidate).toHaveBeenCalledTimes(1);
-            expect(spyValidate).toHaveBeenCalledWith(tunnel);
+        it('should reject if interaction is invalid', async () => {
+            jest.spyOn(validator, 'isInteractionValid').mockReturnValue(false);
+            await expect(manager.createGame(tunnel)).resolves.toBeUndefined();
+            expect(validator.isInteractionValid).toHaveBeenCalledTimes(1);
+            expect(validator.isInteractionValid).toHaveBeenCalledWith(tunnel);
         });
 
-        it('should check if a new game is possible', async () => {
-            jest.spyOn(validator, 'isInteractionValid').mockReturnValue(true);
-            const spyValidate = jest.spyOn(validator, 'isNewGamePossible');
+        it('should reject if a new game is not possible', async () => {
+            jest.spyOn(validator, 'isNewGamePossible').mockReturnValue(false);
             const invited = <GuildMember>{};
-            await manager.createGame(tunnel, invited);
-            expect(spyValidate).toHaveBeenCalledTimes(1);
-            expect(spyValidate).toHaveBeenCalledWith(tunnel, invited);
+            await expect(manager.createGame(tunnel, invited)).rejects.toBeUndefined();
+            expect(validator.isNewGamePossible).toHaveBeenCalledTimes(1);
+            expect(validator.isNewGamePossible).toHaveBeenCalledWith(tunnel, invited);
         });
 
         it('should create a game board and send it into the messaging tunnel', async () => {
-            jest.spyOn(validator, 'isInteractionValid').mockReturnValue(true);
-            jest.spyOn(validator, 'isNewGamePossible').mockReturnValue(true);
             const spyReplyWith = jest.spyOn(tunnel, 'replyWith');
 
             const invited = <GuildMember>{};
@@ -116,9 +105,6 @@ describe('GameStateManager', () => {
         });
 
         it('should create a game board with AI if no invited member', async () => {
-            jest.spyOn(validator, 'isInteractionValid').mockReturnValue(true);
-            jest.spyOn(validator, 'isNewGamePossible').mockReturnValue(true);
-
             await manager.createGame(tunnel);
 
             expect(gameBoard).toHaveBeenCalledTimes(1);
