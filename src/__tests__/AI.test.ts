@@ -1,10 +1,17 @@
+import localize from '@i18n/localize';
 import AI from '@tictactoe/ai/AI';
 import { AIDifficultyLevel } from '@tictactoe/ai/AIDifficultyLevel';
 import Game from '@tictactoe/Game';
 import { Player } from '@tictactoe/Player';
 
+jest.mock('@i18n/localize');
+
 describe('AI', () => {
     let ai: AI;
+
+    beforeAll(() => {
+        jest.spyOn(localize, '__').mockImplementation(t => t);
+    });
 
     it('should compute display name', () => {
         expect(new AI().toString()).toBe('game.ai');
