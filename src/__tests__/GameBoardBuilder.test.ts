@@ -3,13 +3,14 @@ import localize from '@i18n/localize';
 import AI from '@tictactoe/ai/AI';
 import { Player } from '@tictactoe/Player';
 
+jest.mock('@i18n/localize');
 jest.mock('@tictactoe/ai/AI');
 
 describe('GameBoardBuilder', () => {
     let builder: GameBoardBuilder;
 
     beforeAll(() => {
-        localize.loadFromLocale('en');
+        jest.spyOn(localize, '__').mockImplementation(t => t);
     });
 
     beforeEach(() => {
@@ -25,10 +26,15 @@ describe('GameBoardBuilder', () => {
     });
 
     it('should compute title based on entity names', () => {
+        const spyLocalize = jest.spyOn(localize, '__');
         builder.withTitle({ id: '1', displayName: 'entity1' }, { id: '2', displayName: 'entity2' });
         expect(builder.toMessageOptions()).toEqual(
-            expect.objectContaining({ content: ':game_die: `entity1` **VS** `entity2`\n\n' })
+            expect.objectContaining({ content: 'game.title\n\n' })
         );
+        expect(spyLocalize).toHaveBeenCalledWith('game.title', {
+            player1: 'entity1',
+            player2: 'entity2'
+        });
     });
 
     it('should compute board using custom emojies', () => {
@@ -47,21 +53,32 @@ describe('GameBoardBuilder', () => {
     });
 
     it.each`
-        entity                        | state
-        ${undefined}                  | ${'Reactions are loading, please wait...'}
-        ${new AI()}                   | ${':robot: AI is playing, please wait...'}
-        ${{ toString: () => 'fake' }} | ${'fake, select your move:'}
-    `('should set state based if playing entity is $entity', ({ entity, state }) => {
+        entity                        | state                | stateParams
+        ${undefined}                  | ${'game.load'}       | ${[]}
+        ${new AI()}                   | ${'game.waiting-ai'} | ${[]}
+        ${{ toString: () => 'fake' }} | ${'game.action'}     | ${[{ player: 'fake' }]}
+    `('should set state based on playing entity $entity', ({ entity, state, stateParams }) => {
+        const spyLocalize = jest.spyOn(localize, '__');
         builder.withEntityPlaying(entity);
         expect(builder.toMessageOptions()).toEqual(expect.objectContaining({ content: state }));
+        expect(spyLocalize).toHaveBeenCalledWith(state, ...stateParams);
     });
 
     it.each`
-        entity                        | state
-        ${undefined}                  | ${"No one won the game, it's a tie! Let's try again?"}
-        ${{ toString: () => 'fake' }} | ${':tada: fake has won the game!'}
-    `('should set state based if winning entity is $entity', ({ entity, state }) => {
+        entity                        | state         | stateParams
+        ${undefined}                  | ${'game.end'} | ${[]}
+        ${{ toString: () => 'fake' }} | ${'game.win'} | ${[{ player: 'fake' }]}
+    `('should set state based on winning entity $entity', ({ entity, state, stateParams }) => {
+        const spyLocalize = jest.spyOn(localize, '__');
         builder.withEndingMessage(entity);
         expect(builder.toMessageOptions()).toEqual(expect.objectContaining({ content: state }));
+        expect(spyLocalize).toHaveBeenCalledWith(state, ...stateParams);
+    });
+
+    it('should set state based if game has expired', () => {
+        builder.withExpireMessage();
+        expect(builder.toMessageOptions()).toEqual(
+            expect.objectContaining({ content: 'game.expire' })
+        );
     });
 });

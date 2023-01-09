@@ -3,7 +3,6 @@ import GameBoardButtonBuilder from '@bot/builder/GameBoardButtonBuilder';
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
 import GameConfig from '@config/GameConfig';
-import localize from '@i18n/localize';
 import AI from '@tictactoe/ai/AI';
 import Entity from '@tictactoe/Entity';
 import Game from '@tictactoe/Game';
@@ -261,7 +260,7 @@ export default class GameBoard {
      * @private
      */
     private async onExpire(): Promise<void> {
-        await this.tunnel.end({ content: localize.__('game.expire'), components: [] });
+        await this.tunnel.end(new GameBoardBuilder().withExpireMessage().toMessageOptions());
         this.manager.endGame(this);
     }
 

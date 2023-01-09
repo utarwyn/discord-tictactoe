@@ -127,6 +127,16 @@ export default class GameBoardBuilder {
     }
 
     /**
+     * Writes expiration state of the game.
+     *
+     * @returns same instance
+     */
+    withExpireMessage(): GameBoardBuilder {
+        this.state = localize.__('game.expire');
+        return this;
+    }
+
+    /**
      * Constructs final representation of the game board.
      *
      * @returns message options of the gameboard

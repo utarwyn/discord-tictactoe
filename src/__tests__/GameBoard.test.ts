@@ -59,6 +59,7 @@ describe('GameBoard', () => {
             withEmojies: jest.fn().mockReturnThis(),
             withEndingMessage: jest.fn().mockReturnThis(),
             withEntityPlaying: jest.fn().mockReturnThis(),
+            withExpireMessage: jest.fn().mockReturnThis(),
             withTitle: jest.fn().mockReturnThis()
         };
 
