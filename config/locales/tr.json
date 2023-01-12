@@ -4,13 +4,13 @@
     "option-user": "Oynamak istediğiniz kullanıcı"
   },
   "duel": {
-    "title": ":crossed_swords: Yeni düello",
-    "challenge": "**{initier}**, seni düelloya davet etti!",
-    "action": "Düelloyu kabul etmek veya reddetmek için bu mesaja tepki verin.",
+    "title": ":crossed_swords: Yeni oyun",
+    "challenge": "**{initier}**, seni yeni bir oyuna davet etti!",
+    "action": "Oyun davetini kabul etmek veya reddetmek için bu mesaja tepki verin.",
     "expire": ":x: `{invited}` cevap süresi doldu.",
-    "reject": ":x: `{invited}` düello reddedildi.",
-    "unknown-user": "o kullanıcıya düello teklif edemezsiniz.",
-    "no-bot": "botlarla oynayamazsınız.",
+    "reject": ":x: `{invited}` oyun daveti reddedildi.",
+    "unknown-user": "Okullanıcıyı oyuna davet edemezsiniz.",
+    "no-bot": "Botlarla oynayamazsınız.",
     "button": {
       "accept": "Kabul Et",
       "decline": "Reddet"
@@ -20,11 +20,11 @@
     "title": ":game_die: `{player1}` **VS** `{player2}`",
     "action": "{player}, hamleni seç:",
     "load": "Tepkiler yükleniyor, lütfen bekleyin...",
-    "end": "Maçı kimse kazanamadı, berabere kaldı!",
+    "end": "Oyunu kimse kazanamadı, berabere kaldı!",
     "win": ":tada: {player} oyunu kazandı!",
-    "expire": ":x: Oyunun süresi **doldu**... Bir kullanıcının hareketsizliğinden olabilir",
-    "in-progress": "you cannot start another game, please wait for current one to end.",
-    "waiting-ai": ":robot: Yapay Zeka oynuyor, lütfen bekle...",
+    "expire": ":x: Oyunun süresi **doldu**... Bir kullanıcının hareketsizliğinden olabilir...",
+    "in-progress": "Yeni bir oyuna başlamadan önce devam eden oyunun bitmesini beklemelisin.",
+    "waiting-ai": ":robot: hamle sırası Yapay Zeka'da, lütfen bekle...",
     "ai": "Yapay Zeka"
   }
 }
