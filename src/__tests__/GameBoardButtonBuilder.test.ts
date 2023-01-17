@@ -81,4 +81,10 @@ describe('GameBoardButtonBuilder', () => {
         expect((options.components![1].components[0] as MessageButton).disabled).toBeTruthy();
         expect((options.components![1].components[1] as MessageButton).disabled).toBeTruthy();
     });
+
+    it('should use an embed if configured to use it', () => {
+        const options = builder.withEmbed().toMessageOptions();
+        expect(options.content).toBeUndefined();
+        expect(options.embeds).toHaveLength(1);
+    });
 });

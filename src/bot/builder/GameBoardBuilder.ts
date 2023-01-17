@@ -41,6 +41,11 @@ export default class GameBoardBuilder {
      * @protected
      */
     protected boardData: Player[];
+    /**
+     * Should enable embed to display the game board.
+     * @private
+     */
+    protected embed: boolean;
 
     /**
      * Constructs a new game board builder.
@@ -50,6 +55,7 @@ export default class GameBoardBuilder {
         this.state = '';
         this.boardSize = 0;
         this.boardData = [];
+        this.embed = false;
     }
 
     /**
@@ -59,7 +65,7 @@ export default class GameBoardBuilder {
      * @param player2 second entity to play
      * @returns same instance
      */
-    withTitle(player1: Entity, player2: Entity): GameBoardBuilder {
+    public withTitle(player1: Entity, player2: Entity): GameBoardBuilder {
         this.title =
             localize.__('game.title', {
                 player1: player1.displayName,
@@ -75,7 +81,7 @@ export default class GameBoardBuilder {
      * @param second emoji of the second entity
      * @returns same instance
      */
-    withEmojies(first: string, second: string): GameBoardBuilder {
+    public withEmojies(first: string, second: string): GameBoardBuilder {
         this.emojies[1] = first;
         this.emojies[2] = second;
         return this;
@@ -88,7 +94,7 @@ export default class GameBoardBuilder {
      * @param board game board data
      * @returns same instance
      */
-    withBoard(boardSize: number, board: Player[]): GameBoardBuilder {
+    public withBoard(boardSize: number, board: Player[]): GameBoardBuilder {
         this.boardSize = boardSize;
         this.boardData = board;
         return this;
@@ -100,7 +106,7 @@ export default class GameBoardBuilder {
      * @param entity entity whiches is playing. If undefined: display loading message
      * @returns same instance
      */
-    withEntityPlaying(entity?: Entity): GameBoardBuilder {
+    public withEntityPlaying(entity?: Entity): GameBoardBuilder {
         if (entity instanceof AI) {
             this.state = localize.__('game.waiting-ai');
         } else if (!entity) {
@@ -117,7 +123,7 @@ export default class GameBoardBuilder {
      * @param winner winning entity. If undefined: display tie message
      * @returns same instance
      */
-    withEndingMessage(winner?: Entity): GameBoardBuilder {
+    public withEndingMessage(winner?: Entity): GameBoardBuilder {
         if (winner) {
             this.state = localize.__('game.win', { player: winner.toString() });
         } else {
@@ -131,8 +137,18 @@ export default class GameBoardBuilder {
      *
      * @returns same instance
      */
-    withExpireMessage(): GameBoardBuilder {
+    public withExpireMessage(): GameBoardBuilder {
         this.state = localize.__('game.expire');
+        return this;
+    }
+
+    /**
+     * Should use an embed to display the game board.
+     *
+     * @returns same instance
+     */
+    public withEmbed(): GameBoardBuilder {
+        this.embed = true;
         return this;
     }
 
@@ -141,7 +157,7 @@ export default class GameBoardBuilder {
      *
      * @returns message options of the gameboard
      */
-    toMessageOptions(): MessageOptions {
+    public toMessageOptions(): MessageOptions {
         // Generate string representation of the board
         let board = '';
 
@@ -156,7 +172,8 @@ export default class GameBoardBuilder {
         const state = this.state && board ? '\n' + this.state : this.state;
         return {
             allowedMentions: { parse: ['users'] },
-            content: this.title + board + state,
+            embeds: this.embed ? [{ title: this.title, description: board + state }] : undefined,
+            content: !this.embed ? this.title + board + state : undefined,
             components: []
         };
     }

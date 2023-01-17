@@ -56,6 +56,7 @@ describe('GameBoard', () => {
             toMessageOptions: jest.fn(),
             withBoard: jest.fn().mockReturnThis(),
             withButtonsDisabledAfterUse: jest.fn().mockReturnThis(),
+            withEmbed: jest.fn().mockReturnThis(),
             withEmojies: jest.fn().mockReturnThis(),
             withEndingMessage: jest.fn().mockReturnThis(),
             withEntityPlaying: jest.fn().mockReturnThis(),
@@ -106,6 +107,12 @@ describe('GameBoard', () => {
             gameBoard.content;
             expect(mockedBuilder.withEmojies).toHaveBeenCalledTimes(1);
             expect(mockedBuilder.withEmojies).toHaveBeenCalledWith('1', '2');
+        });
+
+        it('should set embed in builder if embed is enabled', () => {
+            configuration.gameBoardEmbed = true;
+            gameBoard.content;
+            expect(mockedBuilder.withEmbed).toHaveBeenCalledTimes(1);
         });
 
         it.each`
@@ -196,6 +203,13 @@ describe('GameBoard', () => {
                 await gameBoard.attemptNextTurn();
                 expect(ai.operate).toHaveBeenCalledTimes(2);
                 expect(game.nextPlayer).toHaveBeenCalledTimes(1);
+            });
+
+            it('should end tunnel if game board has to be deleted', async () => {
+                configuration.gameBoardDelete = true;
+                jest.spyOn(ai, 'operate').mockReturnValue({ move: 5, score: 1 });
+                await gameBoard.attemptNextTurn();
+                expect(tunnel.end).toHaveBeenCalledTimes(1);
             });
         });
 

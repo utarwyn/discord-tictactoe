@@ -13,8 +13,9 @@
   "simultaneousGames": false,
   "aiDifficulty": "Medium",
   "gameExpireTime": 30,
-  "gameBoardReactions": false,
   "gameBoardDelete": false,
+  "gameBoardDisableButtons": false,
+  "gameBoardEmbed": false,
   "gameBoardEmojies": [],
-  "gameBoardDisableButtons": false
+  "gameBoardReactions": false
 }

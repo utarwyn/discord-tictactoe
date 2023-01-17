@@ -86,9 +86,7 @@ export default class GameBoard {
      * Creates or retrieves message of the gameboard.
      */
     public get content(): WebhookEditMessageOptions {
-        const builder = this.configuration.gameBoardReactions
-            ? new GameBoardBuilder()
-            : new GameBoardButtonBuilder();
+        const builder = this.createBuilder();
 
         builder
             .withTitle(this.entities[0], this.entities[1])
@@ -239,9 +237,8 @@ export default class GameBoard {
             const winner = this.getEntity(this.game.winner);
 
             if (this.configuration.gameBoardDelete) {
-                await this.tunnel.end(
-                    new GameBoardBuilder().withEndingMessage(winner).toMessageOptions()
-                );
+                const options = this.createBuilder().withEndingMessage(winner).toMessageOptions();
+                await this.tunnel.end(options);
             } else {
                 await this.tunnel.reply?.reactions?.removeAll();
                 await this.update(interaction);
@@ -260,8 +257,25 @@ export default class GameBoard {
      * @private
      */
     private async onExpire(): Promise<void> {
-        await this.tunnel.end(new GameBoardBuilder().withExpireMessage().toMessageOptions());
+        await this.tunnel.end(this.createBuilder().withExpireMessage().toMessageOptions());
         this.manager.endGame(this);
+    }
+
+    /**
+     * Creates a builder based on the game configuration.
+     *
+     * @returns game board builder
+     */
+    private createBuilder(): GameBoardBuilder {
+        const builder = this.configuration.gameBoardReactions
+            ? new GameBoardBuilder()
+            : new GameBoardButtonBuilder();
+
+        if (this.configuration.gameBoardEmbed) {
+            builder.withEmbed();
+        }
+
+        return builder;
     }
 
     /**

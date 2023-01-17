@@ -16,19 +16,23 @@ export default interface GameConfig {
      */
     gameExpireTime?: number;
     /**
-     * Interact with gameboard using reactions instead of buttons.
-     */
-    gameBoardReactions?: boolean;
-    /**
      * Should bot needs to delete the game board message.
      */
     gameBoardDelete?: boolean;
+    /**
+     * Should disable buttons after been used.
+     */
+    gameBoardDisableButtons?: boolean;
+    /**
+     * Should use an embed to display the game board.
+     */
+    gameBoardEmbed?: boolean;
     /**
      * List of emojies used to identify players.
      */
     gameBoardEmojies?: string[];
     /**
-     * Should disable buttons after been used.
+     * Interact with game board using reactions instead of buttons.
      */
-    gameBoardDisableButtons?: boolean;
+    gameBoardReactions?: boolean;
 }

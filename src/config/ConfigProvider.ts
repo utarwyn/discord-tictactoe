@@ -27,10 +27,11 @@ export default class ConfigProvider implements Config {
 
     public aiDifficulty: AIDifficulty = 'Medium';
     public gameExpireTime = 30;
-    public gameBoardReactions = false;
     public gameBoardDelete = false;
-    public gameBoardEmojies = [];
     public gameBoardDisableButtons = false;
+    public gameBoardEmbed = false;
+    public gameBoardEmojies = [];
+    public gameBoardReactions = false;
 
     [key: string]: any;
 
