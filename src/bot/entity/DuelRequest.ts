@@ -1,7 +1,7 @@
 import ComponentInteractionMessagingTunnel from '@bot/messaging/ComponentInteractionMessagingTunnel';
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
-import { EmbedColor } from '@config/InteractionConfig';
+import { EmbedColor } from '@config/types';
 import localize from '@i18n/localize';
 import {
     Collection,

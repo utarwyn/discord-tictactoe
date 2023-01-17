@@ -83,8 +83,10 @@ describe('GameBoardBuilder', () => {
     });
 
     it('should use an embed if configured to use it', () => {
-        const options = builder.withEmbed().toMessageOptions();
+        const color = '#ff0000';
+        const options = builder.withEmbed(color).toMessageOptions();
         expect(options.content).toBeUndefined();
         expect(options.embeds).toHaveLength(1);
+        expect(options.embeds![0].color).toBe(color);
     });
 });

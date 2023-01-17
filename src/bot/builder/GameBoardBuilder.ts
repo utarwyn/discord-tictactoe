@@ -1,3 +1,4 @@
+import { EmbedColor } from '@config/types';
 import localize from '@i18n/localize';
 import AI from '@tictactoe/ai/AI';
 import Entity from '@tictactoe/Entity';
@@ -42,10 +43,10 @@ export default class GameBoardBuilder {
      */
     protected boardData: Player[];
     /**
-     * Should enable embed to display the game board.
+     * Stores embed color if enabled, undefined otherwise.
      * @private
      */
-    protected embed: boolean;
+    protected embedColor?: EmbedColor;
 
     /**
      * Constructs a new game board builder.
@@ -55,7 +56,6 @@ export default class GameBoardBuilder {
         this.state = '';
         this.boardSize = 0;
         this.boardData = [];
-        this.embed = false;
     }
 
     /**
@@ -145,10 +145,11 @@ export default class GameBoardBuilder {
     /**
      * Should use an embed to display the game board.
      *
+     * @param embedColor color of the embed
      * @returns same instance
      */
-    public withEmbed(): GameBoardBuilder {
-        this.embed = true;
+    public withEmbed(embedColor: EmbedColor): GameBoardBuilder {
+        this.embedColor = embedColor;
         return this;
     }
 
@@ -172,8 +173,10 @@ export default class GameBoardBuilder {
         const state = this.state && board ? '\n' + this.state : this.state;
         return {
             allowedMentions: { parse: ['users'] },
-            embeds: this.embed ? [{ title: this.title, description: board + state }] : undefined,
-            content: !this.embed ? this.title + board + state : undefined,
+            embeds: this.embedColor
+                ? [{ title: this.title, description: board + state, color: this.embedColor }]
+                : undefined,
+            content: !this.embedColor ? this.title + board + state : undefined,
             components: []
         };
     }

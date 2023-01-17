@@ -115,6 +115,14 @@ describe('GameBoard', () => {
             expect(mockedBuilder.withEmbed).toHaveBeenCalledTimes(1);
         });
 
+        it('should use custom embed color in builder if provided', () => {
+            configuration.embedColor = '#0000ff';
+            configuration.gameBoardEmbed = true;
+            gameBoard.content;
+            expect(mockedBuilder.withEmbed).toHaveBeenCalledTimes(1);
+            expect(mockedBuilder.withEmbed).toHaveBeenCalledWith(configuration.embedColor);
+        });
+
         it.each`
             gameBoardDisableButtons | gameBoardReactions | calledTimes | description
             ${false}                | ${true}            | ${0}        | ${'enable'}

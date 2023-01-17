@@ -1,5 +1,5 @@
 import Config from '@config/Config';
-import { AIDifficulty } from '@config/GameConfig';
+import { AIDifficulty } from '@config/types';
 import fs from 'fs';
 import path from 'path';
 
@@ -20,7 +20,7 @@ export default class ConfigProvider implements Config {
 
     public allowedChannelIds = [];
     public allowedRoleIds = [];
-    public requestEmbedColor = 2719929;
+    public embedColor = 2719929;
     public requestExpireTime = 60;
     public requestCooldownTime = 0;
     public simultaneousGames = false;

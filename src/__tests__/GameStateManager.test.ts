@@ -5,6 +5,7 @@ import GameStateManager from '@bot/state/GameStateManager';
 import GameStateValidator from '@bot/state/GameStateValidator';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import AI from '@tictactoe/ai/AI';
+import { AIDifficultyLevel } from '@tictactoe/ai/AIDifficultyLevel';
 import Entity from '@tictactoe/Entity';
 import { GuildMember } from 'discord.js';
 
@@ -104,16 +105,27 @@ describe('GameStateManager', () => {
             expect(spyReplyWith).toHaveBeenCalledTimes(1);
         });
 
-        it('should create a game board with AI if no invited member', async () => {
-            await manager.createGame(tunnel);
+        describe('Using AI if there is no invited member', () => {
+            it('should create using default difficulty', async () => {
+                const spyCreateAI = jest.mocked(AI);
+                await manager.createGame(tunnel);
 
-            expect(gameBoard).toHaveBeenCalledTimes(1);
-            expect(gameBoard).toHaveBeenCalledWith(
-                manager,
-                tunnel,
-                expect.any(AI),
-                expect.anything()
-            );
+                expect(spyCreateAI).toHaveBeenCalledWith(undefined);
+                expect(gameBoard).toHaveBeenCalledTimes(1);
+                expect(gameBoard).toHaveBeenCalledWith(
+                    manager,
+                    tunnel,
+                    expect.any(AI),
+                    expect.anything()
+                );
+            });
+
+            it('should create using custom difficulty', async () => {
+                const spyCreateAI = jest.mocked(AI);
+                bot.configuration.aiDifficulty = 'Unbeatable';
+                await manager.createGame(tunnel);
+                expect(spyCreateAI).toHaveBeenCalledWith(AIDifficultyLevel.Unbeatable);
+            });
         });
     });
 

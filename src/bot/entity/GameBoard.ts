@@ -272,7 +272,7 @@ export default class GameBoard {
             : new GameBoardButtonBuilder();
 
         if (this.configuration.gameBoardEmbed) {
-            builder.withEmbed();
+            builder.withEmbed(this.configuration.embedColor ?? 2719929);
         }
 
         return builder;
