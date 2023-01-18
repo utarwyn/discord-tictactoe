@@ -1,8 +1,9 @@
+import { EmbedColor } from '@config/types';
 import localize from '@i18n/localize';
 import AI from '@tictactoe/ai/AI';
 import Entity from '@tictactoe/Entity';
 import { Player } from '@tictactoe/Player';
-import { MessageCreateOptions } from 'discord.js';
+import { APIEmbed, MessageCreateOptions, resolveColor } from 'discord.js';
 
 /**
  * Builds representation of a game board using text emojis
@@ -41,6 +42,11 @@ export default class GameBoardBuilder {
      * @protected
      */
     protected boardData: Player[];
+    /**
+     * Stores embed color if enabled, undefined otherwise.
+     * @private
+     */
+    protected embedColor?: EmbedColor;
 
     /**
      * Constructs a new game board builder.
@@ -59,7 +65,7 @@ export default class GameBoardBuilder {
      * @param player2 second entity to play
      * @returns same instance
      */
-    withTitle(player1: Entity, player2: Entity): GameBoardBuilder {
+    public withTitle(player1: Entity, player2: Entity): GameBoardBuilder {
         this.title =
             localize.__('game.title', {
                 player1: player1.displayName,
@@ -75,7 +81,7 @@ export default class GameBoardBuilder {
      * @param second emoji of the second entity
      * @returns same instance
      */
-    withEmojies(first: string, second: string): GameBoardBuilder {
+    public withEmojies(first: string, second: string): GameBoardBuilder {
         this.emojies[1] = first;
         this.emojies[2] = second;
         return this;
@@ -88,7 +94,7 @@ export default class GameBoardBuilder {
      * @param board game board data
      * @returns same instance
      */
-    withBoard(boardSize: number, board: Player[]): GameBoardBuilder {
+    public withBoard(boardSize: number, board: Player[]): GameBoardBuilder {
         this.boardSize = boardSize;
         this.boardData = board;
         return this;
@@ -100,7 +106,7 @@ export default class GameBoardBuilder {
      * @param entity entity whiches is playing. If undefined: display loading message
      * @returns same instance
      */
-    withEntityPlaying(entity?: Entity): GameBoardBuilder {
+    public withEntityPlaying(entity?: Entity): GameBoardBuilder {
         if (entity instanceof AI) {
             this.state = localize.__('game.waiting-ai');
         } else if (!entity) {
@@ -117,7 +123,7 @@ export default class GameBoardBuilder {
      * @param winner winning entity. If undefined: display tie message
      * @returns same instance
      */
-    withEndingMessage(winner?: Entity): GameBoardBuilder {
+    public withEndingMessage(winner?: Entity): GameBoardBuilder {
         if (winner) {
             this.state = localize.__('game.win', { player: winner.toString() });
         } else {
@@ -127,11 +133,32 @@ export default class GameBoardBuilder {
     }
 
     /**
+     * Writes expiration state of the game.
+     *
+     * @returns same instance
+     */
+    public withExpireMessage(): GameBoardBuilder {
+        this.state = localize.__('game.expire');
+        return this;
+    }
+
+    /**
+     * Should use an embed to display the game board.
+     *
+     * @param embedColor color of the embed
+     * @returns same instance
+     */
+    public withEmbed(embedColor: EmbedColor): GameBoardBuilder {
+        this.embedColor = embedColor;
+        return this;
+    }
+
+    /**
      * Constructs final representation of the game board.
      *
      * @returns message options of the gameboard
      */
-    toMessageOptions(): MessageCreateOptions {
+    public toMessageOptions(): MessageCreateOptions {
         // Generate string representation of the board
         let board = '';
 
@@ -144,9 +171,21 @@ export default class GameBoardBuilder {
 
         // Generate final string
         const state = this.state && board ? '\n' + this.state : this.state;
+
+        // Use an embed if enabled
+        let embed: APIEmbed | null = null;
+        if (this.embedColor) {
+            embed = {
+                title: this.title,
+                description: board + state,
+                color: resolveColor(this.embedColor)
+            };
+        }
+
         return {
             allowedMentions: { parse: ['users'] },
-            content: this.title + board + state,
+            embeds: embed !== null ? [embed] : undefined,
+            content: embed === null ? this.title + board + state : undefined,
             components: []
         };
     }

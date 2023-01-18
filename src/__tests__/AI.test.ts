@@ -9,6 +9,10 @@ jest.mock('@i18n/localize');
 describe('AI', () => {
     let ai: AI;
 
+    beforeAll(() => {
+        jest.spyOn(localize, '__').mockImplementation(t => t);
+    });
+
     it('should compute display name', () => {
         jest.spyOn(localize, '__').mockReturnValue('Awesome AI');
         expect(new AI().toString()).toBe('Awesome AI');

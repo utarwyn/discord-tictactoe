@@ -89,4 +89,12 @@ describe('GameBoardButtonBuilder', () => {
         expect(components[1].toJSON().components[0].disabled).toBeTruthy();
         expect(components[1].toJSON().components[1].disabled).toBeTruthy();
     });
+
+    it('should use an embed if configured to use it', () => {
+        const color = 16711680;
+        const options = builder.withEmbed(color).toMessageOptions();
+        expect(options.content).toBeUndefined();
+        expect(options.embeds).toHaveLength(1);
+        expect((options.embeds![0] as any).color).toBe(color);
+    });
 });

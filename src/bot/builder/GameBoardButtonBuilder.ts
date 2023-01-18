@@ -1,7 +1,14 @@
 import GameBoardBuilder from '@bot/builder/GameBoardBuilder';
 import Entity from '@tictactoe/Entity';
 import { Player } from '@tictactoe/Player';
-import { ActionRowBuilder, BaseMessageOptions, ButtonBuilder, ButtonStyle } from 'discord.js';
+import {
+    ActionRowBuilder,
+    APIEmbed,
+    BaseMessageOptions,
+    ButtonBuilder,
+    ButtonStyle,
+    resolveColor
+} from 'discord.js';
 
 /**
  * Builds representation of a game board using buttons
@@ -87,8 +94,19 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @override
      */
     override toMessageOptions(): BaseMessageOptions {
+        // Use an embed if enabled
+        let embed: APIEmbed | null = null;
+        if (this.embedColor) {
+            embed = {
+                title: this.title,
+                description: this.state,
+                color: resolveColor(this.embedColor)
+            };
+        }
+
         return {
-            content: this.title + this.state,
+            embeds: embed !== null ? [embed] : undefined,
+            content: embed === null ? this.title + this.state : undefined,
             components: [...Array(this.boardSize).keys()].map(row =>
                 new ActionRowBuilder<ButtonBuilder>().addComponents(
                     [...Array(this.boardSize).keys()].map(col => this.createButton(row, col))

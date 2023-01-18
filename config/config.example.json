@@ -6,15 +6,16 @@
   "textCommand": "!ttt",
   "allowedChannelIds": [],
   "allowedRoleIds": [],
+  "embedColor": "#2980B9",
   "requestCooldownTime": 0,
-  "requestEmbedColor": "#2980B9",
   "requestExpireTime": 60,
   "requestReactions": false,
   "simultaneousGames": false,
   "aiDifficulty": "Medium",
   "gameExpireTime": 30,
-  "gameBoardReactions": false,
   "gameBoardDelete": false,
+  "gameBoardDisableButtons": false,
+  "gameBoardEmbed": false,
   "gameBoardEmojies": [],
-  "gameBoardDisableButtons": false
+  "gameBoardReactions": false
 }

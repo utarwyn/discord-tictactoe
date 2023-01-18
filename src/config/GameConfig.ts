@@ -1,4 +1,4 @@
-export type AIDifficulty = 'Easy' | 'Medium' | 'Hard' | 'Unbeatable';
+import { AIDifficulty, EmbedColor } from '@config/types';
 
 /**
  * Configuration values to handle a game as wanted.
@@ -12,23 +12,31 @@ export default interface GameConfig {
      */
     aiDifficulty?: AIDifficulty;
     /**
+     * Color used for the gameboard embed if enabled.
+     */
+    embedColor?: EmbedColor;
+    /**
      * Expiration time of a player turn.
      */
     gameExpireTime?: number;
-    /**
-     * Interact with gameboard using reactions instead of buttons.
-     */
-    gameBoardReactions?: boolean;
     /**
      * Should bot needs to delete the game board message.
      */
     gameBoardDelete?: boolean;
     /**
+     * Should disable buttons after been used.
+     */
+    gameBoardDisableButtons?: boolean;
+    /**
+     * Should use an embed to display the game board.
+     */
+    gameBoardEmbed?: boolean;
+    /**
      * List of emojies used to identify players.
      */
     gameBoardEmojies?: string[];
     /**
-     * Should disable buttons after been used.
+     * Interact with game board using reactions instead of buttons.
      */
-    gameBoardDisableButtons?: boolean;
+    gameBoardReactions?: boolean;
 }

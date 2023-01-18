@@ -1,4 +1,4 @@
-export type EmbedColor = number | [number, number, number] | `#${string}`;
+import { EmbedColor } from '@config/types';
 
 /**
  * Configuration about user interaction with the module.
@@ -16,13 +16,13 @@ export default interface InteractionConfig {
      */
     allowedRoleIds?: string[];
     /**
+     * Color used for the duel request embed.
+     */
+    embedColor?: EmbedColor;
+    /**
      * Cooldown time of a duel request.
      */
     requestCooldownTime?: number;
-    /**
-     * Color used for the duel request embed.
-     */
-    requestEmbedColor?: EmbedColor;
     /**
      * Expiration time of a duel request.
      */
