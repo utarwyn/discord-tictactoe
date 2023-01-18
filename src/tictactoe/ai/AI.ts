@@ -40,7 +40,7 @@ export default class AI implements Entity {
      *
      * @param difficultyLevel difficulty level of the AI
      */
-    constructor(difficultyLevel = AIDifficultyLevel.Medium) {
+    constructor(difficultyLevel = AIDifficultyLevel.Unbeatable) {
         this.randomRate = AI.DIFFICULTY_RANDOM_RATES[difficultyLevel];
     }
 
