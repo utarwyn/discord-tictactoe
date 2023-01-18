@@ -79,11 +79,11 @@ export default class GameBoardBuilder {
      *
      * @param first emoji of the first entity
      * @param second emoji of the second entity
+     * @param none emoji used for an empty cell
      * @returns same instance
      */
-    public withEmojies(first: string, second: string): GameBoardBuilder {
-        this.emojies[1] = first;
-        this.emojies[2] = second;
+    public withEmojies(first: string, second: string, none?: string): GameBoardBuilder {
+        this.emojies = [none ?? this.emojies[0], first, second];
         return this;
     }
 

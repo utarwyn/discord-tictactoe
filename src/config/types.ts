@@ -1,5 +1,5 @@
 /**
- * Difficulty level of the AI. Default is "Medium".
+ * Difficulty level of the AI. Default is "Unbeatable".
  */
 export type AIDifficulty = 'Easy' | 'Medium' | 'Hard' | 'Unbeatable';
 

@@ -11,7 +11,7 @@
   "requestExpireTime": 60,
   "requestReactions": false,
   "simultaneousGames": false,
-  "aiDifficulty": "Medium",
+  "aiDifficulty": "Unbeatable",
   "gameExpireTime": 30,
   "gameBoardDelete": false,
   "gameBoardDisableButtons": false,

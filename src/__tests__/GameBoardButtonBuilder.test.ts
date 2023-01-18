@@ -37,18 +37,32 @@ describe('GameBoardButtonBuilder', () => {
         expect(components[1].toJSON().components[1].label).toBe('O');
     });
 
-    it('should compute board using custom emojies', () => {
+    it('should compute board using two custom emojies', () => {
         const options = builder
             .withEmojies(':dog:', ':cat:')
-            .withBoard(2, [Player.First, Player.Second, Player.Second, Player.First])
+            .withBoard(2, [Player.First, Player.Second, Player.None, Player.First])
             .toMessageOptions();
 
         const components = <ActionRow<ButtonComponent>[]>options.components;
 
         expect(components[0].toJSON().components[0].emoji?.name).toBe('dog');
         expect(components[0].toJSON().components[1].emoji?.name).toBe('cat');
-        expect(components[1].toJSON().components[0].emoji?.name).toBe('cat');
+        expect(components[1].toJSON().components[0].emoji?.name).toBeUndefined();
         expect(components[1].toJSON().components[1].emoji?.name).toBe('dog');
+    });
+
+    it('should compute board using three custom emojies', () => {
+        const options = builder
+            .withEmojies(':dog:', ':cat:', ':square:')
+            .withBoard(2, [Player.First, Player.None, Player.Second, Player.None])
+            .toMessageOptions();
+
+        const components = <ActionRow<ButtonComponent>[]>options.components;
+
+        expect(components[0].toJSON().components[0].emoji?.name).toBe('dog');
+        expect(components[0].toJSON().components[1].emoji?.name).toBe('square');
+        expect(components[1].toJSON().components[0].emoji?.name).toBe('cat');
+        expect(components[1].toJSON().components[1].emoji?.name).toBe('square');
     });
 
     it.each`

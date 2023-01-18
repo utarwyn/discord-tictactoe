@@ -22,7 +22,7 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * Default labels used on buttons if emojies are not enabled.
      * @protected
      */
-    private buttonLabels = ['X', 'O'];
+    private buttonLabels = [' ', 'X', 'O'];
     /**
      * Button styles used for representing the two players.
      * @private
@@ -37,6 +37,11 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @private
      */
     private customEmojies = false;
+    /**
+     * Stores if idle emoji has been customized too.
+     * @private
+     */
+    private customIdleEmoji = false;
     /**
      * Should disable buttons after been used.
      * @private
@@ -84,9 +89,10 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @inheritdoc
      * @override
      */
-    override withEmojies(first: string, second: string): GameBoardBuilder {
+    override withEmojies(first: string, second: string, none?: string): GameBoardBuilder {
         this.customEmojies = true;
-        return super.withEmojies(first, second);
+        this.customIdleEmoji = none != null;
+        return super.withEmojies(first, second, none);
     }
 
     /**
@@ -126,23 +132,16 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
         const button = new ButtonBuilder();
         const buttonIndex = row * this.boardSize + col;
         const buttonData = this.boardData[buttonIndex];
+        const buttonOwned = buttonData !== Player.None;
 
-        if (buttonData !== Player.None) {
-            if (this.customEmojies) {
-                button.setEmoji(this.emojies[buttonData]);
-            } else {
-                button.setLabel(this.buttonLabels[buttonData - 1]);
-            }
-
-            if (this.disableButtonsAfterUsed) {
-                button.setDisabled(true);
-            }
+        if ((buttonOwned && this.customEmojies) || (!buttonOwned && this.customIdleEmoji)) {
+            button.setEmoji(this.emojies[buttonData]);
         } else {
-            button.setLabel(' ');
+            button.setLabel(this.buttonLabels[buttonData]);
+        }
 
-            if (this.gameEnded && this.disableButtonsAfterUsed) {
-                button.setDisabled(true);
-            }
+        if ((buttonOwned || this.gameEnded) && this.disableButtonsAfterUsed) {
+            button.setDisabled(true);
         }
 
         return button.setCustomId(buttonIndex.toString()).setStyle(this.buttonStyles[buttonData]);

@@ -25,7 +25,7 @@ export default class ConfigProvider implements Config {
     public requestCooldownTime = 0;
     public simultaneousGames = false;
 
-    public aiDifficulty: AIDifficulty = 'Medium';
+    public aiDifficulty: AIDifficulty = 'Unbeatable';
     public gameExpireTime = 30;
     public gameBoardDelete = false;
     public gameBoardDisableButtons = false;
