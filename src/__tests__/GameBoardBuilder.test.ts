@@ -37,13 +37,23 @@ describe('GameBoardBuilder', () => {
         });
     });
 
-    it('should compute board using custom emojies', () => {
+    it('should compute board using two custom emojies', () => {
         builder
             .withEmojies(':dog:', ':cat:')
-            .withBoard(2, [Player.First, Player.Second, Player.Second, Player.First]);
+            .withBoard(2, [Player.First, Player.None, Player.Second, Player.First]);
 
         expect(builder.toMessageOptions()).toEqual(
-            expect.objectContaining({ content: ':dog: :cat: \n:cat: :dog: \n' })
+            expect.objectContaining({ content: ':dog: ⬜ \n:cat: :dog: \n' })
+        );
+    });
+
+    it('should compute board using three custom emojies', () => {
+        builder
+            .withEmojies(':dog:', ':cat:', ':square:')
+            .withBoard(2, [Player.First, Player.None, Player.None, Player.Second]);
+
+        expect(builder.toMessageOptions()).toEqual(
+            expect.objectContaining({ content: ':dog: :square: \n:square: :cat: \n' })
         );
     });
 

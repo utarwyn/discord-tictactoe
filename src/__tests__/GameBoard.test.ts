@@ -103,10 +103,16 @@ describe('GameBoard', () => {
         });
 
         it('should use custom emojies from the configuration if provided', () => {
-            configuration.gameBoardEmojies = ['1', '2'];
+            configuration.gameBoardEmojies = ['1', '2', '3'];
             gameBoard.content;
             expect(mockedBuilder.withEmojies).toHaveBeenCalledTimes(1);
-            expect(mockedBuilder.withEmojies).toHaveBeenCalledWith('1', '2');
+            expect(mockedBuilder.withEmojies).toHaveBeenCalledWith('1', '2', '3');
+        });
+
+        it('should not use custom emojies if configuration is invalid', () => {
+            configuration.gameBoardEmojies = ['1'];
+            gameBoard.content;
+            expect(mockedBuilder.withEmojies).toHaveBeenCalledTimes(0);
         });
 
         it('should set embed in builder if embed is enabled', () => {

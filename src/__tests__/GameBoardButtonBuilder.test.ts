@@ -35,16 +35,28 @@ describe('GameBoardButtonBuilder', () => {
         expect((options.components![1].components[1] as MessageButton).label).toBe('O');
     });
 
-    it('should compute board using custom emojies', () => {
+    it('should compute board using two custom emojies', () => {
         const options = builder
             .withEmojies(':dog:', ':cat:')
-            .withBoard(2, [Player.First, Player.Second, Player.Second, Player.First])
+            .withBoard(2, [Player.First, Player.Second, Player.None, Player.First])
             .toMessageOptions();
 
         expect((options.components![0].components[0] as MessageButton).emoji?.name).toBe('dog');
         expect((options.components![0].components[1] as MessageButton).emoji?.name).toBe('cat');
-        expect((options.components![1].components[0] as MessageButton).emoji?.name).toBe('cat');
+        expect((options.components![1].components[0] as MessageButton).emoji?.name).toBeUndefined();
         expect((options.components![1].components[1] as MessageButton).emoji?.name).toBe('dog');
+    });
+
+    it('should compute board using three custom emojies', () => {
+        const options = builder
+            .withEmojies(':dog:', ':cat:', ':square:')
+            .withBoard(2, [Player.First, Player.None, Player.Second, Player.None])
+            .toMessageOptions();
+
+        expect((options.components![0].components[0] as MessageButton).emoji?.name).toBe('dog');
+        expect((options.components![0].components[1] as MessageButton).emoji?.name).toBe('square');
+        expect((options.components![1].components[0] as MessageButton).emoji?.name).toBe('cat');
+        expect((options.components![1].components[1] as MessageButton).emoji?.name).toBe('square');
     });
 
     it.each`

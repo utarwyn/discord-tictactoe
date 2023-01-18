@@ -100,8 +100,8 @@ export default class GameBoard {
         }
 
         const emojies = this.configuration.gameBoardEmojies;
-        if (emojies && emojies.length === 2) {
-            builder.withEmojies(emojies[0], emojies[1]);
+        if (emojies && [2, 3].includes(emojies.length)) {
+            builder.withEmojies(emojies[0], emojies[1], emojies[2]);
         }
 
         if (
