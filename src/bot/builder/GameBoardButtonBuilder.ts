@@ -20,7 +20,7 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * Default labels used on buttons if emojies are not enabled.
      * @protected
      */
-    private buttonLabels = [' ', 'X', 'O'];
+    private buttonLabels = ['-', 'X', 'O'];
     /**
      * Button styles used for representing the two players.
      * @private

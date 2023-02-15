@@ -30,8 +30,8 @@ describe('GameBoardButtonBuilder', () => {
         expect(options.components![0].components).toHaveLength(2);
         expect(options.components![1].components).toHaveLength(2);
         expect((options.components![0].components[0] as MessageButton).label).toBe('X');
-        expect((options.components![0].components[1] as MessageButton).label).toBe(' ');
-        expect((options.components![1].components[0] as MessageButton).label).toBe(' ');
+        expect((options.components![0].components[1] as MessageButton).label).toBe('-');
+        expect((options.components![1].components[0] as MessageButton).label).toBe('-');
         expect((options.components![1].components[1] as MessageButton).label).toBe('O');
     });
 
