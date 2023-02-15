@@ -175,7 +175,7 @@ export default class GameBoardBuilder {
             allowedMentions: { parse: ['users'] },
             embeds: this.embedColor
                 ? [{ title: this.title, description: board + state, color: this.embedColor }]
-                : undefined,
+                : [],
             content: !this.embedColor ? this.title + board + state : undefined,
             components: []
         };

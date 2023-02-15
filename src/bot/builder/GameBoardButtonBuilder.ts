@@ -97,7 +97,7 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
         return {
             embeds: this.embedColor
                 ? [{ title: this.title, description: this.state, color: this.embedColor }]
-                : undefined,
+                : [],
             content: !this.embedColor ? this.title + this.state : undefined,
             components: [...Array(this.boardSize).keys()].map(row =>
                 new MessageActionRow().addComponents(
