@@ -18,7 +18,7 @@ describe('GameBoardButtonBuilder', () => {
     });
 
     it('should send empty message by default', () => {
-        expect(builder.toMessageOptions()).toEqual({ content: '', components: [] });
+        expect(builder.toMessageOptions()).toEqual({ content: '', components: [], embeds: [] });
     });
 
     it('should compute board components', () => {
@@ -32,8 +32,8 @@ describe('GameBoardButtonBuilder', () => {
         expect(components[0].toJSON().components).toHaveLength(2);
         expect(components[1].toJSON().components).toHaveLength(2);
         expect(components[0].toJSON().components[0].label).toBe('X');
-        expect(components[0].toJSON().components[1].label).toBe(' ');
-        expect(components[1].toJSON().components[0].label).toBe(' ');
+        expect(components[0].toJSON().components[1].label).toBe('-');
+        expect(components[1].toJSON().components[0].label).toBe('-');
         expect(components[1].toJSON().components[1].label).toBe('O');
     });
 
@@ -72,7 +72,7 @@ describe('GameBoardButtonBuilder', () => {
         ${{ toString: () => 'fake' }} | ${'fake, select your move:'}
     `('should set state based if playing entity is $entity', ({ entity, state }) => {
         builder.withEntityPlaying(entity);
-        expect(builder.toMessageOptions()).toEqual({ content: state, components: [] });
+        expect(builder.toMessageOptions()).toEqual({ content: state, components: [], embeds: [] });
     });
 
     it('should compute board using disabled buttons after been used', () => {

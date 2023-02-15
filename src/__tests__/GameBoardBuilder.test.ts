@@ -21,7 +21,8 @@ describe('GameBoardBuilder', () => {
         expect(builder.toMessageOptions()).toEqual({
             allowedMentions: { parse: ['users'] },
             content: '',
-            components: []
+            components: [],
+            embeds: []
         });
     });
 
@@ -88,7 +89,7 @@ describe('GameBoardBuilder', () => {
     it('should set state based if game has expired', () => {
         builder.withExpireMessage();
         expect(builder.toMessageOptions()).toEqual(
-            expect.objectContaining({ content: 'game.expire', embeds: undefined })
+            expect.objectContaining({ content: 'game.expire', embeds: [] })
         );
     });
 

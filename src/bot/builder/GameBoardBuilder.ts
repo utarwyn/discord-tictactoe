@@ -184,7 +184,7 @@ export default class GameBoardBuilder {
 
         return {
             allowedMentions: { parse: ['users'] },
-            embeds: embed !== null ? [embed] : undefined,
+            embeds: embed !== null ? [embed] : [],
             content: embed === null ? this.title + board + state : undefined,
             components: []
         };

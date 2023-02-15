@@ -3,7 +3,7 @@ import GameCommand from '@bot/command/GameCommand';
 import EventHandler from '@bot/EventHandler';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import Config from '@config/Config';
-import { ChatInputCommandInteraction, Client, CommandInteraction, Message } from 'discord.js';
+import { ChatInputCommandInteraction, Client, Message } from 'discord.js';
 
 jest.mock('@bot/command/AppCommandRegister');
 jest.mock('@bot/command/GameCommand');
