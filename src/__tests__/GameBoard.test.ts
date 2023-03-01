@@ -225,6 +225,22 @@ describe('GameBoard', () => {
                 await gameBoard.attemptNextTurn();
                 expect(tunnel.end).toHaveBeenCalledTimes(1);
             });
+
+            it.each`
+                gameBoardReactions | calledTimes | description
+                ${false}           | ${0}        | ${'not delete'}
+                ${true}            | ${1}        | ${'delete'}
+            `(
+                'should $description reactions at the end of the game if reactions are $gameBoardReactions',
+                async ({ gameBoardReactions, calledTimes }) => {
+                    configuration.gameBoardReactions = gameBoardReactions;
+                    const reply = { reactions: { removeAll: jest.fn() } as any } as Message;
+                    Object.assign(tunnel, { reply });
+                    jest.spyOn(ai, 'operate').mockReturnValue({ move: 5, score: 1 });
+                    await gameBoard.attemptNextTurn();
+                    expect(reply.reactions.removeAll).toHaveBeenCalledTimes(calledTimes);
+                }
+            );
         });
 
         describe('Human: wait for a reaction', () => {
