@@ -56,21 +56,33 @@ describe('GameStateValidator', () => {
     });
 
     it.each`
-        permissions                        | expected
-        ${[]}                              | ${false}
-        ${['ADD_REACTIONS']}               | ${false}
-        ${GameStateValidator['PERM_LIST']} | ${true}
+        permissions                                             | expected
+        ${[]}                                                   | ${false}
+        ${['AddReactions']}                                     | ${false}
+        ${GameStateValidator['PERM_LIST']}                      | ${false}
+        ${[...GameStateValidator['PERM_LIST'], 'AddReactions']} | ${true}
     `('should check for member permissions $permissions', ({ permissions, expected }) => {
         const spyError = jest.spyOn(global.console, 'error').mockImplementation();
-        jest.spyOn(tunnel.channel.guild.members.me!, 'permissionsIn').mockReturnValue(<
-            Readonly<PermissionsBitField>
-        >{
+        jest.spyOn(tunnel.channel.guild.members.me!, 'permissionsIn').mockReturnValue({
             has: list => (list as Array<PermissionsString>).every(k => permissions.includes(k))
-        });
+        } as Readonly<PermissionsBitField>);
+        manager.bot.configuration.gameBoardReactions = true;
 
         expect(validator.isInteractionValid(tunnel)).toBe(expected);
         expect(spyError).toHaveBeenCalledTimes(expected ? 0 : 1);
         spyError.mockRestore();
+    });
+
+    it('should not need AddReactions perm if do not use reactions', () => {
+        const hasPermissions = jest.fn();
+        jest.spyOn(tunnel.channel.guild.members.me!, 'permissionsIn').mockReturnValue({
+            has: hasPermissions
+        } as any);
+        manager.bot.configuration.gameBoardReactions = false;
+
+        validator.isInteractionValid(tunnel);
+        expect(hasPermissions).toHaveBeenCalledTimes(1);
+        expect(hasPermissions).toHaveBeenCalledWith(expect.not.arrayContaining(['AddReactions']));
     });
 
     it.each`

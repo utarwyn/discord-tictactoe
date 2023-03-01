@@ -243,7 +243,9 @@ export default class GameBoard {
                 const options = this.createBuilder().withEndingMessage(winner).toMessageOptions();
                 await this.tunnel.end(options);
             } else {
-                await this.tunnel.reply?.reactions?.removeAll();
+                if (this.configuration.gameBoardReactions) {
+                    await this.tunnel.reply?.reactions?.removeAll();
+                }
                 await this.update(interaction);
             }
 
