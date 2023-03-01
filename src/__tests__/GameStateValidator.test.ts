@@ -53,21 +53,33 @@ describe('GameStateValidator', () => {
     });
 
     it.each`
-        permissions                        | expected
-        ${[]}                              | ${false}
-        ${['ADD_REACTIONS']}               | ${false}
-        ${GameStateValidator['PERM_LIST']} | ${true}
+        permissions                                              | expected
+        ${[]}                                                    | ${false}
+        ${['ADD_REACTIONS']}                                     | ${false}
+        ${GameStateValidator['PERM_LIST']}                       | ${false}
+        ${[...GameStateValidator['PERM_LIST'], 'ADD_REACTIONS']} | ${true}
     `('should check for member permissions $permissions', ({ permissions, expected }) => {
         const spyError = jest.spyOn(global.console, 'error').mockImplementation();
-        jest.spyOn(tunnel.channel.guild.me!, 'permissionsIn').mockReturnValue(<
-            Readonly<Permissions>
-        >{
+        jest.spyOn(tunnel.channel.guild.me!, 'permissionsIn').mockReturnValue({
             has: list => (list as Array<PermissionString>).every(k => permissions.includes(k))
-        });
+        } as Readonly<Permissions>);
+        manager.bot.configuration.gameBoardReactions = true;
 
         expect(validator.isInteractionValid(tunnel)).toBe(expected);
         expect(spyError).toHaveBeenCalledTimes(expected ? 0 : 1);
         spyError.mockRestore();
+    });
+
+    it('should not need ADD_REACTION perm if do not use reactions', () => {
+        const hasPermissions = jest.fn();
+        jest.spyOn(tunnel.channel.guild.me!, 'permissionsIn').mockReturnValue({
+            has: hasPermissions
+        } as any);
+        manager.bot.configuration.gameBoardReactions = false;
+
+        validator.isInteractionValid(tunnel);
+        expect(hasPermissions).toHaveBeenCalledTimes(1);
+        expect(hasPermissions).toHaveBeenCalledWith(expect.not.arrayContaining(['ADD_REACTIONS']));
     });
 
     it.each`

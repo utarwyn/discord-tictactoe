@@ -1,6 +1,6 @@
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
-import InteractionConfig from '@config/InteractionConfig';
+import Config from '@config/Config';
 import { GuildMember, PermissionString } from 'discord.js';
 
 /**
@@ -16,11 +16,15 @@ export default class GameStateValidator {
      * @private
      */
     private static readonly PERM_LIST: PermissionString[] = [
-        'ADD_REACTIONS',
         'READ_MESSAGE_HISTORY',
         'SEND_MESSAGES',
         'VIEW_CHANNEL'
-    ]; // bot doesn't need manage message to delete its own message
+    ];
+    /**
+     * Permission that the bot needs to add reactions.
+     * @private
+     */
+    private static readonly PERM_ADD_REACTIONS: PermissionString = 'ADD_REACTIONS';
 
     /**
      * Stores configuration of the module.
@@ -40,7 +44,7 @@ export default class GameStateValidator {
     /**
      * Retrieves the module configuration.
      */
-    public get config(): InteractionConfig {
+    public get config(): Config {
         return this.manager.bot.configuration;
     }
 
@@ -109,11 +113,12 @@ export default class GameStateValidator {
      * @private
      */
     private hasPermissionsInChannel(tunnel: MessagingTunnel): boolean {
-        const allowed =
-            tunnel.channel.guild.me
-                ?.permissionsIn(tunnel.channel)
-                ?.has(GameStateValidator.PERM_LIST) ?? false;
+        const perms = [...GameStateValidator.PERM_LIST];
+        if (this.config.gameBoardReactions) {
+            perms.push(GameStateValidator.PERM_ADD_REACTIONS);
+        }
 
+        const allowed = tunnel.channel.guild.me?.permissionsIn(tunnel.channel)?.has(perms) ?? false;
         if (!allowed) {
             console.error(
                 `Cannot operate because of a lack of permissions in the channel #${tunnel.channel.name}`
