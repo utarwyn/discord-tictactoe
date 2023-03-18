@@ -13,7 +13,7 @@ import {
     Message,
     MessageReaction,
     Snowflake,
-    WebhookEditMessageOptions
+    WebhookMessageEditOptions
 } from 'discord.js';
 
 /**
@@ -86,7 +86,7 @@ export default class GameBoard {
     /**
      * Creates or retrieves message of the gameboard.
      */
-    public get content(): WebhookEditMessageOptions {
+    public get content(): WebhookMessageEditOptions {
         const builder = this.createBuilder();
 
         builder
