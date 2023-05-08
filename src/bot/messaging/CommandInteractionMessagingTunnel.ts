@@ -64,7 +64,7 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
     public async replyWith(answer: InteractionReplyOptions, direct?: boolean): Promise<Message> {
         // Fetch current reply if deferred externally and not register in this tunnel
         if (!this.reply && this.interaction.deferred) {
-            this._reply = (await this.interaction.fetchReply()) as Message;
+            this._reply = await this.interaction.fetchReply();
         }
 
         // Edit the reply if already exists
@@ -73,13 +73,13 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
             return this.reply;
         }
 
-        this._reply = (await this.interaction.reply({
+        this._reply = await this.interaction.reply({
             components: [],
             embeds: [],
             ...answer,
             ephemeral: direct,
             fetchReply: true
-        })) as Message;
+        });
 
         return this._reply;
     }

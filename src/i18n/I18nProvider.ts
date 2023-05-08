@@ -80,7 +80,7 @@ export class I18nProvider {
      * @returns translated message using replacements
      */
     __(key: string, replacements?: Replacements): string {
-        if (this.localeData && this.localeData[key]) {
+        if (this.localeData?.[key]) {
             let message = this.localeData[key];
 
             if (replacements) {

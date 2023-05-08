@@ -72,16 +72,16 @@ describe('TicTacToeBot', () => {
         });
     });
 
-    test('should call handleMessage from command', () => {
+    test('should call handleMessage from command', async () => {
         const message = { id: '123456' } as Message;
-        bot.handleMessage(message);
+        await bot.handleMessage(message);
         expect(gameCommand.handleMessage).toHaveBeenCalledTimes(1);
         expect(gameCommand.handleMessage).toHaveBeenCalledWith(message, true);
     });
 
-    test('should call handleInteraction from command', () => {
+    test('should call handleInteraction from command', async () => {
         const interaction = { id: '123456' } as ChatInputCommandInteraction;
-        bot.handleInteraction(interaction);
+        await bot.handleInteraction(interaction);
         expect(gameCommand.handleInteraction).toHaveBeenCalledTimes(1);
         expect(gameCommand.handleInteraction).toHaveBeenCalledWith(interaction, true);
     });

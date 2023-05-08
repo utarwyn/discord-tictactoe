@@ -105,16 +105,16 @@ describe('TicTacToe', () => {
         expect(bot.attachToClient).toHaveBeenCalledWith(client);
     });
 
-    test('should call handleMessage from bot', () => {
+    test('should call handleMessage from bot', async () => {
         const message = { id: 'message' } as Message;
-        tictactoe.handleMessage(message);
+        await tictactoe.handleMessage(message);
         expect(bot.handleMessage).toHaveBeenCalledTimes(1);
         expect(bot.handleMessage).toHaveBeenCalledWith(message);
     });
 
-    test('should call handleInteraction from bot', () => {
+    test('should call handleInteraction from bot', async () => {
         const interaction = { id: 'interaction' } as ChatInputCommandInteraction;
-        tictactoe.handleInteraction(interaction);
+        await tictactoe.handleInteraction(interaction);
         expect(bot.handleInteraction).toHaveBeenCalledTimes(1);
         expect(bot.handleInteraction).toHaveBeenCalledWith(interaction);
     });

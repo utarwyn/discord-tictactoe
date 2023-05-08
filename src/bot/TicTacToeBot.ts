@@ -92,8 +92,8 @@ export default class TicTacToeBot {
      * @param message Discord.js message object
      * @deprecated use chat command interaction instead
      */
-    public handleMessage(message: Message): void {
-        this.command.handleMessage(message, true);
+    public handleMessage(message: Message): Promise<void> {
+        return this.command.handleMessage(message, true);
     }
 
     /**
@@ -101,7 +101,7 @@ export default class TicTacToeBot {
      *
      * @param interaction Discord.js interaction object
      */
-    public handleInteraction(interaction: ChatInputCommandInteraction): void {
-        this.command.handleInteraction(interaction, true);
+    public async handleInteraction(interaction: ChatInputCommandInteraction): Promise<void> {
+        return this.command.handleInteraction(interaction, true);
     }
 }

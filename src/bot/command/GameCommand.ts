@@ -52,8 +52,8 @@ export default class GameCommand {
             const tunnel = new TextMessagingTunnel(message);
             const invited = message.mentions.members?.first();
 
-            return this.processInvitation(tunnel, message.member, invited).catch(error => {
-                tunnel.replyWith({ content: localize.__(error) }, true);
+            return this.processInvitation(tunnel, message.member, invited).catch(async error => {
+                await tunnel.replyWith({ content: localize.__(error) }, true);
             });
         }
     }
@@ -80,8 +80,8 @@ export default class GameCommand {
                 interaction.options.getMember(this.config.commandOptionName ?? 'opponent') ??
                 undefined;
 
-            return this.processInvitation(tunnel, member, mentionned).catch(error => {
-                tunnel.replyWith({ content: localize.__(error) }, true);
+            return this.processInvitation(tunnel, member, mentionned).catch(async error => {
+                await tunnel.replyWith({ content: localize.__(error) }, true);
             });
         }
     }

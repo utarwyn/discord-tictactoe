@@ -90,8 +90,8 @@ class TicTacToe {
      * @param message Discord.js message object
      * @deprecated use chat command interaction instead
      */
-    public handleMessage(message: Message): void {
-        this.bot.handleMessage(message);
+    public handleMessage(message: Message): Promise<void> {
+        return this.bot.handleMessage(message);
     }
 
     /**
@@ -99,8 +99,8 @@ class TicTacToe {
      *
      * @param interaction Discord.js interaction object
      */
-    public handleInteraction(interaction: ChatInputCommandInteraction): void {
-        this.bot.handleInteraction(interaction);
+    public handleInteraction(interaction: ChatInputCommandInteraction): Promise<void> {
+        return this.bot.handleInteraction(interaction);
     }
 
     /**

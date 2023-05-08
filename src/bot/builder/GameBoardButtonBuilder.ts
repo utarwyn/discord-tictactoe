@@ -58,7 +58,7 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      *
      * @returns same instance
      */
-    public withButtonsDisabledAfterUse(): GameBoardBuilder {
+    public withButtonsDisabledAfterUse(): this {
         this.disableButtonsAfterUsed = true;
         return this;
     }
@@ -67,7 +67,7 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @inheritdoc
      * @override
      */
-    override withEntityPlaying(entity?: Entity): GameBoardBuilder {
+    override withEntityPlaying(entity?: Entity): this {
         // Do not display state if game is loading
         if (entity) {
             return super.withEntityPlaying(entity);
@@ -80,7 +80,7 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @inheritdoc
      * @override
      */
-    override withEndingMessage(winner?: Entity): GameBoardBuilder {
+    override withEndingMessage(winner?: Entity): this {
         this.gameEnded = true;
         return super.withEndingMessage(winner);
     }
@@ -89,7 +89,7 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @inheritdoc
      * @override
      */
-    override withEmojies(first: string, second: string, none?: string): GameBoardBuilder {
+    override withEmojies(first: string, second: string, none?: string): this {
         this.customEmojies = true;
         this.customIdleEmoji = none != null;
         return super.withEmojies(first, second, none);
