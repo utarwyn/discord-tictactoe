@@ -21,7 +21,7 @@
     "typescript"
   ],
   "dependencies": {
-    "discord.js": "^13.10.2"
+    "discord.js": "^13.16.0"
   },
   "devDependencies": {
     "@types/jest": "^28.1.7",
