@@ -327,9 +327,19 @@ describe('GameBoard', () => {
                 expect(spyUpdate).toHaveBeenCalledTimes(1);
             });
 
-            it('should end game if an error occured', async () => {
+            it('should expire game and keep gameboard if an error occured', async () => {
+                configuration.gameBoardDelete = false;
                 await callCollectorEvent('end', null, 'expiration');
                 expect(game.updateBoard).toHaveBeenCalledTimes(0);
+                expect(tunnel.end).toHaveBeenCalledTimes(0);
+                expect(manager.endGame).toHaveBeenCalledTimes(1);
+            });
+
+            it('should expire game and delete gameboard if an error occured', async () => {
+                configuration.gameBoardDelete = true;
+                await callCollectorEvent('end', null, 'expiration');
+                expect(game.updateBoard).toHaveBeenCalledTimes(0);
+                expect(tunnel.end).toHaveBeenCalledTimes(1);
                 expect(manager.endGame).toHaveBeenCalledTimes(1);
             });
 
