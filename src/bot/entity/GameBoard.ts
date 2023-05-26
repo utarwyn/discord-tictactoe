@@ -52,6 +52,11 @@ export default class GameBoard {
      * @private
      */
     private reactionsLoaded: boolean;
+    /**
+     * Stores if the game has expired.
+     * @private
+     */
+    private expired: boolean;
 
     /**
      * Constructs a new game board message.
@@ -72,6 +77,7 @@ export default class GameBoard {
         this.game = new Game();
         this._entities = [tunnel.author, member2];
         this.reactionsLoaded = false;
+        this.expired = false;
         this.configuration = configuration;
     }
 
@@ -95,7 +101,9 @@ export default class GameBoard {
                 this.reactionsLoaded ? this.getEntity(this.game.currentPlayer) : undefined
             );
 
-        if (this.game.finished) {
+        if (this.expired) {
+            builder.withExpireMessage();
+        } else if (this.game.finished) {
             builder.withEndingMessage(this.getEntity(this.game.winner));
         }
 
@@ -234,19 +242,7 @@ export default class GameBoard {
         this.game.updateBoard(this.game.currentPlayer, move);
 
         if (this.game.finished) {
-            const winner = this.getEntity(this.game.winner);
-
-            if (this.configuration.gameBoardDelete) {
-                const options = this.createBuilder().withEndingMessage(winner).toMessageOptions();
-                await this.tunnel.end(options);
-            } else {
-                if (this.configuration.gameBoardReactions) {
-                    await this.tunnel.reply?.reactions?.removeAll();
-                }
-                await this.update(interaction);
-            }
-
-            this.manager.endGame(this, winner ?? null);
+            return this.end(this.getEntity(this.game.winner), interaction);
         } else {
             this.game.nextPlayer();
             await this.update(interaction);
@@ -259,14 +255,15 @@ export default class GameBoard {
      * @private
      */
     private async onExpire(): Promise<void> {
-        await this.tunnel.end(this.createBuilder().withExpireMessage().toMessageOptions());
-        this.manager.endGame(this);
+        this.expired = true;
+        return this.end();
     }
 
     /**
      * Creates a builder based on the game configuration.
      *
      * @returns game board builder
+     * @private
      */
     private createBuilder(): GameBoardBuilder {
         const builder = this.configuration.gameBoardReactions
@@ -278,6 +275,32 @@ export default class GameBoard {
         }
 
         return builder;
+    }
+
+    /**
+     * Sends the state and ends game attached to the message.
+     *
+     * @param winner winner of the game if the game is finished
+     * @param interaction interaction to update if action was triggered by it
+     * @private
+     */
+    private async end(winner?: Entity, interaction?: ButtonInteraction): Promise<void> {
+        if (this.configuration.gameBoardDelete) {
+            const builder = this.createBuilder();
+            if (this.expired) {
+                builder.withExpireMessage();
+            } else {
+                builder.withEndingMessage(winner);
+            }
+            await this.tunnel.end(builder.toMessageOptions());
+        } else {
+            if (this.configuration.gameBoardReactions) {
+                await this.tunnel.reply?.reactions?.removeAll();
+            }
+            await this.update(interaction);
+        }
+
+        this.manager.endGame(this, winner);
     }
 
     /**
