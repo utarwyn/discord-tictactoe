@@ -3,10 +3,10 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "target": "es6",
+    "target": "es2021",
     "strict": true,
     "outDir": "dist",
-    "lib": ["es2017"],
+    "lib": ["es2021"],
     "baseUrl": ".",
     "paths": {
       "@bot/*": ["src/bot/*"],
