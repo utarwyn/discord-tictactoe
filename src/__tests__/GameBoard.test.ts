@@ -220,6 +220,7 @@ describe('GameBoard', () => {
             });
 
             it('should end tunnel if game board has to be deleted', async () => {
+                Object.assign(game, { finished: true, winner: Player.First } as Game);
                 configuration.gameBoardDelete = true;
                 jest.spyOn(ai, 'operate').mockReturnValue({ move: 5, score: 1 });
                 await gameBoard.attemptNextTurn();

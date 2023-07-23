@@ -242,7 +242,7 @@ export default class GameBoard {
         this.game.updateBoard(this.game.currentPlayer, move);
 
         if (this.game.finished) {
-            return this.end(this.getEntity(this.game.winner), interaction);
+            return this.end(this.getEntity(this.game.winner) ?? null, interaction);
         } else {
             this.game.nextPlayer();
             await this.update(interaction);
@@ -284,12 +284,12 @@ export default class GameBoard {
      * @param interaction interaction to update if action was triggered by it
      * @private
      */
-    private async end(winner?: Entity, interaction?: ButtonInteraction): Promise<void> {
+    private async end(winner?: Entity | null, interaction?: ButtonInteraction): Promise<void> {
         if (this.configuration.gameBoardDelete) {
             const builder = this.createBuilder();
             if (this.expired) {
                 builder.withExpireMessage();
-            } else {
+            } else if (winner !== null) {
                 builder.withEndingMessage(winner);
             }
             await this.tunnel.end(builder.toMessageOptions());
