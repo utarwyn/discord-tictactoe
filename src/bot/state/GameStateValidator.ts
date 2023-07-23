@@ -118,7 +118,7 @@ export default class GameStateValidator {
             perms.push(GameStateValidator.PERM_ADD_REACTIONS);
         }
 
-        const allowed = tunnel.channel.guild.me?.permissionsIn(tunnel.channel)?.has(perms) ?? false;
+        const allowed = tunnel.channel.guild.members.me?.permissionsIn(tunnel.channel)?.has(perms) ?? false;
         if (!allowed) {
             console.error(
                 `Cannot operate because of a lack of permissions in the channel #${tunnel.channel.name}`
