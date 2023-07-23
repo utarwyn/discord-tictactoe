@@ -289,8 +289,8 @@ export default class GameBoard {
             const builder = this.createBuilder();
             if (this.expired) {
                 builder.withExpireMessage();
-            } else if (winner !== null) {
-                builder.withEndingMessage(winner);
+            } else {
+                builder.withEndingMessage(winner ?? undefined);
             }
             await this.tunnel.end(builder.toMessageOptions());
         } else {
