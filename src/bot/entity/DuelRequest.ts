@@ -185,7 +185,6 @@ export default class DuelRequest {
      * Called when the invited user answered to the request.
      *
      * @param accepted true if user accepted the request, false otherwise
-     * @param rejectFunc function called to reject the duel request
      */
     private async challengeAnswered(accepted: boolean): Promise<void> {
         if (accepted) {

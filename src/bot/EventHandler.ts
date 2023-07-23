@@ -1,7 +1,12 @@
+import Entity from '@tictactoe/Entity';
+
 /**
  * Supported type of events
  */
-export type EventType = 'win' | 'tie';
+export type EventTypes = {
+    win: (data: { winner: Entity; loser: Entity }) => void;
+    tie: (data: { players: Entity[] }) => void;
+};
 
 /**
  * Handles events emitted during games.
@@ -13,7 +18,7 @@ export default class EventHandler {
     /**
      * Map whiches store all registered listeners.
      */
-    listeners: Map<EventType, Array<(data?: any) => void>>;
+    listeners: Map<keyof EventTypes, Array<(data?: any) => void>>;
 
     /**
      * Constructs a new instance of the event handling system.
@@ -31,7 +36,10 @@ export default class EventHandler {
      * @param eventName name of the event for which the listener will be registered
      * @param callback  method called when the event is emitted
      */
-    registerListener(eventName: EventType, callback: (data?: any) => void): void {
+    public registerListener<T extends keyof EventTypes, V extends EventTypes[T]>(
+        eventName: T,
+        callback: V
+    ): void {
         const array = this.listeners.get(eventName);
         if (array) {
             array.push(callback);
@@ -47,7 +55,7 @@ export default class EventHandler {
      * @param eventName name of the event to emit
      * @param data      data object which will be passed to listeners
      */
-    emitEvent(eventName: EventType, data?: any): void {
+    public emitEvent(eventName: keyof EventTypes, data?: any): void {
         this.listeners.get(eventName)?.forEach(listener => listener(data));
     }
 
@@ -57,7 +65,7 @@ export default class EventHandler {
      * @param eventName name of the event to create
      * @private
      */
-    private supportEvent(eventName: EventType): void {
+    private supportEvent(eventName: keyof EventTypes): void {
         this.listeners.set(eventName, []);
     }
 }

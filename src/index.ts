@@ -1,4 +1,4 @@
-import EventHandler, { EventType } from '@bot/EventHandler';
+import EventHandler, { EventTypes } from '@bot/EventHandler';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import Config from '@config/Config';
 import localize from '@i18n/localize';
@@ -97,7 +97,10 @@ class TicTacToe {
      * @param eventName name of the event to listen
      * @param listener  callback method called when the event is emitted
      */
-    public on(eventName: EventType, listener: (data?: any) => void): void {
+    public on<T extends keyof EventTypes, V extends EventTypes[T]>(
+        eventName: T,
+        listener: V
+    ): void {
         this.eventHandler.registerListener(eventName, listener);
     }
 }
