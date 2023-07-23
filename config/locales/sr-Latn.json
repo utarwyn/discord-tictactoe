@@ -1,0 +1,30 @@
+{
+  "command": {
+    "description": "Igrajte XOX",
+    "option-user": "Korisnik sa kojim želite da igrate"
+  },
+  "duel": {
+    "title": ":crossed_swords: Novi duel",
+    "challenge": "**{initier}** Vas je pozvao na duel!",
+    "action": "Dodajte reakciju na ovu poruku da biste prihvatili ili odbili duel.",
+    "expire": ":x: `{invited}` nije prihvatio duel.",
+    "reject": ":x: `{invited}` je odbio duel.",
+    "unknown-user": "ne možete pozvati tog korisnika na igru.",
+    "no-bot": "ne možete pozvati bota na igru.",
+    "button": {
+      "accept": "Prihvati",
+      "decline": "Odbi"
+    }
+  },
+  "game": {
+    "title": ":game_die: `{player1}` **protiv** `{player2}`",
+    "action": "{player}, izaberite svoj potez:",
+    "load": "Reakcije se učitavaju, sačekajte...",
+    "end": "Niko nije pobedio igru, nerešeno je! Da probamo ponovo?",
+    "win": ":tada: {player} je pobedio igru!",
+    "expire": ":x: Igra je **istekla**... možda zbog neaktivnosti jednog korisnika.",
+    "in-progress": "ne možete započeti drugu igru, sačekajte da se trenutna završi.",
+    "waiting-ai": ":robot: Računar igra, sačekajte...",
+    "ai": "Računar"
+  }
+}
