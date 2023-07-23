@@ -93,6 +93,15 @@ describe('GameStateManager', () => {
             expect(validator.isNewGamePossible).toHaveBeenCalledWith(tunnel, invited);
         });
 
+        it('should reject if emitted event throws an error', async () => {
+            const error = new Error('cannot start the game');
+            jest.spyOn(bot.eventHandler, 'emitEvent').mockImplementation(() => {
+                throw error;
+            });
+            const invited = <GuildMember>{};
+            await expect(manager.createGame(tunnel, invited)).rejects.toEqual(error);
+        });
+
         it('should create a game board and send it into the messaging tunnel', async () => {
             const spyReplyWith = jest.spyOn(tunnel, 'replyWith');
 

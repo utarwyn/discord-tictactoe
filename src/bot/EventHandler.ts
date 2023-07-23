@@ -4,6 +4,7 @@ import Entity from '@tictactoe/Entity';
  * Supported type of events
  */
 export type EventTypes = {
+    newGame: (data: { players: Entity[] }) => void;
     win: (data: { winner: Entity; loser: Entity }) => void;
     tie: (data: { players: Entity[] }) => void;
 };
@@ -26,6 +27,7 @@ export default class EventHandler {
     constructor() {
         this.listeners = new Map();
 
+        this.supportEvent('newGame');
         this.supportEvent('win');
         this.supportEvent('tie');
     }

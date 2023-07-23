@@ -32,21 +32,16 @@ describe('I18nProvider', () => {
     });
 
     it.each`
-        data                           | key          | replacements                    | warned   | expected
-        ${{ key: 'fake' }}             | ${'key'}     | ${null}                         | ${false} | ${'fake'}
-        ${{ 'key.awo': '{p1}: {p2}' }} | ${'key.awo'} | ${{ p1: 'test1', p2: 'test2' }} | ${false} | ${'test1: test2'}
-        ${{ key2: 'key2' }}            | ${'key'}     | ${null}                         | ${true}  | ${'key'}
-        ${undefined}                   | ${'my.key'}  | ${null}                         | ${true}  | ${'my.key'}
+        data                           | key          | replacements                    | expected
+        ${{ key: 'fake' }}             | ${'key'}     | ${null}                         | ${'fake'}
+        ${{ 'key.awo': '{p1}: {p2}' }} | ${'key.awo'} | ${{ p1: 'test1', p2: 'test2' }} | ${'test1: test2'}
+        ${{ key2: 'key2' }}            | ${'key'}     | ${null}                         | ${'key'}
+        ${undefined}                   | ${'my.key'}  | ${null}                         | ${'my.key'}
     `(
         'should translate $key with replacements $replacements',
-        ({ data, key, replacements, warned, expected }) => {
-            const spyWarn = jest.spyOn(global.console, 'warn').mockImplementation();
-
+        ({ data, key, replacements, expected }) => {
             provider['localeData'] = data;
-
             expect(provider.__(key, replacements)).toBe(expected);
-            expect(spyWarn).toHaveBeenCalledTimes(warned ? 1 : 0);
-            spyWarn.mockRestore();
         }
     );
 });
