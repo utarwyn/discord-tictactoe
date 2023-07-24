@@ -9,7 +9,7 @@ describe('EventHandler', () => {
     });
 
     test('should initialize supported events', () => {
-        expect(Array.from(eventHandler.listeners.keys())).toEqual(['win', 'tie']);
+        expect(Array.from(eventHandler.listeners.keys())).toEqual(['newGame', 'win', 'tie']);
     });
 
     test('should register a listener if event exists', () => {

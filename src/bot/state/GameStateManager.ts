@@ -99,6 +99,9 @@ export default class GameStateManager {
                 this.bot.configuration
             );
 
+            // Emit a custom event which can cancel the game creation if throws an error
+            this.bot.eventHandler.emitEvent('newGame', { players: gameboard.entities });
+
             // Register the gameboard in the list
             this.gameboards.push(gameboard);
 
