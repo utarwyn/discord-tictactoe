@@ -2,20 +2,9 @@ import GameBoard from '@bot/entity/GameBoard';
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
 import GameStateValidator from '@bot/state/GameStateValidator';
-import TicTacToeBot from '@bot/TicTacToeBot';
 import Config from '@config/Config';
 import Entity from '@tictactoe/Entity';
-import {
-    Collection,
-    Guild,
-    GuildMember,
-    GuildMemberManager,
-    GuildMemberRoleManager,
-    PermissionsBitField,
-    PermissionsString,
-    Role,
-    TextChannel
-} from 'discord.js';
+import { Collection, PermissionsBitField, Role } from 'discord.js';
 
 describe('GameStateValidator', () => {
     let tunnel: MessagingTunnel;
@@ -24,34 +13,28 @@ describe('GameStateValidator', () => {
 
     beforeEach(() => {
         // default state is valid
-        tunnel = <MessagingTunnel>{
-            channel: <TextChannel>{
+        tunnel = {
+            channel: {
                 id: 'TC1',
-                guild: <Guild>{
-                    members: <GuildMemberManager>{
-                        me: <GuildMember>{
+                guild: {
+                    members: {
+                        me: {
                             permissionsIn: _c => <Readonly<PermissionsBitField>>{ has: _p => true }
                         }
                     }
                 }
             },
-            author: <GuildMember>{
+            author: {
                 id: 'GM1',
-                roles: <GuildMemberRoleManager>{
-                    cache: new Collection()
-                },
-                permissions: <Readonly<PermissionsBitField>>{ has: _ => true }
+                roles: { cache: new Collection() },
+                permissions: { has: _ => true }
             }
-        };
-        manager = <GameStateManager>{
-            gameboards: [
-                { tunnel: <MessagingTunnel>{}, entities: [] as Array<Entity> }
-            ] as Array<GameBoard>,
+        } as MessagingTunnel;
+        manager = {
+            gameboards: [{ tunnel: {}, entities: [] as Array<Entity> }],
             memberCooldownEndTimes: new Map(),
-            bot: <TicTacToeBot>{
-                configuration: <Config>{}
-            }
-        };
+            bot: { configuration: <Config>{} }
+        } as GameStateManager;
         validator = new GameStateValidator(manager);
     });
 
@@ -64,7 +47,7 @@ describe('GameStateValidator', () => {
     `('should check for member permissions $permissions', ({ permissions, expected }) => {
         const spyError = jest.spyOn(global.console, 'error').mockImplementation();
         jest.spyOn(tunnel.channel.guild.members.me!, 'permissionsIn').mockReturnValue({
-            has: list => (list as Array<PermissionsString>).every(k => permissions.includes(k))
+            has: list => (list as Array<PermissionsBitField>).every(k => permissions.includes(k))
         } as Readonly<PermissionsBitField>);
         manager.bot.configuration.gameBoardReactions = true;
 
@@ -74,6 +57,7 @@ describe('GameStateValidator', () => {
     });
 
     it('should not need AddReactions perm if do not use reactions', () => {
+        const spyError = jest.spyOn(global.console, 'error').mockImplementation();
         const hasPermissions = jest.fn();
         jest.spyOn(tunnel.channel.guild.members.me!, 'permissionsIn').mockReturnValue({
             has: hasPermissions
@@ -83,6 +67,7 @@ describe('GameStateValidator', () => {
         validator.isInteractionValid(tunnel);
         expect(hasPermissions).toHaveBeenCalledTimes(1);
         expect(hasPermissions).toHaveBeenCalledWith(expect.not.arrayContaining(['AddReactions']));
+        spyError.mockRestore();
     });
 
     it.each`

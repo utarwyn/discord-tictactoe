@@ -128,6 +128,6 @@ export default class GameCommand {
         } else {
             handler = this.manager.createGame(tunnel);
         }
-        return handler.catch(() => Promise.reject('game.in-progress'));
+        return handler.catch((err?: Error) => Promise.reject(err?.message ?? 'game.in-progress'));
     }
 }

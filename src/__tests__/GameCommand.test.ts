@@ -193,5 +193,12 @@ describe('GameCommand', () => {
                 'game.in-progress'
             );
         });
+
+        test('should reject with the custom error if provided', async () => {
+            jest.spyOn(stateManager, 'createGame').mockRejectedValue(new Error('custom error'));
+            await expect(command['processInvitation'](tunnel, inviter)).rejects.toBe(
+                'custom error'
+            );
+        });
     });
 });

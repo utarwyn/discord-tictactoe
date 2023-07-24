@@ -91,7 +91,6 @@ export class I18nProvider {
 
             return message;
         } else {
-            console.warn(`Cannot find language key ${key}. Using key instead.`);
             return key;
         }
     }
