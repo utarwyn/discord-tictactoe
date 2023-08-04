@@ -70,7 +70,7 @@ export default class GameBoardBuilder {
      * @param player2 second entity to play
      * @returns same instance
      */
-    public withTitle(player1: Entity, player2: Entity): GameBoardBuilder {
+    public withTitle(player1: Entity, player2: Entity): this {
         this.title =
             localize.__('game.title', {
                 player1: player1.displayName,
@@ -87,7 +87,7 @@ export default class GameBoardBuilder {
      * @param none emoji used for an empty cell
      * @returns same instance
      */
-    public withEmojies(first: string, second: string, none?: string): GameBoardBuilder {
+    public withEmojies(first: string, second: string, none?: string): this {
         this.emojies = [none ?? this.emojies[0], first, second];
         return this;
     }
@@ -99,7 +99,7 @@ export default class GameBoardBuilder {
      * @param board game board data
      * @returns same instance
      */
-    public withBoard(boardSize: number, board: Player[]): GameBoardBuilder {
+    public withBoard(boardSize: number, board: Player[]): this {
         this.boardSize = boardSize;
         this.boardData = board;
         return this;
@@ -122,7 +122,7 @@ export default class GameBoardBuilder {
      * @param emojiIndex index of the emoji to display next to entity name
      * @returns same instance
      */
-    public withEntityPlaying(entity: Entity, emojiIndex?: number): GameBoardBuilder {
+    public withEntityPlaying(entity: Entity, emojiIndex?: number): this {
         this.stateEntity = { name: entity.toString(), emojiIndex: emojiIndex };
         this.stateKey = entity instanceof AI ? 'game.waiting-ai' : 'game.action';
         return this;
@@ -134,7 +134,7 @@ export default class GameBoardBuilder {
      * @param winner winning entity. If undefined: display tie message
      * @returns same instance
      */
-    public withEndingMessage(winner?: Entity): GameBoardBuilder {
+    public withEndingMessage(winner?: Entity): this {
         if (winner) {
             this.stateKey = 'game.win';
             this.stateEntity = { name: winner.toString() };
@@ -149,7 +149,7 @@ export default class GameBoardBuilder {
      *
      * @returns same instance
      */
-    public withExpireMessage(): GameBoardBuilder {
+    public withExpireMessage(): this {
         this.stateKey = 'game.expire';
         return this;
     }
@@ -160,7 +160,7 @@ export default class GameBoardBuilder {
      * @param embedColor color of the embed
      * @returns same instance
      */
-    public withEmbed(embedColor: EmbedColor): GameBoardBuilder {
+    public withEmbed(embedColor: EmbedColor): this {
         this.embedColor = embedColor;
         return this;
     }
