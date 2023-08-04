@@ -1,4 +1,4 @@
-FROM node:16-slim as base
+FROM node:18-slim as base
 LABEL maintainer="Utarwyn <maxime.malgorn@laposte.net>"
 
 RUN mkdir /app && chown -R node:node /app
