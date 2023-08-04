@@ -36,6 +36,10 @@ export default interface GameConfig {
      */
     gameBoardEmojies?: string[];
     /**
+     * Should display current player's emoji next to its name.
+     */
+    gameBoardPlayerEmoji?: boolean;
+    /**
      * Interact with game board using reactions instead of buttons.
      */
     gameBoardReactions?: boolean;

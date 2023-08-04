@@ -28,10 +28,15 @@ export default class GameBoardBuilder {
      */
     protected title: string;
     /**
-     * Stores game current state.
+     * Stores localization key of current game state.
      * @protected
      */
-    protected state: string;
+    protected stateKey: string;
+    /**
+     * Stores entity whiches is concerned in the state message.
+     * @protected
+     */
+    protected stateEntity?: { name: string; emojiIndex?: number };
     /**
      * Stores game board size.
      * @protected
@@ -53,7 +58,7 @@ export default class GameBoardBuilder {
      */
     constructor() {
         this.title = '';
-        this.state = '';
+        this.stateKey = '';
         this.boardSize = 0;
         this.boardData = [];
     }
@@ -101,19 +106,25 @@ export default class GameBoardBuilder {
     }
 
     /**
-     * Writes that an entity is playing.
+     * Writes that the game is loading.
      *
-     * @param entity entity whiches is playing. If undefined: display loading message
      * @returns same instance
      */
-    public withEntityPlaying(entity?: Entity): GameBoardBuilder {
-        if (entity instanceof AI) {
-            this.state = localize.__('game.waiting-ai');
-        } else if (!entity) {
-            this.state = localize.__('game.load');
-        } else {
-            this.state = localize.__('game.action', { player: entity.toString() });
-        }
+    public withLoadingMessage(): this {
+        this.stateKey = 'game.load';
+        return this;
+    }
+
+    /**
+     * Writes that an entity is playing.
+     *
+     * @param entity entity whiches is playing.
+     * @param emojiIndex index of the emoji to display next to entity name
+     * @returns same instance
+     */
+    public withEntityPlaying(entity: Entity, emojiIndex?: number): GameBoardBuilder {
+        this.stateEntity = { name: entity.toString(), emojiIndex: emojiIndex };
+        this.stateKey = entity instanceof AI ? 'game.waiting-ai' : 'game.action';
         return this;
     }
 
@@ -125,9 +136,10 @@ export default class GameBoardBuilder {
      */
     public withEndingMessage(winner?: Entity): GameBoardBuilder {
         if (winner) {
-            this.state = localize.__('game.win', { player: winner.toString() });
+            this.stateKey = 'game.win';
+            this.stateEntity = { name: winner.toString() };
         } else {
-            this.state = localize.__('game.end');
+            this.stateKey = 'game.end';
         }
         return this;
     }
@@ -138,7 +150,7 @@ export default class GameBoardBuilder {
      * @returns same instance
      */
     public withExpireMessage(): GameBoardBuilder {
-        this.state = localize.__('game.expire');
+        this.stateKey = 'game.expire';
         return this;
     }
 
@@ -169,15 +181,24 @@ export default class GameBoardBuilder {
             }
         }
 
-        // Generate final string
-        const state = this.state && board ? '\n' + this.state : this.state;
+        const state = this.generateState();
+        const stateWithBoard = `${board}${board && state ? '\n' : ''}${state}`;
+
         return {
             allowedMentions: { parse: ['users'] },
             embeds: this.embedColor
-                ? [{ title: this.title, description: board + state, color: this.embedColor }]
+                ? [{ title: this.title, description: stateWithBoard, color: this.embedColor }]
                 : [],
-            content: !this.embedColor ? this.title + board + state : undefined,
+            content: !this.embedColor ? this.title + stateWithBoard : undefined,
             components: []
         };
+    }
+
+    protected generateState(): string {
+        let player = this.stateEntity?.name;
+        if (this.stateEntity?.emojiIndex !== undefined) {
+            player += ` ${this.emojies[this.stateEntity.emojiIndex]}`;
+        }
+        return localize.__(this.stateKey, player ? { player } : undefined);
     }
 }
