@@ -3,6 +3,7 @@ import TicTacToeBot from '@bot/TicTacToeBot';
 import Config from '@config/Config';
 import localize from '@i18n/localize';
 import { Client, CommandInteraction, Intents, Message } from 'discord.js';
+import { MessageProvider } from '@i18n/I18nProvider';
 
 /**
  * Controls all interactions between modules of the bot.
@@ -102,6 +103,17 @@ class TicTacToe {
         listener: V
     ): void {
         this.eventHandler.registerListener(eventName, listener);
+    }
+
+    /**
+     * Adds a message provider for a given key.
+     * Key must exist, otherwise an error will be thrown.
+     *
+     * @param key key corresponding to the added provider
+     * @param provider function that dynamically supplies the message
+     */
+    public addMessageProvider(key: string, provider: MessageProvider): void {
+        localize.addProvider(key, provider);
     }
 }
 

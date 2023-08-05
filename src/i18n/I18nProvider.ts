@@ -2,6 +2,16 @@ import fs from 'fs';
 import path from 'path';
 
 /**
+ * Represents a collection of replacements when translating a text.
+ */
+export type Replacements = { [key: string]: string | number | string[] };
+
+/**
+ * Represents a message provider added programmatically.
+ */
+export type MessageProvider = () => string;
+
+/**
  * Default implementation to translate messages.
  * Can load messages from integrated or external locale files.
  *
@@ -20,10 +30,17 @@ export class I18nProvider {
 
     /**
      * Collection with paths of integrated locales in the module
+     * @private
      */
-    private availableLocales: Map<string, string>;
+    private readonly availableLocales: Map<string, string>;
+    /**
+     * Collection of message providers added programmatically
+     * @private
+     */
+    private readonly messageProviders: Map<string, MessageProvider>;
     /**
      * Collection of all locale messages loaded from a language file
+     * @private
      */
     private localeData?: Record<string, string>;
 
@@ -36,6 +53,7 @@ export class I18nProvider {
                 .readdirSync(localesPath)
                 .map(file => [path.basename(file, '.json'), path.resolve(localesPath, file)])
         );
+        this.messageProviders = new Map<string, MessageProvider>();
     }
 
     /**
@@ -43,7 +61,7 @@ export class I18nProvider {
      *
      * @param locale locale key or language file to load
      */
-    loadFromLocale(locale?: string): void {
+    public loadFromLocale(locale?: string): void {
         let filepath = this.availableLocales.get(locale ?? I18nProvider.DEFAULT_LOCALE);
         let loaded = filepath !== undefined;
 
@@ -79,9 +97,9 @@ export class I18nProvider {
      * @param replacements collection of replacement to operate on the message
      * @returns translated message using replacements
      */
-    __(key: string, replacements?: Replacements): string {
+    public __(key: string, replacements?: Replacements): string {
         if (this.localeData && this.localeData[key]) {
-            let message = this.localeData[key];
+            let message = this.messageProviders.get(key)?.() ?? this.localeData[key];
 
             if (replacements) {
                 Object.entries(replacements).forEach(replacement => {
@@ -93,6 +111,20 @@ export class I18nProvider {
         } else {
             return key;
         }
+    }
+
+    /**
+     * Adds a message provider for a given key.
+     * Key must already exist in the cache, otherwise an error will be thrown.
+     *
+     * @param key key corresponding to the added provider
+     * @param provider function that dynamically supplies the message
+     */
+    public addProvider(key: string, provider: MessageProvider): void {
+        if (this.localeData?.[key] == null) {
+            throw new Error(`Cannot register message provider because key "${key}" does not exist`);
+        }
+        this.messageProviders.set(key, provider);
     }
 
     private static flatten<T extends Record<string, any>>(
@@ -107,11 +139,4 @@ export class I18nProvider {
                 : { ...acc, [newObjectPath]: object[key] };
         }, {} as T);
     }
-}
-
-/**
- * Allows to define some replacements when translating a text.
- */
-export interface Replacements {
-    [key: string]: string | number | string[];
 }

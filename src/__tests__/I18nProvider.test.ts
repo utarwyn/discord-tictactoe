@@ -44,4 +44,17 @@ describe('I18nProvider', () => {
             expect(provider.__(key, replacements)).toBe(expected);
         }
     );
+
+    describe('Dynamic message providers', () => {
+        it('should register and use a message provider of an existing key', () => {
+            provider['localeData'] = { 'game.load': 'default message' };
+            const message = 'Another game loading message';
+            provider.addProvider('game.load', () => message);
+            expect(provider.__('game.load')).toBe(message);
+        });
+
+        it('should throw an error if the key does not exist', () => {
+            expect(() => provider.addProvider('unknown_key', () => 'hello world')).toThrow();
+        });
+    });
 });

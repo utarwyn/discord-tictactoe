@@ -100,4 +100,11 @@ describe('TicTacToe', () => {
         expect(eventHandler.registerListener).toHaveBeenCalledTimes(1);
         expect(eventHandler.registerListener).toHaveBeenCalledWith('tie', listener);
     });
+
+    test('should call addProvider from localize', () => {
+        const messageProvider = () => 'my message';
+        tictactoe.addMessageProvider('game.load', messageProvider);
+        expect(localize.addProvider).toHaveBeenCalledTimes(1);
+        expect(localize.addProvider).toHaveBeenCalledWith('game.load', messageProvider);
+    });
 });
