@@ -52,7 +52,7 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      *
      * @returns same instance
      */
-    public withButtonsDisabledAfterUse(): GameBoardBuilder {
+    public withButtonsDisabledAfterUse(): this {
         this.disableButtonsAfterUsed = true;
         return this;
     }
@@ -61,20 +61,16 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @inheritdoc
      * @override
      */
-    override withEntityPlaying(entity?: Entity): GameBoardBuilder {
-        // Do not display state if game is loading
-        if (entity) {
-            return super.withEntityPlaying(entity);
-        } else {
-            return this;
-        }
+    override withLoadingMessage(): this {
+        // there is no need to display loading message
+        return this;
     }
 
     /**
      * @inheritdoc
      * @override
      */
-    override withEndingMessage(winner?: Entity): GameBoardBuilder {
+    override withEndingMessage(winner?: Entity): this {
         this.gameEnded = true;
         return super.withEndingMessage(winner);
     }
@@ -83,7 +79,7 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @inheritdoc
      * @override
      */
-    override withEmojies(first: string, second: string, none?: string): GameBoardBuilder {
+    override withEmojies(first: string, second: string, none?: string): this {
         this.customEmojies = true;
         this.customIdleEmoji = none != null;
         return super.withEmojies(first, second, none);
@@ -94,11 +90,12 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @override
      */
     override toMessageOptions(): MessageOptions {
+        const state = this.generateState();
         return {
             embeds: this.embedColor
-                ? [{ title: this.title, description: this.state, color: this.embedColor }]
+                ? [{ title: this.title, description: state, color: this.embedColor }]
                 : [],
-            content: !this.embedColor ? this.title + this.state : undefined,
+            content: !this.embedColor ? this.title + state : undefined,
             components: [...Array(this.boardSize).keys()].map(row =>
                 new MessageActionRow().addComponents(
                     [...Array(this.boardSize).keys()].map(col => this.createButton(row, col))

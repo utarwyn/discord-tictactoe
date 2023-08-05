@@ -31,6 +31,7 @@ export default class ConfigProvider implements Config {
     public gameBoardDisableButtons = false;
     public gameBoardEmbed = false;
     public gameBoardEmojies = [];
+    public gameBoardPlayerEmoji = false;
     public gameBoardReactions = false;
 
     [key: string]: any;
