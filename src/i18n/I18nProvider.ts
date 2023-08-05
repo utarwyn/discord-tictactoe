@@ -7,6 +7,7 @@ import path from 'path';
  *
  * @author Utarwyn
  * @since 2.0.0
+ * @internal
  */
 export class I18nProvider {
     /**

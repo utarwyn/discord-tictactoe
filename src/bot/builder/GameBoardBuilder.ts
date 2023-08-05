@@ -11,6 +11,7 @@ import { APIEmbed, MessageCreateOptions, resolveColor } from 'discord.js';
  *
  * @author Utarwyn
  * @since 2.1.0
+ * @internal
  */
 export default class GameBoardBuilder {
     /**

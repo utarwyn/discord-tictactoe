@@ -15,6 +15,7 @@ export type MessagingAnswer = MessagePayloadOption;
  *
  * @author Utarwyn
  * @since 2.2.0
+ * @internal
  */
 export default abstract class MessagingTunnel {
     /**

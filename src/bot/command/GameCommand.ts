@@ -11,6 +11,7 @@ import { GuildMember, Interaction, Message } from 'discord.js';
  *
  * @author Utarwyn
  * @since 2.0.0
+ * @internal
  */
 export default class GameCommand {
     /**

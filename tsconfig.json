@@ -15,7 +15,8 @@
       "@tictactoe/*": ["src/tictactoe/*"]
     },
     "incremental": true,
-    "declaration": true
+    "declaration": true,
+    "stripInternal": true
   },
   "include": ["src/**/*", "bin/**/*"]
 }

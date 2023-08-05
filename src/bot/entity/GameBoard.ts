@@ -22,6 +22,7 @@ import {
  *
  * @author Utarwyn
  * @since 2.0.0
+ * @internal
  */
 export default class GameBoard {
     /**

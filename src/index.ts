@@ -14,17 +14,17 @@ import { ChatInputCommandInteraction, Client, GatewayIntentBits, Message } from 
 class TicTacToe {
     /**
      * Bot configuration
-     * @private
+     * @internal
      */
     private readonly config: Config;
     /**
      * Internal event handling system
-     * @private
+     * @internal
      */
     private readonly eventHandler: EventHandler;
     /**
      * Connection handling service to Discord
-     * @private
+     * @internal
      */
     private readonly bot: TicTacToeBot;
 

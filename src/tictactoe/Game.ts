@@ -5,6 +5,7 @@ import { getOpponent, Player } from '@tictactoe/Player';
  *
  * @author Utarwyn
  * @since 2.0.0
+ * @internal
  */
 export default class Game {
     /**

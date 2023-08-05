@@ -8,6 +8,11 @@
   "bin": {
     "tictactoe": "dist/bin/tictactoe.js"
   },
+  "files": [
+    "config/locales",
+    "dist/bin",
+    "dist/src"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/utarwyn/discord-tictactoe"
@@ -45,8 +50,8 @@
     "clean": "rimraf coverage dist tmp",
     "build": "tsc -p tsconfig.release.json && node lib/replacePaths.js",
     "build:watch": "tsc -w -p tsconfig.release.json",
-    "format:check": "prettier --config .prettierrc --list-different \"**/**.ts\"",
-    "format": "prettier --config .prettierrc --write \"**/**.ts\"",
+    "format:check": "prettier --check \"**/**.ts\"",
+    "format": "prettier --write \"**/**.ts\"",
     "lint": "eslint . --ext .ts",
     "serve": "node dist/bin/tictactoe.js",
     "start": "yarn build && yarn serve",

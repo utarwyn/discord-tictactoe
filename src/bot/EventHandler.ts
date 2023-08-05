@@ -14,6 +14,7 @@ export type EventTypes = {
  *
  * @author Utarwyn
  * @since 2.1.0
+ * @internal
  */
 export default class EventHandler {
     /**

@@ -13,6 +13,7 @@ import { GuildMember } from 'discord.js';
  *
  * @author Utarwyn
  * @since 2.2.0
+ * @internal
  */
 export default class GameStateManager {
     /**

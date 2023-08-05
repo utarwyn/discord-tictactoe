@@ -13,6 +13,7 @@ import {
  *
  * @author Utarwyn
  * @since 3.0.0
+ * @internal
  */
 export default class ComponentInteractionMessagingTunnel extends MessagingTunnel {
     /**

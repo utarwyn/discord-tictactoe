@@ -7,6 +7,7 @@ import { BaseMessageOptions, GuildMember, Message, TextChannel } from 'discord.j
  *
  * @author Utarwyn
  * @since 2.2.0
+ * @internal
  */
 export default class TextMessagingTunnel extends MessagingTunnel {
     /**

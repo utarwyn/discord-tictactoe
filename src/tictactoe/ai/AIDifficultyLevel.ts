@@ -3,6 +3,7 @@
  *
  * @author Utarwyn
  * @since 3.2.0
+ * @internal
  */
 export enum AIDifficultyLevel {
     Easy = 'Easy',

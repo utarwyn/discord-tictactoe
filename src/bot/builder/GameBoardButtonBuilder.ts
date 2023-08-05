@@ -16,6 +16,7 @@ import {
  *
  * @author Utarwyn
  * @since 3.0.0
+ * @internal
  */
 export default class GameBoardButtonBuilder extends GameBoardBuilder {
     /**
