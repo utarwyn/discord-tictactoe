@@ -59,25 +59,35 @@ describe('GameBoardBuilder', () => {
     });
 
     it('should add an empty line between board and state if both defined', () => {
-        builder.withBoard(1, [Player.None]).withEntityPlaying();
+        builder.withBoard(1, [Player.None]).withEntityPlaying(new AI());
         expect(builder.toMessageOptions().content).toContain('\n');
     });
 
-    it.each`
-        entity                        | state                | stateParams
-        ${undefined}                  | ${'game.load'}       | ${[]}
-        ${new AI()}                   | ${'game.waiting-ai'} | ${[]}
-        ${{ toString: () => 'fake' }} | ${'game.action'}     | ${[{ player: 'fake' }]}
-    `('should set state based on playing entity $entity', ({ entity, state, stateParams }) => {
-        const spyLocalize = jest.spyOn(localize, '__');
-        builder.withEntityPlaying(entity);
-        expect(builder.toMessageOptions()).toEqual(expect.objectContaining({ content: state }));
-        expect(spyLocalize).toHaveBeenCalledWith(state, ...stateParams);
+    it('should set state with game loading message', () => {
+        builder.withLoadingMessage();
+        expect(builder.toMessageOptions()).toEqual(
+            expect.objectContaining({ content: 'game.load' })
+        );
     });
 
     it.each`
+        entity                        | emojiIndex   | state                | stateParams
+        ${new AI()}                   | ${undefined} | ${'game.waiting-ai'} | ${[undefined]}
+        ${{ toString: () => 'fake' }} | ${undefined} | ${'game.action'}     | ${[{ player: 'fake' }]}
+        ${{ toString: () => 'fake' }} | ${1}         | ${'game.action'}     | ${[{ player: 'fake 🇽' }]}
+    `(
+        'should set state based on playing entity $entity and emoji index $emojiIndex',
+        ({ entity, emojiIndex, state, stateParams }) => {
+            const spyLocalize = jest.spyOn(localize, '__');
+            builder.withEntityPlaying(entity, emojiIndex);
+            expect(builder.toMessageOptions()).toEqual(expect.objectContaining({ content: state }));
+            expect(spyLocalize).toHaveBeenCalledWith(state, ...stateParams);
+        }
+    );
+
+    it.each`
         entity                        | state         | stateParams
-        ${undefined}                  | ${'game.end'} | ${[]}
+        ${undefined}                  | ${'game.end'} | ${[undefined]}
         ${{ toString: () => 'fake' }} | ${'game.win'} | ${[{ player: 'fake' }]}
     `('should set state based on winning entity $entity', ({ entity, state, stateParams }) => {
         const spyLocalize = jest.spyOn(localize, '__');

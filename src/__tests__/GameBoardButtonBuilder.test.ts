@@ -65,9 +65,13 @@ describe('GameBoardButtonBuilder', () => {
         expect(components[1].toJSON().components[1].emoji?.name).toBe('square');
     });
 
+    it('should do nothing when a loading message is added', () => {
+        const options = builder.withLoadingMessage().toMessageOptions();
+        expect(options.content).toBe('');
+    });
+
     it.each`
         entity                        | state
-        ${undefined}                  | ${''}
         ${new AI()}                   | ${':robot: AI is playing, please wait...'}
         ${{ toString: () => 'fake' }} | ${'fake, select your move:'}
     `('should set state based if playing entity is $entity', ({ entity, state }) => {

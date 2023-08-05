@@ -17,5 +17,6 @@
   "gameBoardDisableButtons": false,
   "gameBoardEmbed": false,
   "gameBoardEmojies": [],
+  "gameBoardPlayerEmoji": false,
   "gameBoardReactions": false
 }

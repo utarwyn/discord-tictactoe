@@ -67,13 +67,9 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @inheritdoc
      * @override
      */
-    override withEntityPlaying(entity?: Entity): this {
-        // Do not display state if game is loading
-        if (entity) {
-            return super.withEntityPlaying(entity);
-        } else {
-            return this;
-        }
+    override withLoadingMessage(): this {
+        // there is no need to display loading message
+        return this;
     }
 
     /**
@@ -100,19 +96,21 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * @override
      */
     override toMessageOptions(): BaseMessageOptions {
+        const state = this.generateState();
+
         // Use an embed if enabled
         let embed: APIEmbed | null = null;
         if (this.embedColor) {
             embed = {
                 title: this.title,
-                description: this.state,
+                description: state,
                 color: resolveColor(this.embedColor)
             };
         }
 
         return {
             embeds: embed !== null ? [embed] : [],
-            content: embed === null ? this.title + this.state : undefined,
+            content: embed === null ? this.title + state : undefined,
             components: [...Array(this.boardSize).keys()].map(row =>
                 new ActionRowBuilder<ButtonBuilder>().addComponents(
                     [...Array(this.boardSize).keys()].map(col => this.createButton(row, col))

@@ -97,10 +97,17 @@ export default class GameBoard {
 
         builder
             .withTitle(this.entities[0], this.entities[1])
-            .withBoard(this.game.boardSize, this.game.board)
-            .withEntityPlaying(
-                this.reactionsLoaded ? this.getEntity(this.game.currentPlayer) : undefined
+            .withBoard(this.game.boardSize, this.game.board);
+
+        const currentEntity = this.getEntity(this.game.currentPlayer);
+        if (this.reactionsLoaded && currentEntity != null) {
+            builder.withEntityPlaying(
+                currentEntity,
+                this.configuration.gameBoardPlayerEmoji ? this.game.currentPlayer : undefined
             );
+        } else {
+            builder.withLoadingMessage();
+        }
 
         if (this.expired) {
             builder.withExpireMessage();

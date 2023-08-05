@@ -59,6 +59,7 @@ describe('GameBoard', () => {
             withEmbed: jest.fn().mockReturnThis(),
             withEmojies: jest.fn().mockReturnThis(),
             withEndingMessage: jest.fn().mockReturnThis(),
+            withLoadingMessage: jest.fn().mockReturnThis(),
             withEntityPlaying: jest.fn().mockReturnThis(),
             withExpireMessage: jest.fn().mockReturnThis(),
             withTitle: jest.fn().mockReturnThis()
@@ -88,11 +89,27 @@ describe('GameBoard', () => {
             }
         );
 
+        it('should set loading message if reactions are not loaded', () => {
+            gameBoard.content;
+            expect(mockedBuilder.withLoadingMessage).toHaveBeenCalledTimes(1);
+        });
+
         it('should set entity playing if reactions are loaded', () => {
             gameBoard['reactionsLoaded'] = true;
             gameBoard.content;
             expect(mockedBuilder.withEntityPlaying).toHaveBeenCalledTimes(1);
-            expect(mockedBuilder.withEntityPlaying).toHaveBeenCalledWith(tunnel.author);
+            expect(mockedBuilder.withEntityPlaying).toHaveBeenCalledWith(tunnel.author, undefined);
+        });
+
+        it('should set entity playing with an emoji', () => {
+            configuration.gameBoardPlayerEmoji = true;
+            gameBoard['reactionsLoaded'] = true;
+            gameBoard.content;
+            expect(mockedBuilder.withEntityPlaying).toHaveBeenCalledTimes(1);
+            expect(mockedBuilder.withEntityPlaying).toHaveBeenCalledWith(
+                tunnel.author,
+                Player.First
+            );
         });
 
         it('should add an ending message if the game is finished', () => {
