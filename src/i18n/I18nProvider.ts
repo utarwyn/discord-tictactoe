@@ -1,15 +1,6 @@
+import { MessageProvider, Replacements } from '@i18n/types';
 import fs from 'fs';
 import path from 'path';
-
-/**
- * Represents a collection of replacements when translating a text.
- */
-export type Replacements = { [key: string]: string | number | string[] };
-
-/**
- * Represents a message provider added programmatically.
- */
-export type MessageProvider = () => string;
 
 /**
  * Default implementation to translate messages.

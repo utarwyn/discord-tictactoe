@@ -1,4 +1,5 @@
-import { I18nProvider, MessageProvider, Replacements } from '@i18n/I18nProvider';
+import { I18nProvider } from '@i18n/I18nProvider';
+import { MessageProvider, Replacements } from '@i18n/types';
 
 const provider = new I18nProvider();
 

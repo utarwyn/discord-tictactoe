@@ -2,8 +2,8 @@ import EventHandler, { EventTypes } from '@bot/EventHandler';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import Config from '@config/Config';
 import localize from '@i18n/localize';
+import { MessageProvider } from '@i18n/types';
 import { Client, CommandInteraction, Intents, Message } from 'discord.js';
-import { MessageProvider } from '@i18n/I18nProvider';
 
 /**
  * Controls all interactions between modules of the bot.
