@@ -14,11 +14,11 @@ Created with <a href="https://github.com/discordjs/discord.js">discord.js</a>.
    <a href="https://sonarcloud.io/dashboard?id=utarwyn_discord-tictactoe">
       <img src="https://sonarcloud.io/api/project_badges/measure?project=utarwyn_discord-tictactoe&metric=alert_status" alt="Quality Gate Status">
    </a>
-   <a href="https://npmjs.com/package/discord-tictactoe">
-      <img alt="npm" src="https://img.shields.io/npm/v/discord-tictactoe">
+   <a href="https://github.com/utarwyn/discord-tictactoe/releases/latest">
+      <img alt="GitHub release" src="https://img.shields.io/github/v/release/utarwyn/discord-tictactoe">
    </a>
-   <a href="https://hub.docker.com/r/utarwyn/discord-tictactoe">
-      <img src="https://img.shields.io/github/actions/workflow/status/utarwyn/discord-tictactoe/publish_docker.yml?label=docker%20build&branch=next" alt="Docker Build status">
+   <a href="https://npmjs.com/package/discord-tictactoe">
+      <img alt="npm" src="https://img.shields.io/npm/dt/discord-tictactoe?color=e67e22">
    </a>
    <a href="https://github.com/utarwyn/discord-tictactoe/blob/next/LICENSE">
       <img src="https://img.shields.io/github/license/utarwyn/discord-tictactoe" alt="License">
