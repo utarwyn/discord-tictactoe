@@ -2,6 +2,7 @@ import EventHandler, { EventTypes } from '@bot/EventHandler';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import Config from '@config/Config';
 import localize from '@i18n/localize';
+import { MessageProvider } from '@i18n/types';
 import { ChatInputCommandInteraction, Client, GatewayIntentBits, Message } from 'discord.js';
 
 /**
@@ -114,6 +115,17 @@ class TicTacToe {
         listener: V
     ): void {
         this.eventHandler.registerListener(eventName, listener);
+    }
+
+    /**
+     * Adds a message provider for a given key.
+     * Key must exist, otherwise an error will be thrown.
+     *
+     * @param key key corresponding to the added provider
+     * @param provider function that dynamically supplies the message
+     */
+    public addMessageProvider(key: string, provider: MessageProvider): void {
+        localize.addProvider(key, provider);
     }
 }
 
