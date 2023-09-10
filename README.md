@@ -55,7 +55,7 @@ The module is suitable for discord.js **v13** and **v14**. Check the table below
 
 | discord.js | Node.JS | Module   | Status      | NPM package              | Docker image                    |
 |------------|---------|----------|-------------|--------------------------|---------------------------------|
-| v14.*      | 16.9+   | v4.*     | Active      | discord-tictactoe@^4     | utarwyn/discord-tictactoe@4     |
+| v14.*      | 16.11+  | v4.*     | Active      | discord-tictactoe@^4     | utarwyn/discord-tictactoe@4     |
 | v13.*      | 16.6+   | v3.*     | Active      | discord-tictactoe@^3     | utarwyn/discord-tictactoe@3     |
 | ~~v12.*~~  | ~~14+~~ | ~~v2.*~~ | End-of-life | ~~discord-tictactoe@^2~~ | ~~utarwyn/discord-tictactoe@2~~ |
 
