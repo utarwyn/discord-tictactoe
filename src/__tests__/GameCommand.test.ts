@@ -72,7 +72,9 @@ describe('GameCommand', () => {
         });
 
         test('should reply in tunnel if an error occured during process', async () => {
-            jest.spyOn(stateManager, 'requestDuel').mockRejectedValue(null);
+            jest.spyOn(stateManager, 'requestDuel').mockRejectedValue(
+                new Error('game.in-progress')
+            );
 
             await command.handleMessage(message);
 
@@ -141,7 +143,9 @@ describe('GameCommand', () => {
         });
 
         test('should reply in tunnel if an error occured during process', async () => {
-            jest.spyOn(stateManager, 'requestDuel').mockRejectedValue(null);
+            jest.spyOn(stateManager, 'requestDuel').mockRejectedValue(
+                new Error('game.in-progress')
+            );
 
             await command.handleInteraction(interaction);
 
@@ -159,13 +163,13 @@ describe('GameCommand', () => {
 
         test('should verify if invited user is not a bot', async () => {
             const invitedBot = { user: { bot: true } } as GuildMember;
-            await expect(command['processInvitation'](tunnel, inviter, invitedBot)).rejects.toBe(
+            await expect(command['processInvitation'](tunnel, inviter, invitedBot)).rejects.toThrow(
                 'duel.no-bot'
             );
         });
 
         test('should verify if invited user is not the inviter', async () => {
-            await expect(command['processInvitation'](tunnel, inviter, inviter)).rejects.toBe(
+            await expect(command['processInvitation'](tunnel, inviter, inviter)).rejects.toThrow(
                 'duel.unknown-user'
             );
         });
@@ -175,28 +179,30 @@ describe('GameCommand', () => {
                 ...invited,
                 permissionsIn: _ => new Map() as any
             } as GuildMember;
-            await expect(command['processInvitation'](tunnel, inviter, invitedNoPerm)).rejects.toBe(
-                'duel.unknown-user'
-            );
+            await expect(
+                command['processInvitation'](tunnel, inviter, invitedNoPerm)
+            ).rejects.toThrow('duel.unknown-user');
         });
 
         test('should verify if game can be created', async () => {
-            jest.spyOn(stateManager, 'createGame').mockRejectedValue(null);
-            await expect(command['processInvitation'](tunnel, inviter)).rejects.toBe(
+            jest.spyOn(stateManager, 'createGame').mockRejectedValue(new Error('game.in-progress'));
+            await expect(command['processInvitation'](tunnel, inviter)).rejects.toThrow(
                 'game.in-progress'
             );
         });
 
         test('should verify if duel request can be created', async () => {
-            jest.spyOn(stateManager, 'requestDuel').mockRejectedValue(null);
-            await expect(command['processInvitation'](tunnel, inviter, invited)).rejects.toBe(
+            jest.spyOn(stateManager, 'requestDuel').mockRejectedValue(
+                new Error('game.in-progress')
+            );
+            await expect(command['processInvitation'](tunnel, inviter, invited)).rejects.toThrow(
                 'game.in-progress'
             );
         });
 
         test('should reject with the custom error if provided', async () => {
             jest.spyOn(stateManager, 'createGame').mockRejectedValue(new Error('custom error'));
-            await expect(command['processInvitation'](tunnel, inviter)).rejects.toBe(
+            await expect(command['processInvitation'](tunnel, inviter)).rejects.toThrow(
                 'custom error'
             );
         });

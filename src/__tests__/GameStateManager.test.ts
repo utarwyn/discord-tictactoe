@@ -52,7 +52,7 @@ describe('GameStateManager', () => {
         it('should reject if a new game is not possible', async () => {
             jest.spyOn(validator, 'isNewGamePossible').mockReturnValue(false);
             const invited = {} as GuildMember;
-            await expect(manager.requestDuel(tunnel, invited)).rejects.toBeUndefined();
+            await expect(manager.requestDuel(tunnel, invited)).rejects.toThrow('game.in-progress');
             expect(validator.isNewGamePossible).toHaveBeenCalledTimes(1);
             expect(validator.isNewGamePossible).toHaveBeenCalledWith(tunnel, invited);
         });
@@ -88,7 +88,7 @@ describe('GameStateManager', () => {
         it('should reject if a new game is not possible', async () => {
             jest.spyOn(validator, 'isNewGamePossible').mockReturnValue(false);
             const invited = <GuildMember>{};
-            await expect(manager.createGame(tunnel, invited)).rejects.toBeUndefined();
+            await expect(manager.createGame(tunnel, invited)).rejects.toThrow('game.in-progress');
             expect(validator.isNewGamePossible).toHaveBeenCalledTimes(1);
             expect(validator.isNewGamePossible).toHaveBeenCalledWith(tunnel, invited);
         });

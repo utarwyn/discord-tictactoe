@@ -54,7 +54,7 @@ export default class GameCommand {
             const invited = message.mentions.members?.first();
 
             return this.processInvitation(tunnel, message.member, invited).catch(async error => {
-                await tunnel.replyWith({ content: localize.__(error) }, true);
+                await tunnel.replyWith({ content: localize.__(error.message) }, true);
             });
         }
     }
@@ -82,7 +82,7 @@ export default class GameCommand {
                 undefined;
 
             return this.processInvitation(tunnel, member, mentionned).catch(async error => {
-                await tunnel.replyWith({ content: localize.__(error) }, true);
+                await tunnel.replyWith({ content: localize.__(error.message) }, true);
             });
         }
     }
@@ -105,10 +105,10 @@ export default class GameCommand {
                     inviter.user.id === invited.user.id ||
                     !invited.permissionsIn(tunnel.channel).has('ViewChannel')
                 ) {
-                    return Promise.reject('duel.unknown-user');
+                    throw new Error('duel.unknown-user');
                 }
             } else {
-                return Promise.reject('duel.no-bot');
+                throw new Error('duel.no-bot');
             }
         }
 
@@ -123,12 +123,10 @@ export default class GameCommand {
      * @param invited discord.js invited member instance, can be undefined to play against AI
      */
     private async handleInvitation(tunnel: MessagingTunnel, invited?: GuildMember): Promise<void> {
-        let handler: Promise<void>;
         if (invited) {
-            handler = this.manager.requestDuel(tunnel, invited);
+            await this.manager.requestDuel(tunnel, invited);
         } else {
-            handler = this.manager.createGame(tunnel);
+            await this.manager.createGame(tunnel);
         }
-        return handler.catch((err?: Error) => Promise.reject(err?.message ?? 'game.in-progress'));
     }
 }

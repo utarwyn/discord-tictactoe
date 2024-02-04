@@ -128,10 +128,8 @@ export default class AI implements Entity {
             if (deep.score > best.score) {
                 best = deep;
             }
-        } else {
-            if (deep.score < best.score) {
-                best = deep;
-            }
+        } else if (deep.score < best.score) {
+            best = deep;
         }
 
         return best;

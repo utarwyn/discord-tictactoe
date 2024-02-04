@@ -56,7 +56,7 @@ export default class GameStateManager {
     public async requestDuel(tunnel: MessagingTunnel, invited: GuildMember): Promise<void> {
         if (this.validator.isInteractionValid(tunnel)) {
             if (!this.validator.isNewGamePossible(tunnel, invited)) {
-                return Promise.reject();
+                throw new Error('game.in-progress');
             }
 
             const duel = new DuelRequest(
@@ -90,7 +90,7 @@ export default class GameStateManager {
     public async createGame(tunnel: MessagingTunnel, invited?: GuildMember): Promise<void> {
         if (this.validator.isInteractionValid(tunnel)) {
             if (!this.validator.isNewGamePossible(tunnel, invited)) {
-                return Promise.reject();
+                throw new Error('game.in-progress');
             }
 
             const gameboard = new GameBoard(
