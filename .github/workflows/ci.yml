@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main, next, 'release/**']
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ⚙ Setup
+        uses: ./.github/actions/setup
+        with:
+          node_version: 20.x
+
+      - name: 🎈 Lint and test
+        run: |
+          pnpm run format:check
+          pnpm run lint
+          pnpm run test
+
+      - name: ⛳ SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
