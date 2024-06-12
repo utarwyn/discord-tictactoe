@@ -1,22 +1,23 @@
 FROM node:20-slim as base
 LABEL maintainer="Utarwyn <maxime.malgorn@laposte.net>"
 
-RUN mkdir /app && chown -R node:node /app
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
+RUN corepack enable
+COPY . /app
 WORKDIR /app
 
-####################################################################################################
+FROM base AS prod-deps
+RUN pnpm install --prod --frozen-lockfile
 
-FROM base as build
+FROM base AS build
+RUN pnpm install --frozen-lockfile
+RUN pnpm run build
 
-COPY --chown=node:node . /app
-RUN yarn install --silent --pure-lockfile && yarn build && rm -rf node_modules && yarn install --production --silent --pure-lockfile && yarn cache clean
+FROM base
+COPY --from=prod-deps /app/node_modules /app/node_modules
+COPY --from=build /app/dist /app/dist
 
-####################################################################################################
-
-FROM base as release
-
-COPY --from=build --chown=node:node /app .
-
-USER node
 ENV NODE_ENV=production
-CMD ["yarn", "serve"]
+CMD ["pnpm", "serve"]

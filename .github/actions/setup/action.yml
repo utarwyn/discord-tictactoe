@@ -1,0 +1,26 @@
+name: setup
+description: Setup Node and install dependencies
+
+inputs:
+  node_version:
+    description: Node Version
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Use pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 9
+
+    - name: Use Node.js ${{ inputs.node_version }}
+      uses: actions/setup-node@v4
+      with:
+        cache: 'pnpm'
+        node-version: ${{ inputs.node_version }}
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: 🔧 Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile --strict-peer-dependencies

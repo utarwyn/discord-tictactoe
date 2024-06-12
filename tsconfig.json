@@ -16,7 +16,8 @@
     },
     "incremental": true,
     "declaration": true,
-    "stripInternal": true
+    "stripInternal": true,
+    "skipLibCheck": true
   },
   "include": ["src/**/*", "bin/**/*"]
 }
