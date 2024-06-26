@@ -58,5 +58,6 @@
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "release": "pnpm run clean && pnpm run lint && pnpm run test && pnpm run format && pnpm run build"
-  }
+  },
+  "packageManager": "pnpm@9.4.0"
 }
