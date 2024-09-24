@@ -2,12 +2,15 @@ import GameBoardButtonBuilder from '@bot/builder/GameBoardButtonBuilder';
 import localize from '@i18n/localize';
 import AI from '@tictactoe/ai/AI';
 import { Player } from '@tictactoe/Player';
-import { ActionRow, ButtonComponent } from 'discord.js';
+import { ButtonComponent } from 'discord.js';
 
 jest.mock('@tictactoe/ai/AI');
 
 describe('GameBoardButtonBuilder', () => {
     let builder: GameBoardButtonBuilder;
+
+    const getButton = (options: any, row: number, col: number) =>
+        options.components[row].components[col].toJSON() as ButtonComponent;
 
     beforeAll(() => {
         localize.loadFromLocale('en');
@@ -26,15 +29,11 @@ describe('GameBoardButtonBuilder', () => {
             .withBoard(2, [Player.First, Player.None, Player.None, Player.Second])
             .toMessageOptions();
 
-        const components = <ActionRow<ButtonComponent>[]>options.components;
-
-        expect(components).toHaveLength(2);
-        expect(components[0].toJSON().components).toHaveLength(2);
-        expect(components[1].toJSON().components).toHaveLength(2);
-        expect(components[0].toJSON().components[0].label).toBe('X');
-        expect(components[0].toJSON().components[1].label).toBe('-');
-        expect(components[1].toJSON().components[0].label).toBe('-');
-        expect(components[1].toJSON().components[1].label).toBe('O');
+        expect(options.components).toHaveLength(2);
+        expect(getButton(options, 0, 0).label).toBe('X');
+        expect(getButton(options, 0, 1).label).toBe('-');
+        expect(getButton(options, 1, 0).label).toBe('-');
+        expect(getButton(options, 1, 1).label).toBe('O');
     });
 
     it('should compute board using two custom emojies', () => {
@@ -43,12 +42,10 @@ describe('GameBoardButtonBuilder', () => {
             .withBoard(2, [Player.First, Player.Second, Player.None, Player.First])
             .toMessageOptions();
 
-        const components = <ActionRow<ButtonComponent>[]>options.components;
-
-        expect(components[0].toJSON().components[0].emoji?.name).toBe('dog');
-        expect(components[0].toJSON().components[1].emoji?.name).toBe('cat');
-        expect(components[1].toJSON().components[0].emoji?.name).toBeUndefined();
-        expect(components[1].toJSON().components[1].emoji?.name).toBe('dog');
+        expect(getButton(options, 0, 0).emoji?.name).toBe('dog');
+        expect(getButton(options, 0, 1).emoji?.name).toBe('cat');
+        expect(getButton(options, 1, 0).emoji?.name).toBeUndefined();
+        expect(getButton(options, 1, 1).emoji?.name).toBe('dog');
     });
 
     it('should compute board using three custom emojies', () => {
@@ -57,12 +54,10 @@ describe('GameBoardButtonBuilder', () => {
             .withBoard(2, [Player.First, Player.None, Player.Second, Player.None])
             .toMessageOptions();
 
-        const components = <ActionRow<ButtonComponent>[]>options.components;
-
-        expect(components[0].toJSON().components[0].emoji?.name).toBe('dog');
-        expect(components[0].toJSON().components[1].emoji?.name).toBe('square');
-        expect(components[1].toJSON().components[0].emoji?.name).toBe('cat');
-        expect(components[1].toJSON().components[1].emoji?.name).toBe('square');
+        expect(getButton(options, 0, 0).emoji?.name).toBe('dog');
+        expect(getButton(options, 0, 1).emoji?.name).toBe('square');
+        expect(getButton(options, 1, 0).emoji?.name).toBe('cat');
+        expect(getButton(options, 1, 1).emoji?.name).toBe('square');
     });
 
     it('should do nothing when a loading message is added', () => {
@@ -85,12 +80,10 @@ describe('GameBoardButtonBuilder', () => {
             .withBoard(2, [Player.First, Player.Second, Player.None, Player.None])
             .toMessageOptions();
 
-        const components = <ActionRow<ButtonComponent>[]>options.components;
-
-        expect(components[0].toJSON().components[0].disabled).toBeTruthy();
-        expect(components[0].toJSON().components[1].disabled).toBeTruthy();
-        expect(components[1].toJSON().components[0].disabled).toBeFalsy();
-        expect(components[1].toJSON().components[1].disabled).toBeFalsy();
+        expect(getButton(options, 0, 0).disabled).toBeTruthy();
+        expect(getButton(options, 0, 1).disabled).toBeTruthy();
+        expect(getButton(options, 1, 0).disabled).toBeFalsy();
+        expect(getButton(options, 1, 1).disabled).toBeFalsy();
     });
 
     it('should disable all buttons if game has ended', () => {
@@ -100,12 +93,10 @@ describe('GameBoardButtonBuilder', () => {
             .withEndingMessage()
             .toMessageOptions();
 
-        const components = <ActionRow<ButtonComponent>[]>options.components;
-
-        expect(components[0].toJSON().components[0].disabled).toBeTruthy();
-        expect(components[0].toJSON().components[1].disabled).toBeTruthy();
-        expect(components[1].toJSON().components[0].disabled).toBeTruthy();
-        expect(components[1].toJSON().components[1].disabled).toBeTruthy();
+        expect(getButton(options, 0, 0).disabled).toBeTruthy();
+        expect(getButton(options, 0, 1).disabled).toBeTruthy();
+        expect(getButton(options, 1, 0).disabled).toBeTruthy();
+        expect(getButton(options, 1, 1).disabled).toBeTruthy();
     });
 
     it('should use an embed if configured to use it', () => {
