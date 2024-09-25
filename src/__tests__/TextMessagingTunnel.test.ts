@@ -1,5 +1,5 @@
 import TextMessagingTunnel from '@bot/messaging/TextMessagingTunnel';
-import { GuildMember, Message, TextChannel } from 'discord.js';
+import { BaseMessageOptions, GuildMember, Message, TextChannel } from 'discord.js';
 
 describe('TextMessagingTunnel', () => {
     const createTunnel = (origin: Message) => new TextMessagingTunnel(origin);
@@ -20,5 +20,13 @@ describe('TextMessagingTunnel', () => {
 
         tunnel['_reply'] = <Message>{ id: 'C1' };
         expect(tunnel.reply).toBe(tunnel['_reply']);
+    });
+
+    it('should reply to the origin message', async () => {
+        const answer = <BaseMessageOptions>{ content: 'My reply' };
+        const tunnel = createTunnel(<Message>{ channel: { send: jest.fn() as unknown } });
+        await tunnel.replyWith(answer);
+
+        expect(tunnel.channel.send).toHaveBeenCalledWith(answer);
     });
 });

@@ -1,5 +1,11 @@
 import MessagingTunnel from '@bot/messaging/MessagingTunnel';
-import { BaseMessageOptions, GuildMember, Message, TextChannel } from 'discord.js';
+import {
+    BaseMessageOptions,
+    GuildMember,
+    GuildTextBasedChannel,
+    Message,
+    TextChannel
+} from 'discord.js';
 
 /**
  * Represents a text messaging channel
@@ -59,7 +65,7 @@ export default class TextMessagingTunnel extends MessagingTunnel {
         if (direct) {
             this._reply = await this.origin.reply(answer);
         } else {
-            this._reply = await this.origin.channel.send(answer);
+            this._reply = await (this.origin.channel as GuildTextBasedChannel).send(answer);
         }
         return this._reply;
     }

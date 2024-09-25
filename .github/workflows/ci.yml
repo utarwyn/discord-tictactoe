@@ -28,6 +28,9 @@ jobs:
           pnpm run lint
           pnpm run test
 
+      - name: 📦 Build
+        run: pnpm run build
+
       - name: ⛳ SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
