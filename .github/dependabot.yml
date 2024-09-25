@@ -10,7 +10,7 @@ updates:
       - utarwyn
     ignore:
       - dependency-name: '@types/node'
-        versions: ['>=18'] # stick to node 16
+        versions: ['>16'] # stick to node 16
     groups:
       minor-all:
         patterns:
