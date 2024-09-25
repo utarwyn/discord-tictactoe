@@ -1,19 +1,42 @@
 version: 2
 updates:
-- package-ecosystem: npm
-  directory: "/"
-  schedule:
-    interval: daily
-    time: "04:00"
-  open-pull-requests-limit: 10
-  reviewers:
-  - utarwyn
-  ignore:
-  - dependency-name: "@types/node"
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: daily
+      time: '04:00'
+    open-pull-requests-limit: 10
+    reviewers:
+      - utarwyn
+    ignore:
+      - dependency-name: '@types/node'
+        versions: ['>=18'] # stick to node 16
+    groups:
+      minor-all:
+        patterns:
+          - '*'
+        exclude-patterns:
+          - 'typescript'
+        update-types:
+          - 'minor'
+          - 'patch'
+      major-all:
+        patterns:
+          - '*'
+        exclude-patterns:
+          - 'typescript'
+        update-types:
+          - 'major'
+      major-typescript:
+        patterns:
+          - 'typescript'
+        update-types:
+          - 'patch'
+          - 'major'
 
-- package-ecosystem: "github-actions"
-  directory: "/"
-  schedule:
-    interval: "weekly"
-  reviewers:
-  - utarwyn
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    reviewers:
+      - utarwyn
