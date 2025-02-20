@@ -2,6 +2,7 @@ import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import {
     ChatInputCommandInteraction,
     GuildMember,
+    InteractionEditReplyOptions,
     InteractionReplyOptions,
     Message,
     TextChannel
@@ -70,7 +71,7 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
 
         // Edit the reply if already exists
         if (this.reply) {
-            await this.editReply(answer);
+            await this.editReply(answer as InteractionEditReplyOptions);
             return this.reply;
         }
 
@@ -88,7 +89,7 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async editReply(answer: InteractionReplyOptions): Promise<void> {
+    public async editReply(answer: InteractionEditReplyOptions): Promise<void> {
         if (this.reply) {
             await this.interaction.editReply(answer);
         }
@@ -97,7 +98,7 @@ export default class CommandInteractionMessagingTunnel extends MessagingTunnel {
     /**
      * @inheritdoc
      */
-    public async end(reason: InteractionReplyOptions): Promise<void> {
+    public async end(reason: InteractionEditReplyOptions): Promise<void> {
         if (this.reply) {
             try {
                 await this.editReply(reason);

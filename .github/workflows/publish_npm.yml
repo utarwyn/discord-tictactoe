@@ -18,7 +18,7 @@ jobs:
       - name: ⚙ Setup
         uses: ./.github/actions/setup
         with:
-          node_version: 20.x
+          node_version: 22.x
 
       - name: 🚀 Prepare release
         run: pnpm run release
@@ -42,7 +42,7 @@ jobs:
       - name: ⚙ Setup
         uses: ./.github/actions/setup
         with:
-          node_version: 20.x
+          node_version: 22.x
 
       - name: 📝 Add scope to package name
         run: npx --yes change-package-name @utarwyn/discord-tictactoe
