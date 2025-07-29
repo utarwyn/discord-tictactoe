@@ -43,6 +43,8 @@ jobs:
         uses: ./.github/actions/setup
         with:
           node_version: 22.x
+          registry_url: 'https://npm.pkg.github.com'
+          scope: '@utarwyn'
 
       - name: 📝 Add scope to package name
         run: npx --yes change-package-name @utarwyn/discord-tictactoe

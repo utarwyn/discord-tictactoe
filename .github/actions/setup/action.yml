@@ -5,6 +5,13 @@ inputs:
   node_version:
     description: Node Version
     required: true
+  registry_url:
+    description: NPM Registry URL
+    required: false
+    default: 'https://registry.npmjs.org'
+  scope:
+    description: NPM Scope
+    required: false
 
 runs:
   using: composite
@@ -17,7 +24,8 @@ runs:
       with:
         cache: 'pnpm'
         node-version: ${{ inputs.node_version }}
-        registry-url: 'https://registry.npmjs.org'
+        registry-url: ${{ inputs.registry_url }}
+        scope: ${{ inputs.scope }}
 
     - name: 🔧 Install dependencies
       shell: bash
