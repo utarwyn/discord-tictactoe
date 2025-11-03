@@ -23,7 +23,7 @@
     "end": "Tidak ada yang menang, Ini seri! Coba lagi?",
     "win": ":tada: {player} Memenangkan permainan",
     "expire": ":x: Game telah **Kadaluarsa**... Mungkin salah satu pemain tidak aktif",
-    "in-progress": "Kamu tidak bisa memulai Pertandingan kain, Selesaikan dulu yang sekarang!.",
+    "in-progress": "Kamu tidak bisa memulai Pertandingan lain, Selesaikan dahulu pertandingan yang sedang berjalan!.",
     "waiting-ai": ":robot: AI Sedang bermain, tunggu sebentar...",
     "ai": "sang AI"
   }
