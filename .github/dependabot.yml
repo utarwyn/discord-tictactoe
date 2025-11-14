@@ -3,8 +3,7 @@ updates:
   - package-ecosystem: npm
     directory: '/'
     schedule:
-      interval: weekly
-      day: 'monday'
+      interval: daily
       time: '04:00'
     open-pull-requests-limit: 3
     versioning-strategy: increase
@@ -22,6 +21,7 @@ updates:
         update-types:
           - 'minor'
           - 'patch'
+        default-days: 3
       major-all:
         patterns:
           - '*'
@@ -29,12 +29,14 @@ updates:
           - 'typescript'
         update-types:
           - 'major'
+        default-days: 3
       major-typescript:
         patterns:
           - 'typescript'
         update-types:
           - 'patch'
           - 'major'
+        default-days: 3
 
   - package-ecosystem: 'github-actions'
     directory: '/'
