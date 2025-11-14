@@ -3,8 +3,9 @@ updates:
   - package-ecosystem: npm
     directory: '/'
     schedule:
-      interval: daily
-      time: '04:00'
+      interval: weekly
+    cooldown:
+      default-days: 3
     open-pull-requests-limit: 3
     versioning-strategy: increase
     reviewers:
@@ -41,6 +42,6 @@ updates:
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: 'weekly'
+      interval: weekly
     reviewers:
       - utarwyn
