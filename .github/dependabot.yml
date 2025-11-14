@@ -20,6 +20,16 @@ updates:
         update-types:
           - 'minor'
           - 'patch'
+        dependency-type: 'production'
+      minor-all-dev:
+        patterns:
+          - '*'
+        exclude-patterns:
+          - 'typescript'
+        update-types:
+          - 'minor'
+          - 'patch'
+        dependency-type: 'development'
       major-all:
         patterns:
           - '*'
@@ -27,6 +37,15 @@ updates:
           - 'typescript'
         update-types:
           - 'major'
+        dependency-type: 'production'
+      major-all-dev:
+        patterns:
+          - '*'
+        exclude-patterns:
+          - 'typescript'
+        update-types:
+          - 'major'
+        dependency-type: 'development'
       major-typescript:
         patterns:
           - 'typescript'
