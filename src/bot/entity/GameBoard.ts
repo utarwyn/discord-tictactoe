@@ -150,7 +150,7 @@ export default class GameBoard {
      * @private
      */
     private static buttonIdentifierToMove(identifier: string): number {
-        return parseInt(identifier) ?? -1;
+        return Number.parseInt(identifier) ?? -1;
     }
 
     /**

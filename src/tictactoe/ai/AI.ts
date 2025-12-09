@@ -34,7 +34,7 @@ export default class AI implements Entity {
     /**
      * Probability of running the randomized algorithm.
      */
-    private randomRate: number;
+    private readonly randomRate: number;
 
     /**
      * Creates an AI.

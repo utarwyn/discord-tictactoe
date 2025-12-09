@@ -1,7 +1,7 @@
 import Config from '@config/Config';
 import { AIDifficulty } from '@config/types';
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 /**
  * Manages the configuration loading to operate the bot.
@@ -67,7 +67,7 @@ export default class ConfigProvider implements Config {
                 // Operate types checking
                 switch (typeof this[camelCaseKey]) {
                     case 'number':
-                        newValue = parseFloat(value);
+                        newValue = Number.parseFloat(value);
                         break;
                     case 'boolean':
                         newValue = value.toLowerCase() === 'true';
@@ -90,6 +90,6 @@ export default class ConfigProvider implements Config {
     }
 
     private static camelCase(str: string): string {
-        return str.toLowerCase().replace(/_([a-z])/g, g => g[1].toUpperCase());
+        return str.toLowerCase().replaceAll(/_([a-z])/g, g => g[1].toUpperCase());
     }
 }

@@ -58,7 +58,7 @@ describe('AI', () => {
     describe('Randomize algorithm', () => {
         beforeEach(() => {
             ai = new AI();
-            ai['randomRate'] = 1;
+            Object.defineProperty(ai, 'randomRate', { get: () => 1 });
         });
 
         it('should only pick empty cells', () => {

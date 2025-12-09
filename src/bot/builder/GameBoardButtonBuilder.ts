@@ -23,12 +23,12 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
      * Default labels used on buttons if emojies are not enabled.
      * @protected
      */
-    private buttonLabels = ['-', 'X', 'O'];
+    private readonly buttonLabels = ['-', 'X', 'O'];
     /**
      * Button styles used for representing the two players.
      * @private
      */
-    private buttonStyles: ButtonStyle[] = [
+    private readonly buttonStyles: ButtonStyle[] = [
         ButtonStyle.Secondary,
         ButtonStyle.Primary,
         ButtonStyle.Danger
@@ -110,11 +110,11 @@ export default class GameBoardButtonBuilder extends GameBoardBuilder {
         }
 
         return {
-            embeds: embed !== null ? [embed] : [],
-            content: embed === null ? this.title + state : undefined,
-            components: [...Array(this.boardSize).keys()].map(row =>
+            embeds: embed ? [embed] : [],
+            content: embed ? undefined : this.title + state,
+            components: [...new Array(this.boardSize).keys()].map(row =>
                 new ActionRowBuilder<ButtonBuilder>().addComponents(
-                    [...Array(this.boardSize).keys()].map(col => this.createButton(row, col))
+                    [...new Array(this.boardSize).keys()].map(col => this.createButton(row, col))
                 )
             )
         };

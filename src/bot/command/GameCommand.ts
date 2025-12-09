@@ -100,15 +100,15 @@ export default class GameCommand {
         invited?: GuildMember
     ): Promise<void> {
         if (invited) {
-            if (!invited.user.bot) {
-                if (
-                    inviter.user.id === invited.user.id ||
-                    !invited.permissionsIn(tunnel.channel).has('ViewChannel')
-                ) {
-                    throw new Error('duel.unknown-user');
-                }
-            } else {
+            if (invited.user.bot) {
                 throw new Error('duel.no-bot');
+            }
+
+            if (
+                inviter.user.id === invited.user.id ||
+                !invited.permissionsIn(tunnel.channel).has('ViewChannel')
+            ) {
+                throw new Error('duel.unknown-user');
             }
         }
 

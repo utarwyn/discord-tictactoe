@@ -45,7 +45,7 @@ describe('GameStateValidator', () => {
         ${GameStateValidator['PERM_LIST']}                      | ${false}
         ${[...GameStateValidator['PERM_LIST'], 'AddReactions']} | ${true}
     `('should check for member permissions $permissions', ({ permissions, expected }) => {
-        const spyError = jest.spyOn(global.console, 'error').mockImplementation();
+        const spyError = jest.spyOn(globalThis.console, 'error').mockImplementation();
         jest.spyOn(tunnel.channel.guild.members.me!, 'permissionsIn').mockReturnValue({
             has: list => (list as Array<PermissionsBitField>).every(k => permissions.includes(k))
         } as Readonly<PermissionsBitField>);
@@ -57,7 +57,7 @@ describe('GameStateValidator', () => {
     });
 
     it('should not need AddReactions perm if do not use reactions', () => {
-        const spyError = jest.spyOn(global.console, 'error').mockImplementation();
+        const spyError = jest.spyOn(globalThis.console, 'error').mockImplementation();
         const hasPermissions = jest.fn();
         jest.spyOn(tunnel.channel.guild.members.me!, 'permissionsIn').mockReturnValue({
             has: hasPermissions

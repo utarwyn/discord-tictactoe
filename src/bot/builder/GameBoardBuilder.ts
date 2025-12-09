@@ -27,12 +27,12 @@ export default class GameBoardBuilder {
      * Stores game board title message.
      * @protected
      */
-    protected title: string;
+    protected title = '';
     /**
      * Stores localization key of current game state.
      * @protected
      */
-    protected stateKey: string;
+    protected stateKey = '';
     /**
      * Stores entity whiches is concerned in the state message.
      * @protected
@@ -42,27 +42,17 @@ export default class GameBoardBuilder {
      * Stores game board size.
      * @protected
      */
-    protected boardSize: number;
+    protected boardSize = 0;
     /**
      * Stores game board data.
      * @protected
      */
-    protected boardData: Player[];
+    protected boardData: Player[] = [];
     /**
      * Stores embed color if enabled, undefined otherwise.
      * @private
      */
     protected embedColor?: EmbedColor;
-
-    /**
-     * Constructs a new game board builder.
-     */
-    constructor() {
-        this.title = '';
-        this.stateKey = '';
-        this.boardSize = 0;
-        this.boardData = [];
-    }
 
     /**
      * Writes a title to the game board message.
@@ -196,8 +186,8 @@ export default class GameBoardBuilder {
         }
         return {
             allowedMentions: { parse: ['users'] },
-            embeds: embed !== null ? [embed] : [],
-            content: embed === null ? this.title + stateWithBoard : undefined,
+            embeds: embed ? [embed] : [],
+            content: embed ? undefined : this.title + stateWithBoard,
             components: []
         };
     }

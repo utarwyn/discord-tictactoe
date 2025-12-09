@@ -1,6 +1,6 @@
 import { MessageProvider, Replacements } from '@i18n/types';
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 /**
  * Default implementation to translate messages.
@@ -37,7 +37,7 @@ export class I18nProvider {
     private localeData?: Record<string, string>;
 
     constructor() {
-        const workingDirectory = global.__dirname ?? __dirname;
+        const workingDirectory = globalThis.__dirname ?? __dirname;
         const localesPath = path.join(workingDirectory, '..', '..', '..', 'config', 'locales');
 
         this.availableLocales = new Map(
@@ -57,7 +57,7 @@ export class I18nProvider {
         let filepath = this.availableLocales.get(locale ?? I18nProvider.DEFAULT_LOCALE);
         let loaded = filepath !== undefined;
 
-        if (!loaded && locale && locale.startsWith(I18nProvider.FILEPATH_PREFIX)) {
+        if (!loaded && locale?.startsWith(I18nProvider.FILEPATH_PREFIX)) {
             filepath = path.resolve(
                 process.cwd(),
                 locale.slice(I18nProvider.FILEPATH_PREFIX.length)

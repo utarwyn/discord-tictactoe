@@ -94,8 +94,9 @@ export default class DuelRequest {
 
         return {
             allowedMentions: { parse: ['users'] },
-            components: !this.useReactions
-                ? [
+            components: this.useReactions
+                ? []
+                : [
                       new ActionRowBuilder<ButtonBuilder>().addComponents(
                           new ButtonBuilder({
                               style: ButtonStyle.Success,
@@ -108,8 +109,7 @@ export default class DuelRequest {
                               label: localize.__('duel.button.decline')
                           })
                       )
-                  ]
-                : [],
+                  ],
             content: this.invited.toString(),
             embeds: [
                 new EmbedBuilder()
@@ -169,7 +169,7 @@ export default class DuelRequest {
     private async challengeButtonAnswered(interaction: MessageComponentInteraction): Promise<void> {
         // now that an interaction using buttons has been operated on message, use it
         this.tunnel = new ComponentInteractionMessagingTunnel(interaction, this.tunnel.author);
-        return this.challengeAnswered(interaction.customId === 'yes');
+        return interaction.customId === 'yes' ? this.challengeAccepted() : this.challengeRejected();
     }
 
     /**
@@ -180,25 +180,27 @@ export default class DuelRequest {
     private async challengeEmojiAnswered(
         collected: Collection<Snowflake, MessageReaction>
     ): Promise<void> {
-        return this.challengeAnswered(collected.first()!.emoji.name === DuelRequest.REACTIONS[0]);
+        const accepted = collected.first()!.emoji.name === DuelRequest.REACTIONS[0];
+        return accepted ? this.challengeAccepted() : this.challengeRejected();
     }
 
     /**
-     * Called when the invited user answered to the request.
-     *
-     * @param accepted true if user accepted the request, false otherwise
+     * Called when the invited user accepts the request.
      */
-    private async challengeAnswered(accepted: boolean): Promise<void> {
-        if (accepted) {
-            return this.manager.createGame(this.tunnel, this.invited);
-        } else {
-            return this.tunnel.end({
-                allowedMentions: { parse: [] },
-                components: [],
-                content: localize.__('duel.reject', { invited: this.invited.displayName }),
-                embeds: []
-            });
-        }
+    private async challengeAccepted(): Promise<void> {
+        return this.manager.createGame(this.tunnel, this.invited);
+    }
+
+    /**
+     * Called when the invited user declines the request.
+     */
+    private async challengeRejected(): Promise<void> {
+        return this.tunnel.end({
+            allowedMentions: { parse: [] },
+            components: [],
+            content: localize.__('duel.reject', { invited: this.invited.displayName }),
+            embeds: []
+        });
     }
 
     /**
