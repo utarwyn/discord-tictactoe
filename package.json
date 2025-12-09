@@ -26,7 +26,7 @@
     "typescript"
   ],
   "dependencies": {
-    "discord.js": "^14.21.0"
+    "discord.js": "^14.25.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
@@ -60,5 +60,5 @@
     "test:watch": "jest --watch",
     "release": "pnpm run clean && pnpm run lint && pnpm run test && pnpm run format && pnpm run build"
   },
-  "packageManager": "pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af"
+  "packageManager": "pnpm@10.25.0+sha512.5e82639027af37cf832061bcc6d639c219634488e0f2baebe785028a793de7b525ffcd3f7ff574f5e9860654e098fe852ba8ac5dd5cefe1767d23a020a92f501"
 }
