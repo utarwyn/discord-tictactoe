@@ -44,13 +44,10 @@ Then, you can install the bot via Docker or npm (check below!). If you are not a
 
 ## Installation
 
-The module is suitable for discord.js **v13** and **v14**. Check the table below to see which version meets your needs.
+The module is suitable for discord.js **v14** and requires an active **LTS version** of Node.
 
-| discord.js | Node.JS | Module    | Status      | NPM package              | Docker image                    |
-| ---------- | ------- | --------- | ----------- | ------------------------ | ------------------------------- |
-| v14.\*     | 16.11+  | v4.\*     | Active      | discord-tictactoe@^4     | utarwyn/discord-tictactoe@4     |
-| v13.\*     | 16.6+   | v3.\*     | Active      | discord-tictactoe@^3     | utarwyn/discord-tictactoe@3     |
-| ~~v12.\*~~ | ~~14+~~ | ~~v2.\*~~ | End-of-life | ~~discord-tictactoe@^2~~ | ~~utarwyn/discord-tictactoe@2~~ |
+> [!WARNING]
+> **Module v3 is unsupported** as it uses the outdated discord.js v13. Please upgrade to v4 (`discord-tictactoe@^4`) which uses discord.js v14. v3 will no longer receive updates or support.
 
 The bot works **out-of-the-box**. But if you want to configure it, check [config.example.json][7] file in the config folder.
 
@@ -65,7 +62,7 @@ The bot works **out-of-the-box**. But if you want to configure it, check [config
 
 1. Check with `node -v` that you are running appropriate Node.js version.
 2. Install the project from [npm][2]:\
-   `npm install discord-tictactoe@^4` or `yarn add discord-tictactoe@^4`
+   `npm install discord-tictactoe@` or `yarn add discord-tictactoe@`
 3. Import module into your script:
    ```javascript
    const TicTacToe = require('discord-tictactoe');
