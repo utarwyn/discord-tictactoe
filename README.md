@@ -62,7 +62,7 @@ The bot works **out-of-the-box**. But if you want to configure it, check [config
 
 1. Check with `node -v` that you are running appropriate Node.js version.
 2. Install the project from [npm][2]:\
-   `npm install discord-tictactoe@` or `yarn add discord-tictactoe@`
+   `npm install discord-tictactoe` or `yarn add discord-tictactoe`
 3. Import module into your script:
    ```javascript
    const TicTacToe = require('discord-tictactoe');
