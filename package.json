@@ -41,7 +41,7 @@
     "replace-in-file": "^8.4.0",
     "rimraf": "^6.1.2",
     "ts-jest": "^29.4.6",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "typescript-eslint": "^8.50.0"
   },
   "engines": {
