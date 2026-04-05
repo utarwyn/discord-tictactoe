@@ -1,23 +1,18 @@
 {
+  "extends": "@tsconfig/node18/tsconfig.json",
+  "include": ["src/**/*", "bin/**/*"],
   "compilerOptions": {
-    "module": "commonjs",
-    "esModuleInterop": true,
     "resolveJsonModule": true,
-    "target": "es2021",
-    "strict": true,
     "outDir": "dist",
-    "lib": ["es2021"],
-    "baseUrl": ".",
+    "types": ["node", "jest"],
     "paths": {
-      "@bot/*": ["src/bot/*"],
-      "@config/*": ["src/config/*"],
-      "@i18n/*": ["src/i18n/*"],
-      "@tictactoe/*": ["src/tictactoe/*"]
+      "@bot/*": ["./src/bot/*"],
+      "@config/*": ["./src/config/*"],
+      "@i18n/*": ["./src/i18n/*"],
+      "@tictactoe/*": ["./src/tictactoe/*"]
     },
     "incremental": true,
     "declaration": true,
-    "stripInternal": true,
-    "skipLibCheck": true
-  },
-  "include": ["src/**/*", "bin/**/*"]
+    "stripInternal": true
+  }
 }
