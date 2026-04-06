@@ -17,10 +17,10 @@ runs:
   using: composite
   steps:
     - name: Use pnpm
-      uses: pnpm/action-setup@v4
+      uses: pnpm/action-setup@v5
 
     - name: Use Node.js ${{ inputs.node_version }}
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         cache: 'pnpm'
         node-version: ${{ inputs.node_version }}

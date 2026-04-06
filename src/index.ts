@@ -67,7 +67,9 @@ class TicTacToe {
             await client.login(loginToken);
         } catch (e: any) {
             if (e.message?.startsWith('Privileged')) {
-                throw new Error('You must enable Message Content intent to use the text command.');
+                throw new Error('You must enable Message Content intent to use the text command.', {
+                    cause: e
+                });
             } else {
                 throw e;
             }
