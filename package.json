@@ -30,9 +30,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@tsconfig/node18": "^18.2.6",
+    "@tsconfig/node22": "^22.0.6",
     "@types/jest": "^30.0.0",
-    "@types/node": "^18.19.120",
+    "@types/node": "^22.20.5",
     "eslint": "^10.2.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jest": "^29.15.1",
@@ -46,7 +46,7 @@
     "typescript-eslint": "^8.58.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "scripts": {
     "clean": "rimraf coverage dist tmp",
@@ -61,5 +61,5 @@
     "test:watch": "jest --watch",
     "release": "pnpm run clean && pnpm run lint && pnpm run test && pnpm run format && pnpm run build"
   },
-  "packageManager": "pnpm@10.25.0+sha512.5e82639027af37cf832061bcc6d639c219634488e0f2baebe785028a793de7b525ffcd3f7ff574f5e9860654e098fe852ba8ac5dd5cefe1767d23a020a92f501"
+  "packageManager": "pnpm@12.16.1+sha512.091d1dee7927575661b25dab3c2ae31cafc1c54d6b71ed6a6600cf0c1cb10434a447eae14015f1b23e2e6bedeed79df94a932e2164d2832280dce3fb32f656d1"
 }

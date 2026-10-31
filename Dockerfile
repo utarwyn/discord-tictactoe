@@ -1,4 +1,4 @@
-FROM node:22-slim as base
+FROM node:26-slim as base
 LABEL maintainer="Utarwyn <maxime.malgorn@laposte.net>"
 
 ENV PNPM_HOME="/pnpm"
