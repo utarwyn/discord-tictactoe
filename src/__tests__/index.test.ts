@@ -4,13 +4,13 @@ import localize from '@i18n/localize';
 import { ChatInputCommandInteraction, Client, GatewayIntentBits, Message } from 'discord.js';
 import TicTacToe from '../index';
 
-jest.mock('@bot/EventHandler');
-jest.mock('@bot/TicTacToeBot');
-jest.mock('@i18n/localize');
-jest.mock('discord.js', () => ({
-    ...jest.createMockFromModule<any>('discord.js'),
-    GatewayIntentBits: jest.requireActual('discord.js').GatewayIntentBits
-}));
+vi.mock('@bot/EventHandler');
+vi.mock('@bot/TicTacToeBot');
+vi.mock('@i18n/localize');
+vi.mock('discord.js', async importOriginal => {
+    const actual = await importOriginal<typeof import('discord.js')>();
+    return { ...actual, Client: vi.fn() as unknown as typeof actual.Client };
+});
 
 describe('TicTacToe', () => {
     let bot: TicTacToeBot;
@@ -19,15 +19,19 @@ describe('TicTacToe', () => {
 
     beforeEach(() => {
         bot = {
-            attachToClient: jest.fn() as any,
-            handleMessage: jest.fn() as any,
-            handleInteraction: jest.fn() as any
-        } as TicTacToeBot;
-        eventHandler = { registerListener: jest.fn() as any } as EventHandler;
+            attachToClient: vi.fn(),
+            handleMessage: vi.fn(),
+            handleInteraction: vi.fn()
+        } as unknown as TicTacToeBot;
+        eventHandler = { registerListener: vi.fn() } as unknown as EventHandler;
         tictactoe = new TicTacToe({ command: 'cmd', language: 'fr', token: 'token' });
 
-        jest.mocked(TicTacToeBot).mockImplementation(() => bot);
-        jest.mocked(EventHandler).mockImplementation(() => eventHandler);
+        vi.mocked(TicTacToeBot).mockImplementation(function () {
+            return bot;
+        });
+        vi.mocked(EventHandler).mockImplementation(function () {
+            return eventHandler;
+        });
     });
 
     test('should use an empty object if config not provided', () => {
@@ -43,8 +47,10 @@ describe('TicTacToe', () => {
         let client: Client;
 
         beforeEach(() => {
-            client = { login: jest.fn() as any } as Client;
-            jest.mocked(Client).mockImplementation(() => client);
+            client = { login: vi.fn() as any } as Client;
+            vi.mocked(Client).mockImplementation(function () {
+                return client;
+            });
         });
 
         test('should use token from parameter if provided', async () => {
@@ -68,7 +74,7 @@ describe('TicTacToe', () => {
         test('should add message content intent if text command is enabled', async () => {
             Object.assign(tictactoe, { config: { ...tictactoe['config'], textCommand: 'ttt' } });
             await tictactoe.login();
-            expect(jest.mocked(Client)).toHaveBeenCalledWith({
+            expect(vi.mocked(Client)).toHaveBeenCalledWith({
                 intents: expect.arrayContaining([GatewayIntentBits.MessageContent])
             });
         });
@@ -84,7 +90,7 @@ describe('TicTacToe', () => {
         });
 
         test('should throw a specific error if a privileged intent is needed', async () => {
-            jest.spyOn(client, 'login').mockRejectedValue(new Error('Privileged intent needed'));
+            vi.spyOn(client, 'login').mockRejectedValue(new Error('Privileged intent needed'));
             await expect(tictactoe.login()).rejects.toHaveProperty(
                 'message',
                 expect.stringContaining('enable Message Content')
@@ -93,7 +99,7 @@ describe('TicTacToe', () => {
 
         test('should throw a generic error if a problem occured during login', async () => {
             const error = new Error('generic error');
-            jest.spyOn(client, 'login').mockRejectedValue(error);
+            vi.spyOn(client, 'login').mockRejectedValue(error);
             await expect(tictactoe.login()).rejects.toEqual(error);
         });
     });
@@ -120,7 +126,7 @@ describe('TicTacToe', () => {
     });
 
     test('should call registerListener from event handler', () => {
-        const listener = jest.fn();
+        const listener = vi.fn();
         tictactoe.on('tie', listener);
         expect(eventHandler.registerListener).toHaveBeenCalledTimes(1);
         expect(eventHandler.registerListener).toHaveBeenCalledWith('tie', listener);

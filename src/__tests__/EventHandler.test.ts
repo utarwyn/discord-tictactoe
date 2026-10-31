@@ -2,7 +2,7 @@ import EventHandler from '@bot/EventHandler';
 
 describe('EventHandler', () => {
     let eventHandler: EventHandler;
-    const listener = jest.fn();
+    const listener = vi.fn();
 
     beforeEach(() => {
         eventHandler = new EventHandler();

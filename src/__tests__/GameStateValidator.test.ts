@@ -12,18 +12,11 @@ describe('GameStateValidator', () => {
     let validator: GameStateValidator;
 
     beforeEach(() => {
+        const permissionsIn = (_c: any) => <Readonly<PermissionsBitField>>{ has: _p => true };
+
         // default state is valid
         tunnel = {
-            channel: {
-                id: 'TC1',
-                guild: {
-                    members: {
-                        me: {
-                            permissionsIn: _c => <Readonly<PermissionsBitField>>{ has: _p => true }
-                        }
-                    }
-                }
-            },
+            channel: { id: 'TC1', guild: { members: { me: { permissionsIn } } } },
             author: {
                 id: 'GM1',
                 roles: { cache: new Collection() },
@@ -45,8 +38,8 @@ describe('GameStateValidator', () => {
         ${GameStateValidator['PERM_LIST']}                      | ${false}
         ${[...GameStateValidator['PERM_LIST'], 'AddReactions']} | ${true}
     `('should check for member permissions $permissions', ({ permissions, expected }) => {
-        const spyError = jest.spyOn(globalThis.console, 'error').mockImplementation();
-        jest.spyOn(tunnel.channel.guild.members.me!, 'permissionsIn').mockReturnValue({
+        const spyError = vi.spyOn(globalThis.console, 'error').mockImplementation(() => {});
+        vi.spyOn(tunnel.channel.guild.members.me!, 'permissionsIn').mockReturnValue({
             has: list => (list as Array<PermissionsBitField>).every(k => permissions.includes(k))
         } as Readonly<PermissionsBitField>);
         manager.bot.configuration.gameBoardReactions = true;
@@ -57,16 +50,14 @@ describe('GameStateValidator', () => {
     });
 
     it('should not need AddReactions perm if do not use reactions', () => {
-        const spyError = jest.spyOn(globalThis.console, 'error').mockImplementation();
-        const hasPermissions = jest.fn();
-        jest.spyOn(tunnel.channel.guild.members.me!, 'permissionsIn').mockReturnValue({
-            has: hasPermissions
-        } as any);
+        const spyError = vi.spyOn(globalThis.console, 'error').mockImplementation(() => {});
+        const has = vi.fn();
+        vi.spyOn(tunnel.channel.guild.members.me!, 'permissionsIn').mockReturnValue({ has } as any);
         manager.bot.configuration.gameBoardReactions = false;
 
         validator.isInteractionValid(tunnel);
-        expect(hasPermissions).toHaveBeenCalledTimes(1);
-        expect(hasPermissions).toHaveBeenCalledWith(expect.not.arrayContaining(['AddReactions']));
+        expect(has).toHaveBeenCalledTimes(1);
+        expect(has).toHaveBeenCalledWith(expect.not.arrayContaining(['AddReactions']));
         spyError.mockRestore();
     });
 
@@ -83,8 +74,8 @@ describe('GameStateValidator', () => {
     `(
         'should check with member roles $memberRoles and admin $isAdmin (allowed roles: $allowedRoleIds)',
         ({ allowedRoleIds, memberRoles, isAdmin, expected }) => {
-            jest.spyOn(tunnel.author.permissions, 'has').mockReturnValue(isAdmin);
-            jest.spyOn(tunnel.author.permissions, 'has').mockReturnValue(isAdmin);
+            vi.spyOn(tunnel.author.permissions, 'has').mockReturnValue(isAdmin);
+            vi.spyOn(tunnel.author.permissions, 'has').mockReturnValue(isAdmin);
             Object.defineProperty(tunnel.author.roles, 'cache', {
                 value: new Collection(
                     memberRoles.map((roleId: string) => [roleId, <Role>{ id: roleId }])

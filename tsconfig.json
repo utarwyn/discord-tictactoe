@@ -1,10 +1,10 @@
 {
   "extends": "@tsconfig/node22/tsconfig.json",
-  "include": ["src/**/*", "bin/**/*"],
+  "include": ["src/**/*", "bin/**/*", "vitest.config.mts", "vitest.setup.ts"],
   "compilerOptions": {
     "resolveJsonModule": true,
     "outDir": "dist",
-    "types": ["node", "jest"],
+    "types": ["node", "vitest/globals"],
     "paths": {
       "@bot/*": ["./src/bot/*"],
       "@config/*": ["./src/config/*"],

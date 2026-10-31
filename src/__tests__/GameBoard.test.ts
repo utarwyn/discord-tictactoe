@@ -9,11 +9,28 @@ import Entity from '@tictactoe/Entity';
 import Game from '@tictactoe/Game';
 import { Player } from '@tictactoe/Player';
 import { Collection, Message } from 'discord.js';
+import type { Mock } from 'vitest';
 
-jest.mock('@bot/builder/GameBoardBuilder');
-jest.mock('@bot/builder/GameBoardButtonBuilder');
-jest.mock('@i18n/localize');
-jest.mock('@tictactoe/Game');
+vi.mock('@bot/builder/GameBoardBuilder', async importOriginal => {
+    const original = await importOriginal<typeof import('@bot/builder/GameBoardBuilder')>();
+    return {
+        default: vi.fn().mockImplementation(function () {
+            return Object.assign(Object.create(original.default.prototype));
+        })
+    };
+});
+vi.mock('@bot/builder/GameBoardButtonBuilder', async importOriginal => {
+    const original = await importOriginal<typeof import('@bot/builder/GameBoardButtonBuilder')>();
+    return {
+        default: vi.fn().mockImplementation(function () {
+            return Object.assign(Object.create(original.default.prototype));
+        })
+    };
+});
+vi.mock('@i18n/localize');
+vi.mock('@tictactoe/Game');
+
+const messageFixture = (overrides = {}) => ({ react: vi.fn(), ...overrides }) as unknown as Message;
 
 describe('GameBoard', () => {
     let configuration: GameConfig;
@@ -26,22 +43,24 @@ describe('GameBoard', () => {
 
     beforeEach(() => {
         configuration = {} as GameConfig;
-        manager = { endGame: jest.fn() as any } as GameStateManager;
+        manager = { endGame: vi.fn() as any } as GameStateManager;
         game = {
             currentPlayer: Player.First,
             finished: false,
-            isMoveValid: jest.fn() as any,
-            nextPlayer: jest.fn() as any,
-            updateBoard: jest.fn() as any
-        } as Game;
+            isMoveValid: vi.fn(),
+            nextPlayer: vi.fn(),
+            updateBoard: vi.fn()
+        } as unknown as Game;
         opponent = { id: 'opponent' } as Entity;
         tunnel = {
             author: { id: 'author' },
-            editReply: jest.fn() as any,
-            end: jest.fn() as any
-        } as MessagingTunnel;
+            editReply: vi.fn(),
+            end: vi.fn()
+        } as unknown as MessagingTunnel;
 
-        jest.mocked(Game).mockReturnValue(game);
+        vi.mocked(Game).mockImplementation(function () {
+            return game;
+        });
         gameBoard = new GameBoard(manager, tunnel, opponent, configuration);
     });
 
@@ -53,28 +72,24 @@ describe('GameBoard', () => {
 
     describe('Content', () => {
         const mockedBuilder = {
-            toMessageOptions: jest.fn(),
-            withBoard: jest.fn().mockReturnThis(),
-            withButtonsDisabledAfterUse: jest.fn().mockReturnThis(),
-            withEmbed: jest.fn().mockReturnThis(),
-            withEmojies: jest.fn().mockReturnThis(),
-            withEndingMessage: jest.fn().mockReturnThis(),
-            withLoadingMessage: jest.fn().mockReturnThis(),
-            withEntityPlaying: jest.fn().mockReturnThis(),
-            withExpireMessage: jest.fn().mockReturnThis(),
-            withTitle: jest.fn().mockReturnThis()
+            toMessageOptions: vi.fn(),
+            withBoard: vi.fn().mockReturnThis(),
+            withButtonsDisabledAfterUse: vi.fn().mockReturnThis(),
+            withEmbed: vi.fn().mockReturnThis(),
+            withEmojies: vi.fn().mockReturnThis(),
+            withEndingMessage: vi.fn().mockReturnThis(),
+            withLoadingMessage: vi.fn().mockReturnThis(),
+            withEntityPlaying: vi.fn().mockReturnThis(),
+            withExpireMessage: vi.fn().mockReturnThis(),
+            withTitle: vi.fn().mockReturnThis()
         };
 
-        const builder = jest
-            .mocked(GameBoardBuilder)
-            .mockImplementation(() =>
-                Object.assign(Object.create(GameBoardBuilder.prototype), mockedBuilder)
-            );
-        const buttonBuilder = jest
-            .mocked(GameBoardButtonBuilder)
-            .mockImplementation(() =>
-                Object.assign(Object.create(GameBoardButtonBuilder.prototype), mockedBuilder)
-            );
+        const builder = vi.mocked(GameBoardBuilder).mockImplementation(function () {
+            return Object.assign(Object.create(GameBoardBuilder.prototype), mockedBuilder);
+        });
+        const buttonBuilder = vi.mocked(GameBoardButtonBuilder).mockImplementation(function () {
+            return Object.assign(Object.create(GameBoardButtonBuilder.prototype), mockedBuilder);
+        });
 
         it.each`
             gameBoardReactions | builder
@@ -148,10 +163,10 @@ describe('GameBoard', () => {
 
         it.each`
             gameBoardDisableButtons | gameBoardReactions | calledTimes | description
-            ${false}                | ${true}            | ${0}        | ${'enable'}
-            ${true}                 | ${true}            | ${0}        | ${'enable'}
-            ${false}                | ${false}           | ${0}        | ${'enable'}
-            ${true}                 | ${false}           | ${1}        | ${'disable'}
+            ${false}                | ${true}            | ${0}        | ${'enabled'}
+            ${true}                 | ${true}            | ${0}        | ${'enabled'}
+            ${false}                | ${false}           | ${0}        | ${'enabled'}
+            ${true}                 | ${false}           | ${1}        | ${'disabled'}
         `(
             'should $description button after use with reactions $gameBoardReactions and disable buttons $gameBoardDisableButtons',
             ({ gameBoardDisableButtons, gameBoardReactions, calledTimes }) => {
@@ -166,7 +181,7 @@ describe('GameBoard', () => {
 
         it('should return message options from the builder', () => {
             const messageOptions = { content: 'awesome content' };
-            jest.spyOn(mockedBuilder, 'toMessageOptions').mockReturnValue(messageOptions);
+            vi.spyOn(mockedBuilder, 'toMessageOptions').mockReturnValue(messageOptions);
             expect(gameBoard.content).toEqual(messageOptions);
         });
     });
@@ -174,7 +189,7 @@ describe('GameBoard', () => {
     describe('Attach to a message', () => {
         let message: Message;
 
-        beforeEach(() => (message = { react: jest.fn() } as any));
+        beforeEach(() => (message = messageFixture({ react: vi.fn() })));
 
         it('should react on message if reactions are enabled', async () => {
             Object.assign(GameBoardBuilder, { MOVE_REACTIONS: ['1', '2', '3', '4'] });
@@ -185,7 +200,7 @@ describe('GameBoard', () => {
 
         it('should destroy if an error occured during reaction', async () => {
             configuration.gameBoardReactions = true;
-            jest.spyOn(message, 'react').mockRejectedValue(null);
+            vi.spyOn(message, 'react').mockRejectedValue(null);
             await gameBoard.attachTo(message);
             expect(manager.endGame).toHaveBeenCalledTimes(1);
         });
@@ -206,12 +221,12 @@ describe('GameBoard', () => {
             let ai: AI;
 
             beforeEach(() => {
-                ai = Object.assign(Object.create(AI.prototype), { operate: jest.fn() });
+                ai = Object.assign(Object.create(AI.prototype), { operate: vi.fn() });
                 gameBoard.entities[0] = ai;
             });
 
             it('should operate AI and play turn if move is valid', async () => {
-                jest.spyOn(ai, 'operate').mockReturnValue({ move: 5, score: 1 });
+                vi.spyOn(ai, 'operate').mockReturnValue({ move: 5, score: 1 });
                 await gameBoard.attemptNextTurn();
                 expect(ai.operate).toHaveBeenCalledTimes(1);
                 expect(ai.operate).toHaveBeenCalledWith(game);
@@ -220,13 +235,13 @@ describe('GameBoard', () => {
             });
 
             it('should operate AI but do nothing if move is invalid', async () => {
-                jest.spyOn(ai, 'operate').mockReturnValue({ score: 0 });
+                vi.spyOn(ai, 'operate').mockReturnValue({ score: 0 });
                 await gameBoard.attemptNextTurn();
                 expect(game.updateBoard).toHaveBeenCalledTimes(0);
             });
 
             it('should loop turns', async () => {
-                jest.spyOn(ai, 'operate')
+                vi.spyOn(ai, 'operate')
                     .mockReturnValueOnce({ move: 0, score: 10 })
                     .mockReturnValue({ score: 0 });
 
@@ -239,7 +254,7 @@ describe('GameBoard', () => {
             it('should end tunnel if game board has to be deleted', async () => {
                 Object.assign(game, { finished: true, winner: Player.First } as Game);
                 configuration.gameBoardDelete = true;
-                jest.spyOn(ai, 'operate').mockReturnValue({ move: 5, score: 1 });
+                vi.spyOn(ai, 'operate').mockReturnValue({ move: 5, score: 1 });
                 await gameBoard.attemptNextTurn();
                 expect(tunnel.end).toHaveBeenCalledTimes(1);
             });
@@ -252,9 +267,9 @@ describe('GameBoard', () => {
                 'should $description reactions at the end of the game if reactions are $gameBoardReactions',
                 async ({ gameBoardReactions, calledTimes }) => {
                     configuration.gameBoardReactions = gameBoardReactions;
-                    const reply = { reactions: { removeAll: jest.fn() } as any } as Message;
+                    const reply = messageFixture({ reactions: { removeAll: vi.fn() } });
                     Object.assign(tunnel, { reply });
-                    jest.spyOn(ai, 'operate').mockReturnValue({ move: 5, score: 1 });
+                    vi.spyOn(ai, 'operate').mockReturnValue({ move: 5, score: 1 });
                     await gameBoard.attemptNextTurn();
                     expect(reply.reactions.removeAll).toHaveBeenCalledTimes(calledTimes);
                 }
@@ -265,14 +280,14 @@ describe('GameBoard', () => {
             let reply: Message;
 
             beforeEach(() => {
-                reply = { awaitReactions: jest.fn().mockResolvedValue(null) as any } as Message;
+                reply = messageFixture({ awaitReactions: vi.fn().mockResolvedValue(null) });
                 Object.assign(tunnel, { reply });
                 configuration.gameBoardReactions = true;
             });
 
             it('should apply move after reaction being selected', async () => {
                 Object.assign(GameBoardBuilder, { MOVE_REACTIONS: ['1', '2'] });
-                jest.spyOn(reply, 'awaitReactions').mockResolvedValue(
+                vi.spyOn(reply, 'awaitReactions').mockResolvedValue(
                     new Collection([['1', { emoji: { name: '2' } }]]) as any
                 );
                 await gameBoard.attemptNextTurn();
@@ -281,7 +296,7 @@ describe('GameBoard', () => {
             });
 
             it('should end game if an error occured during reaction await', async () => {
-                jest.spyOn(reply, 'awaitReactions').mockRejectedValue(null);
+                vi.spyOn(reply, 'awaitReactions').mockRejectedValue(null);
                 await gameBoard.attemptNextTurn();
                 expect(game.updateBoard).toHaveBeenCalledTimes(0);
             });
@@ -295,8 +310,8 @@ describe('GameBoard', () => {
             `(
                 'should check if emoji $emoji is valid for user $userId with moveValid=$moveValid',
                 async ({ emoji, userId, moveValid, valid }) => {
-                    jest.spyOn(game, 'isMoveValid').mockReturnValue(moveValid);
-                    const spyAwaitReactions = jest.spyOn(reply, 'awaitReactions');
+                    vi.spyOn(game, 'isMoveValid').mockReturnValue(moveValid);
+                    const spyAwaitReactions = vi.spyOn(reply, 'awaitReactions');
                     await gameBoard.attemptNextTurn();
                     const options = spyAwaitReactions.mock.calls[0][0];
                     expect(
@@ -317,25 +332,25 @@ describe('GameBoard', () => {
 
         describe('Human: wait for a button press', () => {
             let reply: Message;
-            let collector: { on: jest.MockInstance<any, any> };
+            let collector: { on: Mock };
 
             const callCollectorEvent = async (event: string, ...args: any[]): Promise<void> => {
                 await gameBoard.attemptNextTurn();
-                const collectFn = collector.on.mock.calls.find(call => call[0] === event)[1];
+                const collectFn = collector.on.mock.calls.find(call => call[0] === event)![1];
                 return collectFn(...args);
             };
 
             beforeEach(() => {
-                collector = { on: jest.fn().mockReturnThis() };
-                reply = {
-                    createMessageComponentCollector: jest.fn().mockReturnValue(collector) as any
-                } as Message;
+                collector = { on: vi.fn().mockReturnThis() };
+                reply = messageFixture({
+                    createMessageComponentCollector: vi.fn().mockReturnValue(collector)
+                });
                 Object.assign(tunnel, { reply });
                 configuration.gameBoardReactions = false;
             });
 
             it('should apply move after button being pressed', async () => {
-                const spyUpdate = jest.fn();
+                const spyUpdate = vi.fn();
                 Object.assign(GameBoardBuilder, { MOVE_REACTIONS: ['1', '2'] });
 
                 await callCollectorEvent('collect', { customId: '1', update: spyUpdate });
@@ -375,8 +390,8 @@ describe('GameBoard', () => {
             `(
                 'should check if button $customId is valid for user $userId with moveValid=$moveValid',
                 async ({ customId, userId, valid }) => {
-                    jest.spyOn(game, 'isMoveValid').mockReturnValue(valid);
-                    const spyCreateCollector = jest.spyOn(reply, 'createMessageComponentCollector');
+                    vi.spyOn(game, 'isMoveValid').mockReturnValue(valid);
+                    const spyCreateCollector = vi.spyOn(reply, 'createMessageComponentCollector');
                     await gameBoard.attemptNextTurn();
                     const options = spyCreateCollector.mock.calls[0][0];
                     expect(

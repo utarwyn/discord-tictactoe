@@ -9,14 +9,14 @@ import { AIDifficultyLevel } from '@tictactoe/ai/AIDifficultyLevel';
 import Entity from '@tictactoe/Entity';
 import { GuildMember } from 'discord.js';
 
-jest.mock('@bot/entity/DuelRequest');
-jest.mock('@bot/entity/GameBoard');
-jest.mock('@bot/state/GameStateValidator');
-jest.mock('@tictactoe/ai/AI');
+vi.mock('@bot/entity/DuelRequest');
+vi.mock('@bot/entity/GameBoard');
+vi.mock('@bot/state/GameStateValidator');
+vi.mock('@tictactoe/ai/AI');
 
 describe('GameStateManager', () => {
-    const duelRequest = jest.mocked(DuelRequest);
-    const gameBoard = jest.mocked(GameBoard);
+    const duelRequest = vi.mocked(DuelRequest);
+    const gameBoard = vi.mocked(GameBoard);
 
     let manager: GameStateManager;
     let validator: GameStateValidator;
@@ -33,24 +33,32 @@ describe('GameStateManager', () => {
             replyWith: _a => Promise.resolve({})
         } as MessagingTunnel;
         validator = {
-            isInteractionValid: jest.fn().mockReturnValue(true) as any,
-            isNewGamePossible: jest.fn().mockReturnValue(true) as any
-        } as GameStateValidator;
+            isInteractionValid: vi.fn().mockReturnValue(true),
+            isNewGamePossible: vi.fn().mockReturnValue(true)
+        } as unknown as GameStateValidator;
 
-        jest.mocked(GameStateValidator).mockImplementation(() => validator);
+        duelRequest.mockImplementation(function () {
+            return { content: {}, attachTo: vi.fn() } as unknown as DuelRequest;
+        });
+        gameBoard.mockImplementation(function () {
+            return { attachTo: vi.fn(), content: {}, entities: [] } as unknown as GameBoard;
+        });
+        vi.mocked(GameStateValidator).mockImplementation(function () {
+            return validator;
+        });
         manager = new GameStateManager(bot);
     });
 
     describe('Method: requestDuel', () => {
         it('should reject if interaction is invalid', async () => {
-            jest.spyOn(validator, 'isInteractionValid').mockReturnValue(false);
+            vi.spyOn(validator, 'isInteractionValid').mockReturnValue(false);
             await expect(manager.requestDuel(tunnel, {} as GuildMember)).resolves.toBeUndefined();
             expect(validator.isInteractionValid).toHaveBeenCalledTimes(1);
             expect(validator.isInteractionValid).toHaveBeenCalledWith(tunnel);
         });
 
         it('should reject if a new game is not possible', async () => {
-            jest.spyOn(validator, 'isNewGamePossible').mockReturnValue(false);
+            vi.spyOn(validator, 'isNewGamePossible').mockReturnValue(false);
             const invited = {} as GuildMember;
             await expect(manager.requestDuel(tunnel, invited)).rejects.toThrow('game.in-progress');
             expect(validator.isNewGamePossible).toHaveBeenCalledTimes(1);
@@ -58,7 +66,7 @@ describe('GameStateManager', () => {
         });
 
         it('should create a duel request and send it into the messaging tunnel', async () => {
-            const spyReplyWith = jest.spyOn(tunnel, 'replyWith');
+            const spyReplyWith = vi.spyOn(tunnel, 'replyWith');
             await manager.requestDuel(tunnel, <GuildMember>{});
             expect(duelRequest).toHaveBeenCalledTimes(1);
             expect(spyReplyWith).toHaveBeenCalledTimes(1);
@@ -79,14 +87,14 @@ describe('GameStateManager', () => {
 
     describe('Method: createGame', () => {
         it('should reject if interaction is invalid', async () => {
-            jest.spyOn(validator, 'isInteractionValid').mockReturnValue(false);
+            vi.spyOn(validator, 'isInteractionValid').mockReturnValue(false);
             await expect(manager.createGame(tunnel)).resolves.toBeUndefined();
             expect(validator.isInteractionValid).toHaveBeenCalledTimes(1);
             expect(validator.isInteractionValid).toHaveBeenCalledWith(tunnel);
         });
 
         it('should reject if a new game is not possible', async () => {
-            jest.spyOn(validator, 'isNewGamePossible').mockReturnValue(false);
+            vi.spyOn(validator, 'isNewGamePossible').mockReturnValue(false);
             const invited = <GuildMember>{};
             await expect(manager.createGame(tunnel, invited)).rejects.toThrow('game.in-progress');
             expect(validator.isNewGamePossible).toHaveBeenCalledTimes(1);
@@ -95,7 +103,7 @@ describe('GameStateManager', () => {
 
         it('should reject if emitted event throws an error', async () => {
             const error = new Error('cannot start the game');
-            jest.spyOn(bot.eventHandler, 'emitEvent').mockImplementation(() => {
+            vi.spyOn(bot.eventHandler, 'emitEvent').mockImplementation(() => {
                 throw error;
             });
             const invited = <GuildMember>{};
@@ -103,7 +111,7 @@ describe('GameStateManager', () => {
         });
 
         it('should create a game board and send it into the messaging tunnel', async () => {
-            const spyReplyWith = jest.spyOn(tunnel, 'replyWith');
+            const spyReplyWith = vi.spyOn(tunnel, 'replyWith');
 
             const invited = <GuildMember>{};
             await manager.createGame(tunnel, invited);
@@ -116,7 +124,7 @@ describe('GameStateManager', () => {
 
         describe('Using AI if there is no invited member', () => {
             it('should create using default difficulty', async () => {
-                const spyCreateAI = jest.mocked(AI);
+                const spyCreateAI = vi.mocked(AI);
                 await manager.createGame(tunnel);
 
                 expect(spyCreateAI).toHaveBeenCalledWith(undefined);
@@ -130,7 +138,7 @@ describe('GameStateManager', () => {
             });
 
             it('should create using custom difficulty', async () => {
-                const spyCreateAI = jest.mocked(AI);
+                const spyCreateAI = vi.mocked(AI);
                 bot.configuration.aiDifficulty = 'Unbeatable';
                 await manager.createGame(tunnel);
                 expect(spyCreateAI).toHaveBeenCalledWith(AIDifficultyLevel.Unbeatable);
@@ -150,7 +158,7 @@ describe('GameStateManager', () => {
         });
 
         it('should emit win event if ended with a winner', () => {
-            const spyEmitEvent = jest.spyOn(bot.eventHandler, 'emitEvent');
+            const spyEmitEvent = vi.spyOn(bot.eventHandler, 'emitEvent');
 
             // entity 1 = winner
             manager.endGame(gameboard, entity1);
@@ -162,7 +170,7 @@ describe('GameStateManager', () => {
         });
 
         it('should emit tie event if ended without winner', () => {
-            const spyEmitEvent = jest.spyOn(bot.eventHandler, 'emitEvent');
+            const spyEmitEvent = vi.spyOn(bot.eventHandler, 'emitEvent');
             manager.endGame(gameboard, null);
             expect(spyEmitEvent).toHaveBeenCalledWith('tie', { players: gameboard.entities });
         });

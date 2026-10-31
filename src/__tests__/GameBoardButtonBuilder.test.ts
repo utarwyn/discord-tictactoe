@@ -4,7 +4,7 @@ import AI from '@tictactoe/ai/AI';
 import { Player } from '@tictactoe/Player';
 import { ButtonComponent } from 'discord.js';
 
-jest.mock('@tictactoe/ai/AI');
+vi.mock('@tictactoe/ai/AI');
 
 describe('GameBoardButtonBuilder', () => {
     let builder: GameBoardButtonBuilder;
