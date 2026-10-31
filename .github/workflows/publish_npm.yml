@@ -18,7 +18,7 @@ jobs:
       - name: ⚙ Setup
         uses: ./.github/actions/setup
         with:
-          node_version: 22.x
+          node_version: 26
 
       - name: 🚀 Prepare release
         run: pnpm run release
@@ -42,7 +42,7 @@ jobs:
       - name: ⚙ Setup
         uses: ./.github/actions/setup
         with:
-          node_version: 22.x
+          node_version: 26
           registry_url: 'https://npm.pkg.github.com'
           scope: '@utarwyn'
 
