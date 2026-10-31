@@ -1,32 +1,38 @@
 import ConfigProvider from '@config/ConfigProvider';
-import fs from 'fs';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 
 describe('ConfigProvider', () => {
     describe('Load from configuration file', () => {
-        const fsMock = jest.mocked(fs);
-        let configRequireFn: any;
-        let configPath: string;
+        let configDirectory: string;
+        let originalDirectory: string;
 
-        beforeAll(() => {
-            configPath = new ConfigProvider()['CONFIG_PATH'];
-            configRequireFn = jest.fn().mockReturnValue({ foo: true, bar: 1 });
-            jest.mock('fs');
-            jest.mock(configPath, configRequireFn, { virtual: true });
+        beforeEach(() => {
+            originalDirectory = process.cwd();
+            configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'discord-tictactoe-config-'));
+            fs.mkdirSync(path.join(configDirectory, 'config'));
+            process.chdir(configDirectory);
+        });
+
+        afterEach(() => {
+            process.chdir(originalDirectory);
+            fs.rmSync(configDirectory, { force: true, recursive: true });
         });
 
         test('should import configuration from file if exists', () => {
-            const spyExistsSync = jest.spyOn(fsMock, 'existsSync').mockReturnValue(true);
+            fs.writeFileSync(
+                path.join(configDirectory, 'config', 'config.json'),
+                JSON.stringify({ foo: true, bar: 1 })
+            );
             const provider = new ConfigProvider();
-            expect(spyExistsSync).toHaveBeenCalledTimes(1);
-            expect(spyExistsSync).toHaveBeenCalledWith(configPath);
-            expect(configRequireFn).toHaveBeenCalledTimes(1);
             expect(provider['foo']).toBeTruthy();
             expect(provider['bar']).toBe(1);
         });
 
         test('should do nothing if file does not exist', () => {
-            new ConfigProvider();
-            expect(configRequireFn).toHaveBeenCalledTimes(0);
+            const provider = new ConfigProvider();
+            expect(provider['foo']).toBeUndefined();
         });
     });
 

@@ -1,7 +1,7 @@
 import AppCommandRegister from '@bot/command/AppCommandRegister';
-import { ApplicationCommandManager, Message } from 'discord.js';
+import type { ApplicationCommandManager, Message } from 'discord.js';
 
-jest.mock('@i18n/localize');
+vi.mock('@i18n/localize');
 
 describe('AppCommandRegister', () => {
     let commandManager: ApplicationCommandManager;
@@ -9,22 +9,22 @@ describe('AppCommandRegister', () => {
 
     beforeEach(() => {
         commandManager = {
-            create: jest.fn() as any,
-            delete: jest.fn() as any,
-            fetch: jest.fn() as any
-        } as ApplicationCommandManager;
+            create: vi.fn(),
+            delete: vi.fn(),
+            fetch: vi.fn()
+        } as unknown as ApplicationCommandManager;
         register = new AppCommandRegister(commandManager, 'tictactoe', 'opponent');
     });
 
     describe('Handle deploy message', () => {
         const message = {
-            client: { user: 'userId' } as any,
+            client: { user: 'userId' },
             content: '@bot tttdeploy',
             guild: { id: 'guildId' },
-            member: { permissions: new Map([['Administrator', '']]) } as any,
-            mentions: new Map([['userId', '']]) as any,
-            reply: jest.fn() as any
-        } as Message;
+            member: { permissions: new Map([['Administrator', '']]) },
+            mentions: new Map([['userId', '']]),
+            reply: vi.fn()
+        } as unknown as Message;
 
         describe('Check rights', () => {
             test.each`
@@ -68,7 +68,7 @@ describe('AppCommandRegister', () => {
             beforeEach(() => (message.content = '@bot tttdelete'));
 
             test('should delete registered command if found', async () => {
-                const spyFetch = jest
+                const spyFetch = vi
                     .spyOn(commandManager, 'fetch')
                     .mockResolvedValue([{ id: '123456', name: 'tictactoe' }] as any);
 

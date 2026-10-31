@@ -3,11 +3,11 @@ import GameCommand from '@bot/command/GameCommand';
 import EventHandler from '@bot/EventHandler';
 import TicTacToeBot from '@bot/TicTacToeBot';
 import Config from '@config/Config';
-import { ChatInputCommandInteraction, Client, Message } from 'discord.js';
+import type { ChatInputCommandInteraction, Client, Message } from 'discord.js';
 
-jest.mock('@bot/command/AppCommandRegister');
-jest.mock('@bot/command/GameCommand');
-jest.mock('@bot/state/GameStateManager');
+vi.mock('@bot/command/AppCommandRegister');
+vi.mock('@bot/command/GameCommand');
+vi.mock('@bot/state/GameStateManager');
 
 describe('TicTacToeBot', () => {
     let configuration: Config;
@@ -19,10 +19,12 @@ describe('TicTacToeBot', () => {
         configuration = {} as Config;
         eventHandler = {} as EventHandler;
         gameCommand = {
-            handleMessage: jest.fn() as any,
-            handleInteraction: jest.fn() as any
-        } as GameCommand;
-        jest.mocked(GameCommand).mockImplementation(() => gameCommand);
+            handleMessage: vi.fn(),
+            handleInteraction: vi.fn()
+        } as unknown as GameCommand;
+        vi.mocked(GameCommand).mockImplementation(function () {
+            return gameCommand;
+        });
         bot = new TicTacToeBot(configuration, eventHandler);
     });
 
@@ -39,15 +41,15 @@ describe('TicTacToeBot', () => {
         let readyClient: Client;
 
         beforeEach(() => {
-            notReadyClient = { readyAt: false as any, on: jest.fn() as any } as Client;
-            readyClient = { readyAt: true as any, on: jest.fn() as any } as Client;
+            notReadyClient = { readyAt: false, on: vi.fn() } as unknown as Client;
+            readyClient = { readyAt: true, on: vi.fn() } as unknown as Client;
         });
 
         test('should attach slash command now if client is ready', () => {
             configuration.command = 'command';
-            const spyAppCommandRegister = jest.mocked(AppCommandRegister);
+            const spyAppCommandRegister = vi.mocked(AppCommandRegister);
             const commands = [{ id: 'command1' }];
-            const client = { ...readyClient, application: { commands } as any } as Client;
+            const client = { ...readyClient, application: { commands } } as unknown as Client;
 
             bot.attachToClient(client);
 

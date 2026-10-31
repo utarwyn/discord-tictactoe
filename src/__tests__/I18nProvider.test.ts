@@ -22,7 +22,7 @@ describe('I18nProvider', () => {
         ${'file:config/locales/unknown'} | ${true}  | ${'please'}
         ${'unknown'}                     | ${true}  | ${'please'}
     `('should try to load locale $locale', ({ locale, warned, expectedMessage }) => {
-        const spyWarn = jest.spyOn(globalThis.console, 'warn').mockImplementation();
+        const spyWarn = vi.spyOn(globalThis.console, 'warn').mockImplementation(() => undefined);
 
         provider.loadFromLocale(locale);
 

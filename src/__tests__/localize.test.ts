@@ -1,7 +1,9 @@
-const provider = { loadFromLocale: jest.fn(), __: jest.fn(), addProvider: jest.fn() };
+const provider = vi.hoisted(() => ({ loadFromLocale: vi.fn(), __: vi.fn(), addProvider: vi.fn() }));
 
-jest.mock('@i18n/I18nProvider', () => ({
-    I18nProvider: jest.fn().mockImplementation(() => provider)
+vi.mock('@i18n/I18nProvider', () => ({
+    I18nProvider: vi.fn().mockImplementation(function () {
+        return provider;
+    })
 }));
 
 import localize from '@i18n/localize';

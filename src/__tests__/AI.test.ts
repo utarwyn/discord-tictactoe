@@ -4,17 +4,17 @@ import { AIDifficultyLevel } from '@tictactoe/ai/AIDifficultyLevel';
 import Game from '@tictactoe/Game';
 import { Player } from '@tictactoe/Player';
 
-jest.mock('@i18n/localize');
+vi.mock('@i18n/localize');
 
 describe('AI', () => {
     let ai: AI;
 
     beforeAll(() => {
-        jest.spyOn(localize, '__').mockImplementation(t => t);
+        vi.spyOn(localize, '__').mockImplementation(t => t);
     });
 
     it('should compute display name', () => {
-        jest.spyOn(localize, '__').mockReturnValue('Awesome AI');
+        vi.spyOn(localize, '__').mockReturnValue('Awesome AI');
         expect(new AI().toString()).toBe('Awesome AI');
     });
 

@@ -4,9 +4,10 @@ import MessagingTunnel from '@bot/messaging/MessagingTunnel';
 import GameStateManager from '@bot/state/GameStateManager';
 import localize from '@i18n/localize';
 import { Collection, GuildMember, Message } from 'discord.js';
+import { MockInstance } from 'vitest';
 
-jest.mock('@bot/messaging/ComponentInteractionMessagingTunnel');
-jest.mock('@i18n/localize');
+vi.mock('@bot/messaging/ComponentInteractionMessagingTunnel');
+vi.mock('@i18n/localize');
 
 describe('DuelRequest', () => {
     let manager: GameStateManager;
@@ -16,12 +17,12 @@ describe('DuelRequest', () => {
     let duelRequest: DuelRequest;
 
     beforeEach(() => {
-        manager = { createGame: jest.fn() as any } as GameStateManager;
-        invited = { id: 'invited', toString: jest.fn() as any } as GuildMember;
-        tunnel = { author: { displayName: 'Author' }, end: jest.fn() as any } as MessagingTunnel;
+        manager = { createGame: vi.fn() as any } as GameStateManager;
+        invited = { id: 'invited', toString: vi.fn() as any } as GuildMember;
+        tunnel = { author: { displayName: 'Author' }, end: vi.fn() as any } as MessagingTunnel;
         duelRequest = new DuelRequest(manager, tunnel, invited);
 
-        jest.spyOn(localize, '__').mockImplementation(t => t);
+        vi.spyOn(localize, '__').mockImplementation(t => t);
     });
 
     test('should use custom values if provided', () => {
@@ -54,7 +55,7 @@ describe('DuelRequest', () => {
 
         test('should set content to string representation of the invited member', () => {
             const content = 'invited member name';
-            jest.spyOn(invited, 'toString').mockReturnValue(content as any);
+            vi.spyOn(invited, 'toString').mockReturnValue(content as any);
             expect(duelRequest.content).toHaveProperty('content', content);
         });
 
@@ -75,23 +76,23 @@ describe('DuelRequest', () => {
 
     describe('Attach to a message', () => {
         let interactionTunnel: ComponentInteractionMessagingTunnel;
-        let collector: { on: jest.MockInstance<any, any> };
+        let collector: { on: MockInstance };
 
         let message: Message;
 
         beforeEach(() => {
-            collector = { on: jest.fn().mockReturnThis() };
-            interactionTunnel = { end: jest.fn() } as any;
+            collector = { on: vi.fn().mockReturnThis() };
+            interactionTunnel = { end: vi.fn() } as unknown as ComponentInteractionMessagingTunnel;
             message = {
-                awaitReactions: jest
+                awaitReactions: vi
                     .fn()
-                    .mockResolvedValue(new Collection([['1', { emoji: { name: '1' } }]]) as any),
-                createMessageComponentCollector: jest.fn().mockReturnValue(collector),
-                react: jest.fn()
-            } as any;
-            jest.mocked(ComponentInteractionMessagingTunnel).mockImplementation(
-                () => interactionTunnel
-            );
+                    .mockResolvedValue(new Collection([['1', { emoji: { name: '1' } }]])),
+                createMessageComponentCollector: vi.fn().mockReturnValue(collector),
+                react: vi.fn()
+            } as unknown as Message;
+            vi.mocked(ComponentInteractionMessagingTunnel).mockImplementation(function () {
+                return interactionTunnel;
+            });
         });
 
         describe('Using reactions', () => {
@@ -113,7 +114,7 @@ describe('DuelRequest', () => {
             `(
                 'should check if emoji $emoji is valid for user $userId',
                 async ({ emoji, userId, valid }) => {
-                    const spyAwaitReactions = jest.spyOn(message, 'awaitReactions');
+                    const spyAwaitReactions = vi.spyOn(message, 'awaitReactions');
                     await duelRequest.attachTo(message);
                     const options = spyAwaitReactions.mock.calls[0][0];
                     expect(
@@ -139,7 +140,7 @@ describe('DuelRequest', () => {
             });
 
             test('should end tunnel after request expired', async () => {
-                jest.spyOn(message, 'awaitReactions').mockRejectedValue(null);
+                vi.spyOn(message, 'awaitReactions').mockRejectedValue(null);
                 await duelRequest.attachTo(message);
                 expect(tunnel.end).toHaveBeenCalledTimes(1);
                 expect(tunnel.end).toHaveBeenCalledWith(
@@ -150,7 +151,7 @@ describe('DuelRequest', () => {
 
         describe('Using buttons', () => {
             const callCollectorEvent = async (event: string, ...args: any[]): Promise<void> => {
-                const collectFn = collector.on.mock.calls.find(call => call[0] === event)[1];
+                const collectFn = collector.on.mock.calls.find(call => call[0] === event)?.[1];
                 return collectFn(...args);
             };
 
@@ -163,10 +164,7 @@ describe('DuelRequest', () => {
             `(
                 'should check if user $userId can answer the duel request',
                 async ({ userId, valid }) => {
-                    const spyCreateCollector = jest.spyOn(
-                        message,
-                        'createMessageComponentCollector'
-                    );
+                    const spyCreateCollector = vi.spyOn(message, 'createMessageComponentCollector');
                     await duelRequest.attachTo(message);
                     const options = spyCreateCollector.mock.calls[0][0];
                     expect(options!.filter!({ user: { id: userId } } as any, {} as any)).toBe(
